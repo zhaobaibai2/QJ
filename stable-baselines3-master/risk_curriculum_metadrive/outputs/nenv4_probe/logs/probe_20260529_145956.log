@@ -1,0 +1,77 @@
+/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+Using cuda device
+Logging to outputs/nenv4_probe/runs/proposed_ppo_s99/tensorboard/proposed_ppo_s99_1
+------------------------------------
+| paper/                |          |
+|    accel_variation    | 0.816    |
+|    base_reward        | 5.37     |
+|    collision          | 0        |
+|    crash_object       | 0        |
+|    crash_vehicle      | 0        |
+|    episode_cost       | 0        |
+|    episode_length     | 600      |
+|    jerk               | 0.668    |
+|    lane_deviation     | 0.0721   |
+|    max_lane_deviation | 0.192    |
+|    mean_speed_kmh     | 0.607    |
+|    min_ttc            | nan      |
+|    out_of_road        | 0        |
+|    route_completion   | 0.112    |
+|    shaped_reward      | -97      |
+|    steering_variation | 0.798    |
+|    success            | 0        |
+|    ttc_risk           | 0        |
+| rollout/              |          |
+|    ep_len_mean        | 600      |
+|    ep_rew_mean        | -98.4    |
+|    success_rate       | 0        |
+| time/                 |          |
+|    fps                | 1192     |
+|    iterations         | 1        |
+|    time_elapsed       | 3        |
+|    total_timesteps    | 4096     |
+------------------------------------
+-----------------------------------------
+| paper/                  |             |
+|    accel_variation      | 0.8         |
+|    base_reward          | 9.86        |
+|    collision            | 0           |
+|    crash_object         | 0           |
+|    crash_vehicle        | 0           |
+|    episode_cost         | 0           |
+|    episode_length       | 600         |
+|    jerk                 | 0.624       |
+|    lane_deviation       | 0.0852      |
+|    max_lane_deviation   | 0.231       |
+|    mean_speed_kmh       | 0.832       |
+|    min_ttc              | nan         |
+|    out_of_road          | 0           |
+|    route_completion     | 0.152       |
+|    shaped_reward        | -89.3       |
+|    steering_variation   | 0.807       |
+|    success              | 0           |
+|    ttc_risk             | 0           |
+| rollout/                |             |
+|    ep_len_mean          | 600         |
+|    ep_rew_mean          | -101        |
+|    success_rate         | 0           |
+| time/                   |             |
+|    fps                  | 1046        |
+|    iterations           | 2           |
+|    time_elapsed         | 7           |
+|    total_timesteps      | 8192        |
+| train/                  |             |
+|    approx_kl            | 0.010636875 |
+|    clip_fraction        | 0.142       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -2.82       |
+|    explained_variance   | 0.0091      |
+|    learning_rate        | 0.0003      |
+|    loss                 | 0.066       |
+|    n_updates            | 10          |
+|    policy_gradient_loss | -0.0117     |
+|    std                  | 0.986       |
+|    value_loss           | 0.273       |
+-----------------------------------------
+saved_model=outputs/nenv4_probe/runs/proposed_ppo_s99/model/final_model.zip

@@ -1,0 +1,8 @@
+COMMAND: /home/aaa/miniconda3/envs/sb3/bin/python scripts/evaluate_from_config.py --config-json outputs/tuned_compare_curriculum_nenv16_seed1_1m/runs/curriculum_ppo_s1/config.json --model outputs/tuned_compare_curriculum_nenv16_seed1_1m/runs/curriculum_ppo_s1/model/final_model.zip --episodes 50 --densities 0.20 0.25 --output-dir outputs/stress_density_020_025_nenv16_20260701_0153/evaluations/curriculum_seed1 --device cuda --n-envs 16
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost     reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                        
+0.20         0.0          0.164695       0.64         0.36   1.0  59.851750                       0.0               0.0               0.0                   0.0
+0.25         0.0          0.141610       0.76         0.24   1.0  50.451596                       0.0               0.0               0.0                   0.0
+saved_evaluation=outputs/stress_density_020_025_nenv16_20260701_0153/evaluations/curriculum_seed1/curriculum_ppo_s1.csv
