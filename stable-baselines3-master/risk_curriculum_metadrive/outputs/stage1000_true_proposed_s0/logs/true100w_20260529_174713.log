@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/scripts/launch_stage1000_true_proposed.py", line 9, in <module>
+    from racrl.config import get_variant_config
+ModuleNotFoundError: No module named 'racrl'

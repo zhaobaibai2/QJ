@@ -1,0 +1,2 @@
+#{"t_start": 1780065180.4951453, "env_id": "None"}
+r,l,t,is_success,episode_cost,episode_base_reward,episode_shaped_reward,episode_collision,episode_crash_vehicle,episode_crash_object,episode_out_of_road,episode_route_completion,episode_length,episode_mean_speed,episode_mean_lane_deviation,episode_max_lane_deviation,episode_steering_variation,episode_accel_variation,episode_jerk,episode_ttc_risk,episode_min_ttc,curriculum_stage

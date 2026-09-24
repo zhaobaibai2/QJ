@@ -1,0 +1,11 @@
+/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+Wrapping the env in a DummyVecEnv.
+Wrapping the env in a DummyVecEnv.
+Wrapping the env in a DummyVecEnv.
+          success  route_completion  collision  out_of_road      cost      reward
+density                                                                          
+0.00     0.766667          0.966967   0.000000     0.000000  0.000000  490.032023
+0.08     0.700000          0.929268   0.066667     0.000000  0.066667  466.054401
+0.15     0.466667          0.782165   0.433333     0.033333  0.466667  361.523477
+saved_evaluation=outputs/checkpoint_selection/evaluations/ckpt702_shield_strong/proposed_ppo_s0.csv

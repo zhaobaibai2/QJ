@@ -1,0 +1,147 @@
+[2026-07-01T04:26:26+08:00] eval label=guard_only seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=100
+eval_units=2
+[2026-07-01T04:28:27+08:00] eval label=guard_only seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=200
+eval_units=4
+[2026-07-01T04:30:38+08:00] eval label=guard_only seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=300
+eval_units=6
+[2026-07-01T04:32:45+08:00] eval label=shield_only seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=400
+eval_units=8
+[2026-07-01T04:34:47+08:00] eval label=shield_only seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=500
+eval_units=10
+[2026-07-01T04:37:00+08:00] eval label=shield_only seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=600
+eval_units=12
+[2026-07-01T04:39:00+08:00] eval label=retuned_full seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=700
+eval_units=14
+[2026-07-01T04:41:13+08:00] eval label=retuned_full seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=800
+eval_units=16
+[2026-07-01T04:43:15+08:00] eval label=retuned_full seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=900
+eval_units=18
+[2026-07-01T04:45:16+08:00] eval label=proposed_gated_risk seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1000
+eval_units=20
+[2026-07-01T04:47:10+08:00] eval label=proposed_gated_risk seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1100
+eval_units=22
+[2026-07-01T04:49:14+08:00] eval label=proposed_gated_risk seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1200
+eval_units=24
+[2026-07-01T04:51:14+08:00] eval label=risk_only seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1300
+eval_units=26
+[2026-07-01T04:52:54+08:00] eval label=risk_only seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1400
+eval_units=28
+[2026-07-01T04:54:33+08:00] eval label=risk_only seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1500
+eval_units=30
+[2026-07-01T04:56:16+08:00] eval label=no_action_guard seed=0 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1600
+eval_units=32
+[2026-07-01T04:56:57+08:00] eval label=no_action_guard seed=1 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1700
+eval_units=34
+[2026-07-01T04:57:32+08:00] eval label=no_action_guard seed=2 test_start=20000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1800
+eval_units=36
+[2026-07-01T04:58:09+08:00] eval label=guard_only seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=1900
+eval_units=38
+[2026-07-01T05:00:14+08:00] eval label=guard_only seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2000
+eval_units=40
+[2026-07-01T05:02:14+08:00] eval label=guard_only seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2100
+eval_units=42
+[2026-07-01T05:04:23+08:00] eval label=shield_only seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2200
+eval_units=44
+[2026-07-01T05:06:28+08:00] eval label=shield_only seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2300
+eval_units=46
+[2026-07-01T05:08:35+08:00] eval label=shield_only seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2400
+eval_units=48
+[2026-07-01T05:10:43+08:00] eval label=retuned_full seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2500
+eval_units=50
+[2026-07-01T05:12:50+08:00] eval label=retuned_full seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2600
+eval_units=52
+[2026-07-01T05:14:51+08:00] eval label=retuned_full seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2700
+eval_units=54
+[2026-07-01T05:16:43+08:00] eval label=proposed_gated_risk seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2800
+eval_units=56
+[2026-07-01T05:18:51+08:00] eval label=proposed_gated_risk seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=2900
+eval_units=58
+[2026-07-01T05:21:03+08:00] eval label=proposed_gated_risk seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3000
+eval_units=60
+[2026-07-01T05:23:13+08:00] eval label=risk_only seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3100
+eval_units=62
+[2026-07-01T05:24:54+08:00] eval label=risk_only seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3200
+eval_units=64
+[2026-07-01T05:26:36+08:00] eval label=risk_only seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3300
+eval_units=66
+[2026-07-01T05:28:17+08:00] eval label=no_action_guard seed=0 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3400
+eval_units=68
+[2026-07-01T05:28:59+08:00] eval label=no_action_guard seed=1 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3500
+eval_units=70
+[2026-07-01T05:29:35+08:00] eval label=no_action_guard seed=2 test_start=30000
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3600
+eval_units=72
+aggregate_root=outputs/external_seed_robustness_nenv16_20260701_0425/aggregate
+episode_rows=3600
+eval_units=72

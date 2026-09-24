@@ -1,0 +1,93 @@
+{
+  "variant": "retuned_full",
+  "algo": "ppo",
+  "seed": 2,
+  "train_scenarios": 200,
+  "test_scenarios": 100,
+  "train_start_seed": 0,
+  "test_start_seed": 20000,
+  "horizon": 1500,
+  "timesteps": 1000000,
+  "n_envs": 16,
+  "risk_reward": true,
+  "use_risk_reward": true,
+  "use_action_guard": true,
+  "curriculum": true,
+  "fixed_traffic_density": 0.1,
+  "fixed_map_blocks": 5,
+  "reward_weights": {
+    "base_scale": 0.5,
+    "ttc": 4.0,
+    "lane": 1.0,
+    "smooth": 0.02,
+    "accel": 0.01,
+    "cost": 10.0,
+    "overspeed": 3.0,
+    "target_speed_kmh": 18.0,
+    "progress": 40.0,
+    "idle_penalty": 0.15,
+    "min_speed_kmh": 2.0,
+    "success_bonus": 55.0,
+    "crash_penalty": 100.0,
+    "out_of_road_penalty": 150.0,
+    "ttc_threshold": 12.0
+  },
+  "stages": [
+    {
+      "name": "warmup",
+      "traffic_density": 0.0,
+      "map_blocks": "S",
+      "accident_prob": 0.0,
+      "horizon": 600
+    },
+    {
+      "name": "easy",
+      "traffic_density": 0.03,
+      "map_blocks": 3,
+      "accident_prob": 0.0,
+      "horizon": 800
+    },
+    {
+      "name": "medium",
+      "traffic_density": 0.08,
+      "map_blocks": 5,
+      "accident_prob": 0.0,
+      "horizon": 1000
+    },
+    {
+      "name": "prehard",
+      "traffic_density": 0.12,
+      "map_blocks": 6,
+      "accident_prob": 0.0,
+      "horizon": 1100
+    },
+    {
+      "name": "hard",
+      "traffic_density": 0.15,
+      "map_blocks": 7,
+      "accident_prob": 0.0,
+      "horizon": 1200
+    }
+  ],
+  "curriculum_window": 30,
+  "stage0_route_completion": 0.6,
+  "stage0_cost": 0.25,
+  "stage1_success": 0.3,
+  "stage1_route_completion": 0.75,
+  "stage1_cost": 0.35,
+  "stage2_success": 0.5,
+  "stage2_cost": 0.25,
+  "demote_success": 0.05,
+  "demote_route_completion": 0.65,
+  "demote_cost": 0.35,
+  "demote_grace_episodes": 40,
+  "allow_demote": true,
+  "eval_episodes": 50,
+  "eval_freq": 20000,
+  "policy_layers": [
+    256,
+    256
+  ],
+  "ent_coef": 0.01,
+  "learning_rate": 0.0003
+}

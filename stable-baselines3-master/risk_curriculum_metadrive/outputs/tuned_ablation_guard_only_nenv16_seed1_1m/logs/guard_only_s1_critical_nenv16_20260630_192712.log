@@ -1,0 +1,2912 @@
+start_time=2026-06-30T19:27:13+08:00
+variant=guard_only seed=1 root=outputs/tuned_ablation_guard_only_nenv16_seed1_1m timesteps=1000000 horizon=1500 n_envs=16 episodes=50 device=cuda extra_args=--ent-coef 0.01 --reward-ttc 6 --reward-cost 50 --reward-overspeed 3 --reward-target-speed 18 --reward-progress 40 --reward-lane 1.0 --reward-success-bonus 55 --reward-crash-penalty 120 --reward-out-of-road-penalty 150 --reward-ttc-threshold 12 --stage2-success 0.50 --stage2-cost 0.25 --demote-cost 0.35
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+Using cuda device
+Logging to outputs/tuned_ablation_guard_only_nenv16_seed1_1m/runs/guard_only_ppo_s1/tensorboard/guard_only_ppo_s1_1
+------------------------------------
+| paper/                |          |
+|    accel_variation    | 0.824    |
+|    base_reward        | 6.11     |
+|    collision          | 0        |
+|    crash_object       | 0        |
+|    crash_vehicle      | 0        |
+|    episode_cost       | 0        |
+|    episode_length     | 600      |
+|    jerk               | 0.652    |
+|    lane_deviation     | 0.0762   |
+|    max_lane_deviation | 0.181    |
+|    mean_speed_kmh     | 0.723    |
+|    min_ttc            | nan      |
+|    out_of_road        | 0        |
+|    route_completion   | 0.0939   |
+|    shaped_reward      | 6.11     |
+|    steering_variation | 0.831    |
+|    success            | 0        |
+|    ttc_risk           | 0        |
+| rollout/              |          |
+|    ep_len_mean        | 600      |
+|    ep_rew_mean        | 5.59     |
+|    success_rate       | 0        |
+| time/                 |          |
+|    fps                | 2615     |
+|    iterations         | 1        |
+|    time_elapsed       | 6        |
+|    total_timesteps    | 16384    |
+------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.124       |
+|    window_success          | 0           |
+| paper/                     |             |
+|    accel_variation         | 0.798       |
+|    base_reward             | 8.22        |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 600         |
+|    jerk                    | 0.637       |
+|    lane_deviation          | 0.211       |
+|    max_lane_deviation      | 0.425       |
+|    mean_speed_kmh          | 0.849       |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.136       |
+|    shaped_reward           | 8.22        |
+|    steering_variation      | 0.83        |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 596         |
+|    ep_rew_mean             | 6.41        |
+|    success_rate            | 0           |
+| time/                      |             |
+|    fps                     | 2246        |
+|    iterations              | 2           |
+|    time_elapsed            | 14          |
+|    total_timesteps         | 32768       |
+| train/                     |             |
+|    approx_kl               | 0.016636122 |
+|    clip_fraction           | 0.25        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.82       |
+|    explained_variance      | 0.0247      |
+|    learning_rate           | 0.0003      |
+|    loss                    | -0.053      |
+|    n_updates               | 10          |
+|    policy_gradient_loss    | -0.0276     |
+|    std                     | 0.987       |
+|    value_loss              | 0.0137      |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.167       |
+|    window_route_completion | 0.189       |
+|    window_success          | 0           |
+| paper/                     |             |
+|    accel_variation         | 0.763       |
+|    base_reward             | 9.06        |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 600         |
+|    jerk                    | 0.601       |
+|    lane_deviation          | 0.465       |
+|    max_lane_deviation      | 0.996       |
+|    mean_speed_kmh          | 1.19        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.196       |
+|    shaped_reward           | 9.06        |
+|    steering_variation      | 0.817       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 591         |
+|    ep_rew_mean             | 6.99        |
+|    success_rate            | 0           |
+| time/                      |             |
+|    fps                     | 2155        |
+|    iterations              | 3           |
+|    time_elapsed            | 22          |
+|    total_timesteps         | 49152       |
+| train/                     |             |
+|    approx_kl               | 0.016791096 |
+|    clip_fraction           | 0.221       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.78       |
+|    explained_variance      | 0.0478      |
+|    learning_rate           | 0.0003      |
+|    loss                    | -0.0465     |
+|    n_updates               | 20          |
+|    policy_gradient_loss    | -0.0189     |
+|    std                     | 0.964       |
+|    value_loss              | 0.0797      |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.233       |
+|    window_route_completion | 0.227       |
+|    window_success          | 0           |
+| paper/                     |             |
+|    accel_variation         | 0.761       |
+|    base_reward             | -6.13       |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 1           |
+|    episode_length          | 371         |
+|    jerk                    | 0.596       |
+|    lane_deviation          | 0.555       |
+|    max_lane_deviation      | 1.03        |
+|    mean_speed_kmh          | 1.16        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 1           |
+|    route_completion        | 0.124       |
+|    shaped_reward           | -6.13       |
+|    steering_variation      | 0.811       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 577         |
+|    ep_rew_mean             | 7.85        |
+|    success_rate            | 0           |
+| time/                      |             |
+|    fps                     | 2132        |
+|    iterations              | 4           |
+|    time_elapsed            | 30          |
+|    total_timesteps         | 65536       |
+| train/                     |             |
+|    approx_kl               | 0.011957294 |
+|    clip_fraction           | 0.132       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.75       |
+|    explained_variance      | 0.134       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.0109      |
+|    n_updates               | 30          |
+|    policy_gradient_loss    | -0.00376    |
+|    std                     | 0.951       |
+|    value_loss              | 0.311       |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.133       |
+|    window_route_completion | 0.283       |
+|    window_success          | 0           |
+| paper/                     |             |
+|    accel_variation         | 0.743       |
+|    base_reward             | 14          |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 600         |
+|    jerk                    | 0.592       |
+|    lane_deviation          | 0.255       |
+|    max_lane_deviation      | 0.608       |
+|    mean_speed_kmh          | 1.27        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.186       |
+|    shaped_reward           | 14          |
+|    steering_variation      | 0.812       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 575         |
+|    ep_rew_mean             | 9.9         |
+|    success_rate            | 0           |
+| time/                      |             |
+|    fps                     | 2121        |
+|    iterations              | 5           |
+|    time_elapsed            | 38          |
+|    total_timesteps         | 81920       |
+| train/                     |             |
+|    approx_kl               | 0.011833242 |
+|    clip_fraction           | 0.134       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.71       |
+|    explained_variance      | 0.543       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.101       |
+|    n_updates               | 40          |
+|    policy_gradient_loss    | -0.00641    |
+|    std                     | 0.93        |
+|    value_loss              | 0.27        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.323       |
+|    window_success          | 0           |
+| paper/                     |             |
+|    accel_variation         | 0.635       |
+|    base_reward             | 24.8        |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 600         |
+|    jerk                    | 0.489       |
+|    lane_deviation          | 0.21        |
+|    max_lane_deviation      | 0.51        |
+|    mean_speed_kmh          | 1.87        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.254       |
+|    shaped_reward           | 24.8        |
+|    steering_variation      | 0.822       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 577         |
+|    ep_rew_mean             | 13.4        |
+|    success_rate            | 0           |
+| time/                      |             |
+|    fps                     | 2112        |
+|    iterations              | 6           |
+|    time_elapsed            | 46          |
+|    total_timesteps         | 98304       |
+| train/                     |             |
+|    approx_kl               | 0.014438346 |
+|    clip_fraction           | 0.183       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.65       |
+|    explained_variance      | 0.472       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.0113      |
+|    n_updates               | 50          |
+|    policy_gradient_loss    | -0.0107     |
+|    std                     | 0.904       |
+|    value_loss              | 0.225       |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 0          |
+|    window_cost             | 0.0333     |
+|    window_route_completion | 0.471      |
+|    window_success          | 0          |
+| paper/                     |            |
+|    accel_variation         | 0.522      |
+|    base_reward             | 22.9       |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 600        |
+|    jerk                    | 0.441      |
+|    lane_deviation          | 1.07       |
+|    max_lane_deviation      | 2          |
+|    mean_speed_kmh          | 3.74       |
+|    min_ttc                 | nan        |
+|    out_of_road             | 0          |
+|    route_completion        | 0.623      |
+|    shaped_reward           | 22.9       |
+|    steering_variation      | 0.806      |
+|    success                 | 0          |
+|    ttc_risk                | 0          |
+| rollout/                   |            |
+|    ep_len_mean             | 579        |
+|    ep_rew_mean             | 17.4       |
+|    success_rate            | 0          |
+| time/                      |            |
+|    fps                     | 2100       |
+|    iterations              | 7          |
+|    time_elapsed            | 54         |
+|    total_timesteps         | 114688     |
+| train/                     |            |
+|    approx_kl               | 0.01586767 |
+|    clip_fraction           | 0.189      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -2.58      |
+|    explained_variance      | 0.79       |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.0341     |
+|    n_updates               | 60         |
+|    policy_gradient_loss    | -0.0144    |
+|    std                     | 0.873      |
+|    value_loss              | 0.151      |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 1           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.604       |
+|    window_success          | 0.0333      |
+| paper/                     |             |
+|    accel_variation         | 0.444       |
+|    base_reward             | 81.2        |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 590         |
+|    jerk                    | 0.382       |
+|    lane_deviation          | 0.344       |
+|    max_lane_deviation      | 1.08        |
+|    mean_speed_kmh          | 5.62        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.95        |
+|    shaped_reward           | 81.2        |
+|    steering_variation      | 0.749       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 597         |
+|    ep_rew_mean             | 25.1        |
+|    success_rate            | 0.05        |
+| time/                      |             |
+|    fps                     | 2070        |
+|    iterations              | 8           |
+|    time_elapsed            | 63          |
+|    total_timesteps         | 131072      |
+| train/                     |             |
+|    approx_kl               | 0.014314278 |
+|    clip_fraction           | 0.192       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.52       |
+|    explained_variance      | 0.747       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.113       |
+|    n_updates               | 70          |
+|    policy_gradient_loss    | -0.0144     |
+|    std                     | 0.85        |
+|    value_loss              | 0.25        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 1          |
+|    window_cost             | 0.167      |
+|    window_route_completion | 0.614      |
+|    window_success          | 0.3        |
+| paper/                     |            |
+|    accel_variation         | 0.427      |
+|    base_reward             | 77.8       |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 800        |
+|    jerk                    | 0.36       |
+|    lane_deviation          | 0.418      |
+|    max_lane_deviation      | 0.987      |
+|    mean_speed_kmh          | 5.83       |
+|    min_ttc                 | nan        |
+|    out_of_road             | 0          |
+|    route_completion        | 0.425      |
+|    shaped_reward           | 77.8       |
+|    steering_variation      | 0.761      |
+|    success                 | 0          |
+|    ttc_risk                | 0          |
+| rollout/                   |            |
+|    ep_len_mean             | 623        |
+|    ep_rew_mean             | 37.9       |
+|    success_rate            | 0.11       |
+| time/                      |            |
+|    fps                     | 1989       |
+|    iterations              | 9          |
+|    time_elapsed            | 74         |
+|    total_timesteps         | 147456     |
+| train/                     |            |
+|    approx_kl               | 0.01279871 |
+|    clip_fraction           | 0.156      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -2.47      |
+|    explained_variance      | 0.456      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.223      |
+|    n_updates               | 80         |
+|    policy_gradient_loss    | -0.00886   |
+|    std                     | 0.825      |
+|    value_loss              | 1.48       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 0           |
+|    window_cost             | 0.233       |
+|    window_route_completion | 0.413       |
+|    window_success          | 0.0333      |
+| paper/                     |             |
+|    accel_variation         | 0.348       |
+|    base_reward             | 92.6        |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 493         |
+|    jerk                    | 0.305       |
+|    lane_deviation          | 0.328       |
+|    max_lane_deviation      | 0.996       |
+|    mean_speed_kmh          | 7.84        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.958       |
+|    shaped_reward           | 92.6        |
+|    steering_variation      | 0.792       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 625         |
+|    ep_rew_mean             | 58.4        |
+|    success_rate            | 0.18        |
+| time/                      |             |
+|    fps                     | 1960        |
+|    iterations              | 10          |
+|    time_elapsed            | 83          |
+|    total_timesteps         | 163840      |
+| train/                     |             |
+|    approx_kl               | 0.010941729 |
+|    clip_fraction           | 0.136       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.4        |
+|    explained_variance      | 0.471       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.23        |
+|    n_updates               | 90          |
+|    policy_gradient_loss    | -0.00818    |
+|    std                     | 0.797       |
+|    value_loss              | 2           |
+--------------------------------------------
+------------------------------------------
+| curriculum/                |           |
+|    stage                   | 1         |
+|    window_cost             | 0.0333    |
+|    window_route_completion | 0.636     |
+|    window_success          | 0.467     |
+| paper/                     |           |
+|    accel_variation         | 0.341     |
+|    base_reward             | 71.8      |
+|    collision               | 0         |
+|    crash_object            | 0         |
+|    crash_vehicle           | 0         |
+|    episode_cost            | 1         |
+|    episode_length          | 454       |
+|    jerk                    | 0.29      |
+|    lane_deviation          | 0.443     |
+|    max_lane_deviation      | 1.66      |
+|    mean_speed_kmh          | 11.1      |
+|    min_ttc                 | nan       |
+|    out_of_road             | 1         |
+|    route_completion        | 0.579     |
+|    shaped_reward           | 71.8      |
+|    steering_variation      | 0.75      |
+|    success                 | 0         |
+|    ttc_risk                | 0         |
+| rollout/                   |           |
+|    ep_len_mean             | 572       |
+|    ep_rew_mean             | 75.2      |
+|    success_rate            | 0.41      |
+| time/                      |           |
+|    fps                     | 1935      |
+|    iterations              | 11        |
+|    time_elapsed            | 93        |
+|    total_timesteps         | 180224    |
+| train/                     |           |
+|    approx_kl               | 0.0123343 |
+|    clip_fraction           | 0.186     |
+|    clip_range              | 0.2       |
+|    entropy_loss            | -2.34     |
+|    explained_variance      | 0.56      |
+|    learning_rate           | 0.0003    |
+|    loss                    | 1.6       |
+|    n_updates               | 100       |
+|    policy_gradient_loss    | -0.00544  |
+|    std                     | 0.772     |
+|    value_loss              | 2.56      |
+------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.782       |
+|    window_success          | 0.533       |
+| paper/                     |             |
+|    accel_variation         | 0.311       |
+|    base_reward             | 255         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 937         |
+|    jerk                    | 0.282       |
+|    lane_deviation          | 0.361       |
+|    max_lane_deviation      | 1.07        |
+|    mean_speed_kmh          | 13.9        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.987       |
+|    shaped_reward           | 255         |
+|    steering_variation      | 0.672       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 612         |
+|    ep_rew_mean             | 96.5        |
+|    success_rate            | 0.38        |
+| time/                      |             |
+|    fps                     | 1892        |
+|    iterations              | 12          |
+|    time_elapsed            | 103         |
+|    total_timesteps         | 196608      |
+| train/                     |             |
+|    approx_kl               | 0.010632614 |
+|    clip_fraction           | 0.186       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.28       |
+|    explained_variance      | 0.582       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.83        |
+|    n_updates               | 110         |
+|    policy_gradient_loss    | -0.00511    |
+|    std                     | 0.749       |
+|    value_loss              | 2.59        |
+--------------------------------------------
+-----------------------------------------
+| paper/                  |             |
+|    accel_variation      | 0.325       |
+|    base_reward          | 286         |
+|    collision            | 0           |
+|    crash_object         | 0           |
+|    crash_vehicle        | 0           |
+|    episode_cost         | 0           |
+|    episode_length       | 1000        |
+|    jerk                 | 0.283       |
+|    lane_deviation       | 0.296       |
+|    max_lane_deviation   | 0.991       |
+|    mean_speed_kmh       | 14.3        |
+|    min_ttc              | 4.59        |
+|    out_of_road          | 0           |
+|    route_completion     | 0.561       |
+|    shaped_reward        | 286         |
+|    steering_variation   | 0.673       |
+|    success              | 0           |
+|    ttc_risk             | 0.00134     |
+| rollout/                |             |
+|    ep_len_mean          | 646         |
+|    ep_rew_mean          | 123         |
+|    success_rate         | 0.36        |
+| time/                   |             |
+|    fps                  | 1769        |
+|    iterations           | 13          |
+|    time_elapsed         | 120         |
+|    total_timesteps      | 212992      |
+| train/                  |             |
+|    approx_kl            | 0.023705645 |
+|    clip_fraction        | 0.172       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -2.2        |
+|    explained_variance   | 0.631       |
+|    learning_rate        | 0.0003      |
+|    loss                 | 0.9         |
+|    n_updates            | 120         |
+|    policy_gradient_loss | -0.00694    |
+|    std                  | 0.716       |
+|    value_loss           | 2.14        |
+-----------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 1           |
+|    window_cost             | 0.2         |
+|    window_route_completion | 0.628       |
+|    window_success          | 0.0333      |
+| paper/                     |             |
+|    accel_variation         | 0.327       |
+|    base_reward             | 243         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 800         |
+|    jerk                    | 0.301       |
+|    lane_deviation          | 0.289       |
+|    max_lane_deviation      | 0.973       |
+|    mean_speed_kmh          | 15          |
+|    min_ttc                 | 9.22        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.477       |
+|    shaped_reward           | 243         |
+|    steering_variation      | 0.632       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000407    |
+| rollout/                   |             |
+|    ep_len_mean             | 698         |
+|    ep_rew_mean             | 162         |
+|    success_rate            | 0.36        |
+| time/                      |             |
+|    fps                     | 1672        |
+|    iterations              | 14          |
+|    time_elapsed            | 137         |
+|    total_timesteps         | 229376      |
+| train/                     |             |
+|    approx_kl               | 0.011675825 |
+|    clip_fraction           | 0.16        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -2.12       |
+|    explained_variance      | 0.539       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 2.53        |
+|    n_updates               | 130         |
+|    policy_gradient_loss    | -0.0029     |
+|    std                     | 0.689       |
+|    value_loss              | 3.23        |
+--------------------------------------------
+-----------------------------------------
+| paper/                  |             |
+|    accel_variation      | 0.298       |
+|    base_reward          | 232         |
+|    collision            | 0           |
+|    crash_object         | 0           |
+|    crash_vehicle        | 0           |
+|    episode_cost         | 0           |
+|    episode_length       | 631         |
+|    jerk                 | 0.309       |
+|    lane_deviation       | 0.27        |
+|    max_lane_deviation   | 0.999       |
+|    mean_speed_kmh       | 16.2        |
+|    min_ttc              | nan         |
+|    out_of_road          | 0           |
+|    route_completion     | 0.982       |
+|    shaped_reward        | 232         |
+|    steering_variation   | 0.649       |
+|    success              | 1           |
+|    ttc_risk             | 0           |
+| rollout/                |             |
+|    ep_len_mean          | 751         |
+|    ep_rew_mean          | 187         |
+|    success_rate         | 0.3         |
+| time/                   |             |
+|    fps                  | 1646        |
+|    iterations           | 15          |
+|    time_elapsed         | 149         |
+|    total_timesteps      | 245760      |
+| train/                  |             |
+|    approx_kl            | 0.014119925 |
+|    clip_fraction        | 0.169       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -2.05       |
+|    explained_variance   | 0.569       |
+|    learning_rate        | 0.0003      |
+|    loss                 | 1.87        |
+|    n_updates            | 140         |
+|    policy_gradient_loss | -0.000132   |
+|    std                  | 0.663       |
+|    value_loss           | 3.04        |
+-----------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.76        |
+|    window_success          | 0.3         |
+| paper/                     |             |
+|    accel_variation         | 0.373       |
+|    base_reward             | 346         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 961         |
+|    jerk                    | 0.338       |
+|    lane_deviation          | 0.276       |
+|    max_lane_deviation      | 0.995       |
+|    mean_speed_kmh          | 16.7        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.986       |
+|    shaped_reward           | 346         |
+|    steering_variation      | 0.579       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 820         |
+|    ep_rew_mean             | 221         |
+|    success_rate            | 0.25        |
+| time/                      |             |
+|    fps                     | 1589        |
+|    iterations              | 16          |
+|    time_elapsed            | 164         |
+|    total_timesteps         | 262144      |
+| train/                     |             |
+|    approx_kl               | 0.021386832 |
+|    clip_fraction           | 0.165       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.97       |
+|    explained_variance      | 0.583       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 2.42        |
+|    n_updates               | 150         |
+|    policy_gradient_loss    | -0.0013     |
+|    std                     | 0.638       |
+|    value_loss              | 2.88        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0.0667     |
+|    window_route_completion | 0.806      |
+|    window_success          | 0.333      |
+| paper/                     |            |
+|    accel_variation         | 0.398      |
+|    base_reward             | 370        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.369      |
+|    lane_deviation          | 0.212      |
+|    max_lane_deviation      | 0.806      |
+|    mean_speed_kmh          | 16.8       |
+|    min_ttc                 | 9.59       |
+|    out_of_road             | 0          |
+|    route_completion        | 0.655      |
+|    shaped_reward           | 370        |
+|    steering_variation      | 0.628      |
+|    success                 | 0          |
+|    ttc_risk                | 0.000201   |
+| rollout/                   |            |
+|    ep_len_mean             | 837        |
+|    ep_rew_mean             | 250        |
+|    success_rate            | 0.23       |
+| time/                      |            |
+|    fps                     | 1512       |
+|    iterations              | 17         |
+|    time_elapsed            | 184        |
+|    total_timesteps         | 278528     |
+| train/                     |            |
+|    approx_kl               | 0.01250991 |
+|    clip_fraction           | 0.191      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -1.89      |
+|    explained_variance      | 0.65       |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.72       |
+|    n_updates               | 160        |
+|    policy_gradient_loss    | -0.000504  |
+|    std                     | 0.615      |
+|    value_loss              | 1.85       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.167       |
+|    window_route_completion | 0.737       |
+|    window_success          | 0.133       |
+| paper/                     |             |
+|    accel_variation         | 0.339       |
+|    base_reward             | 336         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.342       |
+|    lane_deviation          | 0.306       |
+|    max_lane_deviation      | 1.36        |
+|    mean_speed_kmh          | 16.9        |
+|    min_ttc                 | 13.1        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.655       |
+|    shaped_reward           | 336         |
+|    steering_variation      | 0.595       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 844         |
+|    ep_rew_mean             | 272         |
+|    success_rate            | 0.25        |
+| time/                      |             |
+|    fps                     | 1454        |
+|    iterations              | 18          |
+|    time_elapsed            | 202         |
+|    total_timesteps         | 294912      |
+| train/                     |             |
+|    approx_kl               | 0.026546638 |
+|    clip_fraction           | 0.239       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.84       |
+|    explained_variance      | 0.601       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.5         |
+|    n_updates               | 170         |
+|    policy_gradient_loss    | 0.00689     |
+|    std                     | 0.599       |
+|    value_loss              | 2.7         |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.1         |
+|    window_route_completion | 0.815       |
+|    window_success          | 0.2         |
+| paper/                     |             |
+|    accel_variation         | 0.419       |
+|    base_reward             | 395         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.371       |
+|    lane_deviation          | 0.188       |
+|    max_lane_deviation      | 0.624       |
+|    mean_speed_kmh          | 17          |
+|    min_ttc                 | 9.99        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.901       |
+|    shaped_reward           | 395         |
+|    steering_variation      | 0.553       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000285    |
+| rollout/                   |             |
+|    ep_len_mean             | 848         |
+|    ep_rew_mean             | 289         |
+|    success_rate            | 0.29        |
+| time/                      |             |
+|    fps                     | 1412        |
+|    iterations              | 19          |
+|    time_elapsed            | 220         |
+|    total_timesteps         | 311296      |
+| train/                     |             |
+|    approx_kl               | 0.017674852 |
+|    clip_fraction           | 0.261       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.78       |
+|    explained_variance      | 0.522       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.81        |
+|    n_updates               | 180         |
+|    policy_gradient_loss    | 0.00871     |
+|    std                     | 0.583       |
+|    value_loss              | 3.55        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.1         |
+|    window_route_completion | 0.763       |
+|    window_success          | 0.133       |
+| paper/                     |             |
+|    accel_variation         | 0.376       |
+|    base_reward             | 330         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.364       |
+|    lane_deviation          | 0.261       |
+|    max_lane_deviation      | 0.775       |
+|    mean_speed_kmh          | 16.2        |
+|    min_ttc                 | 3.89        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.846       |
+|    shaped_reward           | 330         |
+|    steering_variation      | 0.563       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00347     |
+| rollout/                   |             |
+|    ep_len_mean             | 869         |
+|    ep_rew_mean             | 301         |
+|    success_rate            | 0.28        |
+| time/                      |             |
+|    fps                     | 1373        |
+|    iterations              | 20          |
+|    time_elapsed            | 238         |
+|    total_timesteps         | 327680      |
+| train/                     |             |
+|    approx_kl               | 0.044567548 |
+|    clip_fraction           | 0.231       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.73       |
+|    explained_variance      | 0.626       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.857       |
+|    n_updates               | 190         |
+|    policy_gradient_loss    | -0.000603   |
+|    std                     | 0.57        |
+|    value_loss              | 2.43        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.776       |
+|    window_success          | 0.2         |
+| paper/                     |             |
+|    accel_variation         | 0.386       |
+|    base_reward             | 346         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.385       |
+|    lane_deviation          | 0.237       |
+|    max_lane_deviation      | 0.943       |
+|    mean_speed_kmh          | 15.9        |
+|    min_ttc                 | 0.00716     |
+|    out_of_road             | 0           |
+|    route_completion        | 0.745       |
+|    shaped_reward           | 346         |
+|    steering_variation      | 0.563       |
+|    success                 | 0           |
+|    ttc_risk                | 0.0399      |
+| rollout/                   |             |
+|    ep_len_mean             | 913         |
+|    ep_rew_mean             | 320         |
+|    success_rate            | 0.24        |
+| time/                      |             |
+|    fps                     | 1337        |
+|    iterations              | 21          |
+|    time_elapsed            | 257         |
+|    total_timesteps         | 344064      |
+| train/                     |             |
+|    approx_kl               | 0.030427359 |
+|    clip_fraction           | 0.225       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.7        |
+|    explained_variance      | 0.585       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.09        |
+|    n_updates               | 200         |
+|    policy_gradient_loss    | 0.00267     |
+|    std                     | 0.563       |
+|    value_loss              | 3.66        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.766       |
+|    window_success          | 0.1         |
+| paper/                     |             |
+|    accel_variation         | 0.463       |
+|    base_reward             | 407         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.428       |
+|    lane_deviation          | 0.157       |
+|    max_lane_deviation      | 0.615       |
+|    mean_speed_kmh          | 16.8        |
+|    min_ttc                 | 6.22        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.542       |
+|    shaped_reward           | 407         |
+|    steering_variation      | 0.529       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00192     |
+| rollout/                   |             |
+|    ep_len_mean             | 933         |
+|    ep_rew_mean             | 333         |
+|    success_rate            | 0.15        |
+| time/                      |             |
+|    fps                     | 1300        |
+|    iterations              | 22          |
+|    time_elapsed            | 277         |
+|    total_timesteps         | 360448      |
+| train/                     |             |
+|    approx_kl               | 0.015719503 |
+|    clip_fraction           | 0.198       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.66       |
+|    explained_variance      | 0.778       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.716       |
+|    n_updates               | 210         |
+|    policy_gradient_loss    | 0.00218     |
+|    std                     | 0.552       |
+|    value_loss              | 1.74        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.816       |
+|    window_success          | 0.1         |
+| paper/                     |             |
+|    accel_variation         | 0.401       |
+|    base_reward             | 410         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.395       |
+|    lane_deviation          | 0.128       |
+|    max_lane_deviation      | 0.469       |
+|    mean_speed_kmh          | 16.3        |
+|    min_ttc                 | 2.88        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.94        |
+|    shaped_reward           | 410         |
+|    steering_variation      | 0.536       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00892     |
+| rollout/                   |             |
+|    ep_len_mean             | 946         |
+|    ep_rew_mean             | 348         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1281        |
+|    iterations              | 23          |
+|    time_elapsed            | 294         |
+|    total_timesteps         | 376832      |
+| train/                     |             |
+|    approx_kl               | 0.030926997 |
+|    clip_fraction           | 0.222       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.61       |
+|    explained_variance      | 0.725       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.55        |
+|    n_updates               | 220         |
+|    policy_gradient_loss    | 0.00695     |
+|    std                     | 0.54        |
+|    value_loss              | 1.46        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.858       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.472       |
+|    base_reward             | 419         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 978         |
+|    jerk                    | 0.456       |
+|    lane_deviation          | 0.166       |
+|    max_lane_deviation      | 0.818       |
+|    mean_speed_kmh          | 16.8        |
+|    min_ttc                 | 5.85        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.989       |
+|    shaped_reward           | 419         |
+|    steering_variation      | 0.521       |
+|    success                 | 1           |
+|    ttc_risk                | 0.00314     |
+| rollout/                   |             |
+|    ep_len_mean             | 962         |
+|    ep_rew_mean             | 364         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1259        |
+|    iterations              | 24          |
+|    time_elapsed            | 312         |
+|    total_timesteps         | 393216      |
+| train/                     |             |
+|    approx_kl               | 0.015058083 |
+|    clip_fraction           | 0.209       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.57       |
+|    explained_variance      | 0.596       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.569       |
+|    n_updates               | 230         |
+|    policy_gradient_loss    | 0.007       |
+|    std                     | 0.528       |
+|    value_loss              | 1.57        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.835       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.386       |
+|    base_reward             | 300         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 871         |
+|    jerk                    | 0.377       |
+|    lane_deviation          | 0.27        |
+|    max_lane_deviation      | 0.716       |
+|    mean_speed_kmh          | 15.2        |
+|    min_ttc                 | 1.16        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.987       |
+|    shaped_reward           | 300         |
+|    steering_variation      | 0.527       |
+|    success                 | 1           |
+|    ttc_risk                | 0.0593      |
+| rollout/                   |             |
+|    ep_len_mean             | 960         |
+|    ep_rew_mean             | 368         |
+|    success_rate            | 0.16        |
+| time/                      |             |
+|    fps                     | 1239        |
+|    iterations              | 25          |
+|    time_elapsed            | 330         |
+|    total_timesteps         | 409600      |
+| train/                     |             |
+|    approx_kl               | 0.049955666 |
+|    clip_fraction           | 0.26        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.52       |
+|    explained_variance      | 0.716       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.59        |
+|    n_updates               | 240         |
+|    policy_gradient_loss    | 0.0111      |
+|    std                     | 0.518       |
+|    value_loss              | 1.42        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.1         |
+|    window_route_completion | 0.801       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.482       |
+|    base_reward             | 362         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.433       |
+|    lane_deviation          | 0.288       |
+|    max_lane_deviation      | 0.848       |
+|    mean_speed_kmh          | 17.4        |
+|    min_ttc                 | 9.04        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.805       |
+|    shaped_reward           | 362         |
+|    steering_variation      | 0.493       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000329    |
+| rollout/                   |             |
+|    ep_len_mean             | 965         |
+|    ep_rew_mean             | 377         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1219        |
+|    iterations              | 26          |
+|    time_elapsed            | 349         |
+|    total_timesteps         | 425984      |
+| train/                     |             |
+|    approx_kl               | 0.016086059 |
+|    clip_fraction           | 0.235       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.48       |
+|    explained_variance      | 0.701       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.549       |
+|    n_updates               | 250         |
+|    policy_gradient_loss    | 0.0021      |
+|    std                     | 0.509       |
+|    value_loss              | 1.6         |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0.0667     |
+|    window_route_completion | 0.777      |
+|    window_success          | 0.1        |
+| paper/                     |            |
+|    accel_variation         | 0.503      |
+|    base_reward             | 415        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.482      |
+|    lane_deviation          | 0.183      |
+|    max_lane_deviation      | 0.735      |
+|    mean_speed_kmh          | 17.5       |
+|    min_ttc                 | 8.03       |
+|    out_of_road             | 0          |
+|    route_completion        | 0.895      |
+|    shaped_reward           | 415        |
+|    steering_variation      | 0.493      |
+|    success                 | 0          |
+|    ttc_risk                | 0.000602   |
+| rollout/                   |            |
+|    ep_len_mean             | 972        |
+|    ep_rew_mean             | 383        |
+|    success_rate            | 0.15       |
+| time/                      |            |
+|    fps                     | 1203       |
+|    iterations              | 27         |
+|    time_elapsed            | 367        |
+|    total_timesteps         | 442368     |
+| train/                     |            |
+|    approx_kl               | 0.02224707 |
+|    clip_fraction           | 0.252      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -1.47      |
+|    explained_variance      | 0.566      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.732      |
+|    n_updates               | 260        |
+|    policy_gradient_loss    | 0.00142    |
+|    std                     | 0.508      |
+|    value_loss              | 2.11       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.809       |
+|    window_success          | 0.133       |
+| paper/                     |             |
+|    accel_variation         | 0.48        |
+|    base_reward             | 368         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.433       |
+|    lane_deviation          | 0.235       |
+|    max_lane_deviation      | 0.738       |
+|    mean_speed_kmh          | 16.5        |
+|    min_ttc                 | 0.786       |
+|    out_of_road             | 0           |
+|    route_completion        | 0.683       |
+|    shaped_reward           | 368         |
+|    steering_variation      | 0.48        |
+|    success                 | 0           |
+|    ttc_risk                | 0.037       |
+| rollout/                   |             |
+|    ep_len_mean             | 971         |
+|    ep_rew_mean             | 384         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1188        |
+|    iterations              | 28          |
+|    time_elapsed            | 385         |
+|    total_timesteps         | 458752      |
+| train/                     |             |
+|    approx_kl               | 0.032377318 |
+|    clip_fraction           | 0.239       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.44       |
+|    explained_variance      | 0.791       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.566       |
+|    n_updates               | 270         |
+|    policy_gradient_loss    | 0.00809     |
+|    std                     | 0.5         |
+|    value_loss              | 1.38        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.823       |
+|    window_success          | 0.133       |
+| paper/                     |             |
+|    accel_variation         | 0.49        |
+|    base_reward             | 427         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.457       |
+|    lane_deviation          | 0.147       |
+|    max_lane_deviation      | 0.449       |
+|    mean_speed_kmh          | 17.2        |
+|    min_ttc                 | 8.08        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.717       |
+|    shaped_reward           | 427         |
+|    steering_variation      | 0.491       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000986    |
+| rollout/                   |             |
+|    ep_len_mean             | 970         |
+|    ep_rew_mean             | 385         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1173        |
+|    iterations              | 29          |
+|    time_elapsed            | 404         |
+|    total_timesteps         | 475136      |
+| train/                     |             |
+|    approx_kl               | 0.049628653 |
+|    clip_fraction           | 0.27        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.42       |
+|    explained_variance      | 0.685       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.758       |
+|    n_updates               | 280         |
+|    policy_gradient_loss    | 0.00697     |
+|    std                     | 0.497       |
+|    value_loss              | 2.09        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.829       |
+|    window_success          | 0.1         |
+| paper/                     |             |
+|    accel_variation         | 0.517       |
+|    base_reward             | 444         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.479       |
+|    lane_deviation          | 0.123       |
+|    max_lane_deviation      | 0.443       |
+|    mean_speed_kmh          | 17.6        |
+|    min_ttc                 | 6.5         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.96        |
+|    shaped_reward           | 444         |
+|    steering_variation      | 0.435       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00111     |
+| rollout/                   |             |
+|    ep_len_mean             | 973         |
+|    ep_rew_mean             | 387         |
+|    success_rate            | 0.15        |
+| time/                      |             |
+|    fps                     | 1161        |
+|    iterations              | 30          |
+|    time_elapsed            | 423         |
+|    total_timesteps         | 491520      |
+| train/                     |             |
+|    approx_kl               | 0.018438999 |
+|    clip_fraction           | 0.218       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.4        |
+|    explained_variance      | 0.793       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.95        |
+|    n_updates               | 290         |
+|    policy_gradient_loss    | 0.0101      |
+|    std                     | 0.493       |
+|    value_loss              | 1.65        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.822       |
+|    window_success          | 0.0667      |
+| paper/                     |             |
+|    accel_variation         | 0.544       |
+|    base_reward             | 448         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.481       |
+|    lane_deviation          | 0.121       |
+|    max_lane_deviation      | 0.582       |
+|    mean_speed_kmh          | 17.7        |
+|    min_ttc                 | 9.2         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.818       |
+|    shaped_reward           | 448         |
+|    steering_variation      | 0.447       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000533    |
+| rollout/                   |             |
+|    ep_len_mean             | 980         |
+|    ep_rew_mean             | 395         |
+|    success_rate            | 0.13        |
+| time/                      |             |
+|    fps                     | 1149        |
+|    iterations              | 31          |
+|    time_elapsed            | 441         |
+|    total_timesteps         | 507904      |
+| train/                     |             |
+|    approx_kl               | 0.028336868 |
+|    clip_fraction           | 0.248       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.36       |
+|    explained_variance      | 0.753       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.633       |
+|    n_updates               | 300         |
+|    policy_gradient_loss    | 0.00832     |
+|    std                     | 0.483       |
+|    value_loss              | 1.04        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.823       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.535       |
+|    base_reward             | 396         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 844         |
+|    jerk                    | 0.509       |
+|    lane_deviation          | 0.109       |
+|    max_lane_deviation      | 0.431       |
+|    mean_speed_kmh          | 17.3        |
+|    min_ttc                 | 4.3         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.988       |
+|    shaped_reward           | 396         |
+|    steering_variation      | 0.426       |
+|    success                 | 1           |
+|    ttc_risk                | 0.00484     |
+| rollout/                   |             |
+|    ep_len_mean             | 981         |
+|    ep_rew_mean             | 406         |
+|    success_rate            | 0.14        |
+| time/                      |             |
+|    fps                     | 1135        |
+|    iterations              | 32          |
+|    time_elapsed            | 461         |
+|    total_timesteps         | 524288      |
+| train/                     |             |
+|    approx_kl               | 0.015445924 |
+|    clip_fraction           | 0.22        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.32       |
+|    explained_variance      | 0.678       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.752       |
+|    n_updates               | 310         |
+|    policy_gradient_loss    | 0.00506     |
+|    std                     | 0.476       |
+|    value_loss              | 1.78        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.817       |
+|    window_success          | 0.267       |
+| paper/                     |             |
+|    accel_variation         | 0.525       |
+|    base_reward             | 420         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 940         |
+|    jerk                    | 0.477       |
+|    lane_deviation          | 0.157       |
+|    max_lane_deviation      | 1.03        |
+|    mean_speed_kmh          | 17.5        |
+|    min_ttc                 | 19.3        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.989       |
+|    shaped_reward           | 420         |
+|    steering_variation      | 0.447       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 978         |
+|    ep_rew_mean             | 413         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1123        |
+|    iterations              | 33          |
+|    time_elapsed            | 481         |
+|    total_timesteps         | 540672      |
+| train/                     |             |
+|    approx_kl               | 0.018192716 |
+|    clip_fraction           | 0.226       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.3        |
+|    explained_variance      | 0.701       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.747       |
+|    n_updates               | 320         |
+|    policy_gradient_loss    | 0.00697     |
+|    std                     | 0.471       |
+|    value_loss              | 1.75        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.831       |
+|    window_success          | 0.267       |
+| paper/                     |             |
+|    accel_variation         | 0.517       |
+|    base_reward             | 424         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.481       |
+|    lane_deviation          | 0.142       |
+|    max_lane_deviation      | 0.734       |
+|    mean_speed_kmh          | 17.2        |
+|    min_ttc                 | 3.21        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.962       |
+|    shaped_reward           | 424         |
+|    steering_variation      | 0.42        |
+|    success                 | 0           |
+|    ttc_risk                | 0.0087      |
+| rollout/                   |             |
+|    ep_len_mean             | 970         |
+|    ep_rew_mean             | 417         |
+|    success_rate            | 0.18        |
+| time/                      |             |
+|    fps                     | 1117        |
+|    iterations              | 34          |
+|    time_elapsed            | 498         |
+|    total_timesteps         | 557056      |
+| train/                     |             |
+|    approx_kl               | 0.018697072 |
+|    clip_fraction           | 0.252       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.26       |
+|    explained_variance      | 0.794       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.528       |
+|    n_updates               | 330         |
+|    policy_gradient_loss    | 0.01        |
+|    std                     | 0.461       |
+|    value_loss              | 1.39        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.825       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.525       |
+|    base_reward             | 431         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.452       |
+|    lane_deviation          | 0.132       |
+|    max_lane_deviation      | 0.646       |
+|    mean_speed_kmh          | 17.2        |
+|    min_ttc                 | 3.29        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.939       |
+|    shaped_reward           | 431         |
+|    steering_variation      | 0.417       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00728     |
+| rollout/                   |             |
+|    ep_len_mean             | 961         |
+|    ep_rew_mean             | 418         |
+|    success_rate            | 0.2         |
+| time/                      |             |
+|    fps                     | 1107        |
+|    iterations              | 35          |
+|    time_elapsed            | 517         |
+|    total_timesteps         | 573440      |
+| train/                     |             |
+|    approx_kl               | 0.033148296 |
+|    clip_fraction           | 0.24        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.22       |
+|    explained_variance      | 0.731       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.484       |
+|    n_updates               | 340         |
+|    policy_gradient_loss    | 0.00731     |
+|    std                     | 0.454       |
+|    value_loss              | 1.66        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.791       |
+|    window_success          | 0.0667      |
+| paper/                     |             |
+|    accel_variation         | 0.536       |
+|    base_reward             | 447         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.485       |
+|    lane_deviation          | 0.128       |
+|    max_lane_deviation      | 0.444       |
+|    mean_speed_kmh          | 17.7        |
+|    min_ttc                 | 14.3        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.867       |
+|    shaped_reward           | 447         |
+|    steering_variation      | 0.412       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 963         |
+|    ep_rew_mean             | 422         |
+|    success_rate            | 0.19        |
+| time/                      |             |
+|    fps                     | 1099        |
+|    iterations              | 36          |
+|    time_elapsed            | 536         |
+|    total_timesteps         | 589824      |
+| train/                     |             |
+|    approx_kl               | 0.012595152 |
+|    clip_fraction           | 0.237       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.18       |
+|    explained_variance      | 0.721       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.07        |
+|    n_updates               | 350         |
+|    policy_gradient_loss    | 0.00817     |
+|    std                     | 0.449       |
+|    value_loss              | 2.35        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0.0333     |
+|    window_route_completion | 0.818      |
+|    window_success          | 0.1        |
+| paper/                     |            |
+|    accel_variation         | 0.508      |
+|    base_reward             | 470        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.478      |
+|    lane_deviation          | 0.0891     |
+|    max_lane_deviation      | 0.316      |
+|    mean_speed_kmh          | 17.8       |
+|    min_ttc                 | 22.6       |
+|    out_of_road             | 0          |
+|    route_completion        | 0.885      |
+|    shaped_reward           | 470        |
+|    steering_variation      | 0.374      |
+|    success                 | 0          |
+|    ttc_risk                | 0          |
+| rollout/                   |            |
+|    ep_len_mean             | 955        |
+|    ep_rew_mean             | 422        |
+|    success_rate            | 0.2        |
+| time/                      |            |
+|    fps                     | 1091       |
+|    iterations              | 37         |
+|    time_elapsed            | 555        |
+|    total_timesteps         | 606208     |
+| train/                     |            |
+|    approx_kl               | 0.03061699 |
+|    clip_fraction           | 0.27       |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -1.15      |
+|    explained_variance      | 0.798      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.502      |
+|    n_updates               | 360        |
+|    policy_gradient_loss    | 0.00836    |
+|    std                     | 0.442      |
+|    value_loss              | 0.921      |
+-------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0.0667     |
+|    window_route_completion | 0.835      |
+|    window_success          | 0.233      |
+| paper/                     |            |
+|    accel_variation         | 0.525      |
+|    base_reward             | 382        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.471      |
+|    lane_deviation          | 0.129      |
+|    max_lane_deviation      | 0.506      |
+|    mean_speed_kmh          | 15.3       |
+|    min_ttc                 | 3.05       |
+|    out_of_road             | 0          |
+|    route_completion        | 0.756      |
+|    shaped_reward           | 382        |
+|    steering_variation      | 0.372      |
+|    success                 | 0          |
+|    ttc_risk                | 0.025      |
+| rollout/                   |            |
+|    ep_len_mean             | 956        |
+|    ep_rew_mean             | 423        |
+|    success_rate            | 0.21       |
+| time/                      |            |
+|    fps                     | 1084       |
+|    iterations              | 38         |
+|    time_elapsed            | 574        |
+|    total_timesteps         | 622592     |
+| train/                     |            |
+|    approx_kl               | 0.04528419 |
+|    clip_fraction           | 0.269      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -1.13      |
+|    explained_variance      | 0.707      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.679      |
+|    n_updates               | 370        |
+|    policy_gradient_loss    | 0.0105     |
+|    std                     | 0.44       |
+|    value_loss              | 1.74       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.859       |
+|    window_success          | 0.267       |
+| paper/                     |             |
+|    accel_variation         | 0.507       |
+|    base_reward             | 451         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 969         |
+|    jerk                    | 0.457       |
+|    lane_deviation          | 0.113       |
+|    max_lane_deviation      | 0.352       |
+|    mean_speed_kmh          | 17.4        |
+|    min_ttc                 | 2.01        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.99        |
+|    shaped_reward           | 451         |
+|    steering_variation      | 0.369       |
+|    success                 | 1           |
+|    ttc_risk                | 0.00264     |
+| rollout/                   |             |
+|    ep_len_mean             | 960         |
+|    ep_rew_mean             | 426         |
+|    success_rate            | 0.18        |
+| time/                      |             |
+|    fps                     | 1078        |
+|    iterations              | 39          |
+|    time_elapsed            | 592         |
+|    total_timesteps         | 638976      |
+| train/                     |             |
+|    approx_kl               | 0.020760698 |
+|    clip_fraction           | 0.262       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.12       |
+|    explained_variance      | 0.739       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.683       |
+|    n_updates               | 380         |
+|    policy_gradient_loss    | 0.00987     |
+|    std                     | 0.437       |
+|    value_loss              | 2.23        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.865       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.514       |
+|    base_reward             | 466         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.48        |
+|    lane_deviation          | 0.0851      |
+|    max_lane_deviation      | 0.391       |
+|    mean_speed_kmh          | 17.6        |
+|    min_ttc                 | 8.66        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.884       |
+|    shaped_reward           | 466         |
+|    steering_variation      | 0.371       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000524    |
+| rollout/                   |             |
+|    ep_len_mean             | 965         |
+|    ep_rew_mean             | 430         |
+|    success_rate            | 0.16        |
+| time/                      |             |
+|    fps                     | 1075        |
+|    iterations              | 40          |
+|    time_elapsed            | 609         |
+|    total_timesteps         | 655360      |
+| train/                     |             |
+|    approx_kl               | 0.017956529 |
+|    clip_fraction           | 0.231       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.09       |
+|    explained_variance      | 0.819       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.307       |
+|    n_updates               | 390         |
+|    policy_gradient_loss    | 0.0058      |
+|    std                     | 0.433       |
+|    value_loss              | 1.02        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.849       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.461       |
+|    base_reward             | 421         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 991         |
+|    jerk                    | 0.437       |
+|    lane_deviation          | 0.114       |
+|    max_lane_deviation      | 0.415       |
+|    mean_speed_kmh          | 15.7        |
+|    min_ttc                 | 0.112       |
+|    out_of_road             | 0           |
+|    route_completion        | 0.989       |
+|    shaped_reward           | 421         |
+|    steering_variation      | 0.369       |
+|    success                 | 1           |
+|    ttc_risk                | 0.053       |
+| rollout/                   |             |
+|    ep_len_mean             | 972         |
+|    ep_rew_mean             | 438         |
+|    success_rate            | 0.2         |
+| time/                      |             |
+|    fps                     | 1068        |
+|    iterations              | 41          |
+|    time_elapsed            | 628         |
+|    total_timesteps         | 671744      |
+| train/                     |             |
+|    approx_kl               | 0.020799784 |
+|    clip_fraction           | 0.26        |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.08       |
+|    explained_variance      | 0.846       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.334       |
+|    n_updates               | 400         |
+|    policy_gradient_loss    | 0.0135      |
+|    std                     | 0.431       |
+|    value_loss              | 1.05        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.831       |
+|    window_success          | 0.267       |
+| paper/                     |             |
+|    accel_variation         | 0.503       |
+|    base_reward             | 455         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.476       |
+|    lane_deviation          | 0.0881      |
+|    max_lane_deviation      | 0.263       |
+|    mean_speed_kmh          | 17.3        |
+|    min_ttc                 | 4.61        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.833       |
+|    shaped_reward           | 455         |
+|    steering_variation      | 0.377       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00457     |
+| rollout/                   |             |
+|    ep_len_mean             | 969         |
+|    ep_rew_mean             | 440         |
+|    success_rate            | 0.23        |
+| time/                      |             |
+|    fps                     | 1059        |
+|    iterations              | 42          |
+|    time_elapsed            | 649         |
+|    total_timesteps         | 688128      |
+| train/                     |             |
+|    approx_kl               | 0.025539951 |
+|    clip_fraction           | 0.302       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.06       |
+|    explained_variance      | 0.871       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.303       |
+|    n_updates               | 410         |
+|    policy_gradient_loss    | 0.0191      |
+|    std                     | 0.43        |
+|    value_loss              | 1.26        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.782       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.517       |
+|    base_reward             | 460         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.474       |
+|    lane_deviation          | 0.113       |
+|    max_lane_deviation      | 0.376       |
+|    mean_speed_kmh          | 17.9        |
+|    min_ttc                 | 15.7        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.799       |
+|    shaped_reward           | 460         |
+|    steering_variation      | 0.347       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 965         |
+|    ep_rew_mean             | 439         |
+|    success_rate            | 0.23        |
+| time/                      |             |
+|    fps                     | 1054        |
+|    iterations              | 43          |
+|    time_elapsed            | 668         |
+|    total_timesteps         | 704512      |
+| train/                     |             |
+|    approx_kl               | 0.015404778 |
+|    clip_fraction           | 0.283       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.05       |
+|    explained_variance      | 0.873       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.502       |
+|    n_updates               | 420         |
+|    policy_gradient_loss    | 0.0142      |
+|    std                     | 0.428       |
+|    value_loss              | 0.96        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.833       |
+|    window_success          | 0.2         |
+| paper/                     |             |
+|    accel_variation         | 0.518       |
+|    base_reward             | 441         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.447       |
+|    lane_deviation          | 0.0963      |
+|    max_lane_deviation      | 0.406       |
+|    mean_speed_kmh          | 16.9        |
+|    min_ttc                 | 5.7         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.839       |
+|    shaped_reward           | 441         |
+|    steering_variation      | 0.361       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00453     |
+| rollout/                   |             |
+|    ep_len_mean             | 970         |
+|    ep_rew_mean             | 442         |
+|    success_rate            | 0.21        |
+| time/                      |             |
+|    fps                     | 1050        |
+|    iterations              | 44          |
+|    time_elapsed            | 686         |
+|    total_timesteps         | 720896      |
+| train/                     |             |
+|    approx_kl               | 0.015145479 |
+|    clip_fraction           | 0.299       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.04       |
+|    explained_variance      | 0.683       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.11        |
+|    n_updates               | 430         |
+|    policy_gradient_loss    | 0.0142      |
+|    std                     | 0.427       |
+|    value_loss              | 2.6         |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.87        |
+|    window_success          | 0.2         |
+| paper/                     |             |
+|    accel_variation         | 0.501       |
+|    base_reward             | 418         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 849         |
+|    jerk                    | 0.487       |
+|    lane_deviation          | 0.0746      |
+|    max_lane_deviation      | 0.298       |
+|    mean_speed_kmh          | 17.6        |
+|    min_ttc                 | 8.64        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.987       |
+|    shaped_reward           | 418         |
+|    steering_variation      | 0.349       |
+|    success                 | 1           |
+|    ttc_risk                | 0.000452    |
+| rollout/                   |             |
+|    ep_len_mean             | 969         |
+|    ep_rew_mean             | 445         |
+|    success_rate            | 0.22        |
+| time/                      |             |
+|    fps                     | 1045        |
+|    iterations              | 45          |
+|    time_elapsed            | 705         |
+|    total_timesteps         | 737280      |
+| train/                     |             |
+|    approx_kl               | 0.015458503 |
+|    clip_fraction           | 0.239       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1.03       |
+|    explained_variance      | 0.874       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.254       |
+|    n_updates               | 440         |
+|    policy_gradient_loss    | 0.00651     |
+|    std                     | 0.426       |
+|    value_loss              | 1.16        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.865       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.516       |
+|    base_reward             | 452         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.46        |
+|    lane_deviation          | 0.102       |
+|    max_lane_deviation      | 0.417       |
+|    mean_speed_kmh          | 17.4        |
+|    min_ttc                 | 10.2        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.884       |
+|    shaped_reward           | 452         |
+|    steering_variation      | 0.342       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000427    |
+| rollout/                   |             |
+|    ep_len_mean             | 969         |
+|    ep_rew_mean             | 445         |
+|    success_rate            | 0.21        |
+| time/                      |             |
+|    fps                     | 1038        |
+|    iterations              | 46          |
+|    time_elapsed            | 725         |
+|    total_timesteps         | 753664      |
+| train/                     |             |
+|    approx_kl               | 0.017248457 |
+|    clip_fraction           | 0.328       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -1          |
+|    explained_variance      | 0.849       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.267       |
+|    n_updates               | 450         |
+|    policy_gradient_loss    | 0.0206      |
+|    std                     | 0.418       |
+|    value_loss              | 1.2         |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.837       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.522       |
+|    base_reward             | 473         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.469       |
+|    lane_deviation          | 0.0793      |
+|    max_lane_deviation      | 0.375       |
+|    mean_speed_kmh          | 17.8        |
+|    min_ttc                 | 8.62        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.637       |
+|    shaped_reward           | 473         |
+|    steering_variation      | 0.312       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000791    |
+| rollout/                   |             |
+|    ep_len_mean             | 966         |
+|    ep_rew_mean             | 443         |
+|    success_rate            | 0.17        |
+| time/                      |             |
+|    fps                     | 1034        |
+|    iterations              | 47          |
+|    time_elapsed            | 744         |
+|    total_timesteps         | 770048      |
+| train/                     |             |
+|    approx_kl               | 0.101213515 |
+|    clip_fraction           | 0.274       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.955      |
+|    explained_variance      | 0.858       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.378       |
+|    n_updates               | 460         |
+|    policy_gradient_loss    | 0.0127      |
+|    std                     | 0.412       |
+|    value_loss              | 0.828       |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0           |
+|    window_route_completion | 0.853       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.537       |
+|    base_reward             | 407         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.498       |
+|    lane_deviation          | 0.125       |
+|    max_lane_deviation      | 0.343       |
+|    mean_speed_kmh          | 15.9        |
+|    min_ttc                 | 2.51        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.704       |
+|    shaped_reward           | 407         |
+|    steering_variation      | 0.314       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00434     |
+| rollout/                   |             |
+|    ep_len_mean             | 965         |
+|    ep_rew_mean             | 441         |
+|    success_rate            | 0.19        |
+| time/                      |             |
+|    fps                     | 1031        |
+|    iterations              | 48          |
+|    time_elapsed            | 762         |
+|    total_timesteps         | 786432      |
+| train/                     |             |
+|    approx_kl               | 0.030921768 |
+|    clip_fraction           | 0.297       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.938      |
+|    explained_variance      | 0.672       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.896       |
+|    n_updates               | 470         |
+|    policy_gradient_loss    | 0.0145      |
+|    std                     | 0.411       |
+|    value_loss              | 1.16        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0          |
+|    window_route_completion | 0.848      |
+|    window_success          | 0.267      |
+| paper/                     |            |
+|    accel_variation         | 0.5        |
+|    base_reward             | 431        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 882        |
+|    jerk                    | 0.465      |
+|    lane_deviation          | 0.0751     |
+|    max_lane_deviation      | 0.301      |
+|    mean_speed_kmh          | 17.4       |
+|    min_ttc                 | 0.647      |
+|    out_of_road             | 0          |
+|    route_completion        | 0.989      |
+|    shaped_reward           | 431        |
+|    steering_variation      | 0.327      |
+|    success                 | 1          |
+|    ttc_risk                | 0.00943    |
+| rollout/                   |            |
+|    ep_len_mean             | 975        |
+|    ep_rew_mean             | 446        |
+|    success_rate            | 0.2        |
+| time/                      |            |
+|    fps                     | 1027       |
+|    iterations              | 49         |
+|    time_elapsed            | 781        |
+|    total_timesteps         | 802816     |
+| train/                     |            |
+|    approx_kl               | 0.01342305 |
+|    clip_fraction           | 0.219      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -0.921     |
+|    explained_variance      | 0.836      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.377      |
+|    n_updates               | 480        |
+|    policy_gradient_loss    | 0.00493    |
+|    std                     | 0.408      |
+|    value_loss              | 0.888      |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.821       |
+|    window_success          | 0.267       |
+| paper/                     |             |
+|    accel_variation         | 0.49        |
+|    base_reward             | 461         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 972         |
+|    jerk                    | 0.45        |
+|    lane_deviation          | 0.126       |
+|    max_lane_deviation      | 0.393       |
+|    mean_speed_kmh          | 17.9        |
+|    min_ttc                 | nan         |
+|    out_of_road             | 0           |
+|    route_completion        | 0.99        |
+|    shaped_reward           | 461         |
+|    steering_variation      | 0.301       |
+|    success                 | 1           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 962         |
+|    ep_rew_mean             | 442         |
+|    success_rate            | 0.22        |
+| time/                      |             |
+|    fps                     | 1021        |
+|    iterations              | 50          |
+|    time_elapsed            | 802         |
+|    total_timesteps         | 819200      |
+| train/                     |             |
+|    approx_kl               | 0.015588993 |
+|    clip_fraction           | 0.238       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.891      |
+|    explained_variance      | 0.868       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.288       |
+|    n_updates               | 490         |
+|    policy_gradient_loss    | 0.00944     |
+|    std                     | 0.402       |
+|    value_loss              | 0.701       |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.805       |
+|    window_success          | 0.133       |
+| paper/                     |             |
+|    accel_variation         | 0.511       |
+|    base_reward             | 469         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.461       |
+|    lane_deviation          | 0.0866      |
+|    max_lane_deviation      | 0.356       |
+|    mean_speed_kmh          | 17.7        |
+|    min_ttc                 | 11.1        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.663       |
+|    shaped_reward           | 469         |
+|    steering_variation      | 0.315       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000124    |
+| rollout/                   |             |
+|    ep_len_mean             | 962         |
+|    ep_rew_mean             | 439         |
+|    success_rate            | 0.2         |
+| time/                      |             |
+|    fps                     | 1018        |
+|    iterations              | 51          |
+|    time_elapsed            | 820         |
+|    total_timesteps         | 835584      |
+| train/                     |             |
+|    approx_kl               | 0.029356595 |
+|    clip_fraction           | 0.266       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.872      |
+|    explained_variance      | 0.76        |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.09        |
+|    n_updates               | 500         |
+|    policy_gradient_loss    | 0.00917     |
+|    std                     | 0.4         |
+|    value_loss              | 2.07        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.133       |
+|    window_route_completion | 0.796       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.508       |
+|    base_reward             | 160         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 1           |
+|    episode_length          | 434         |
+|    jerk                    | 0.473       |
+|    lane_deviation          | 0.267       |
+|    max_lane_deviation      | 2           |
+|    mean_speed_kmh          | 17.7        |
+|    min_ttc                 | 53.7        |
+|    out_of_road             | 1           |
+|    route_completion        | 0.412       |
+|    shaped_reward           | 160         |
+|    steering_variation      | 0.296       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 945         |
+|    ep_rew_mean             | 432         |
+|    success_rate            | 0.24        |
+| time/                      |             |
+|    fps                     | 1013        |
+|    iterations              | 52          |
+|    time_elapsed            | 840         |
+|    total_timesteps         | 851968      |
+| train/                     |             |
+|    approx_kl               | 0.025509482 |
+|    clip_fraction           | 0.278       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.859      |
+|    explained_variance      | 0.651       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.55        |
+|    n_updates               | 510         |
+|    policy_gradient_loss    | 0.00976     |
+|    std                     | 0.397       |
+|    value_loss              | 2.14        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.1         |
+|    window_route_completion | 0.833       |
+|    window_success          | 0.333       |
+| paper/                     |             |
+|    accel_variation         | 0.537       |
+|    base_reward             | 459         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.463       |
+|    lane_deviation          | 0.111       |
+|    max_lane_deviation      | 0.397       |
+|    mean_speed_kmh          | 17.8        |
+|    min_ttc                 | 9.82        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.978       |
+|    shaped_reward           | 459         |
+|    steering_variation      | 0.309       |
+|    success                 | 0           |
+|    ttc_risk                | 0.000471    |
+| rollout/                   |             |
+|    ep_len_mean             | 942         |
+|    ep_rew_mean             | 431         |
+|    success_rate            | 0.26        |
+| time/                      |             |
+|    fps                     | 1011        |
+|    iterations              | 53          |
+|    time_elapsed            | 858         |
+|    total_timesteps         | 868352      |
+| train/                     |             |
+|    approx_kl               | 0.013451539 |
+|    clip_fraction           | 0.261       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.866      |
+|    explained_variance      | 0.749       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.746       |
+|    n_updates               | 520         |
+|    policy_gradient_loss    | 0.0078      |
+|    std                     | 0.405       |
+|    value_loss              | 2.33        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0          |
+|    window_route_completion | 0.836      |
+|    window_success          | 0.233      |
+| paper/                     |            |
+|    accel_variation         | 0.499      |
+|    base_reward             | 446        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.45       |
+|    lane_deviation          | 0.142      |
+|    max_lane_deviation      | 0.52       |
+|    mean_speed_kmh          | 17.9       |
+|    min_ttc                 | 11.6       |
+|    out_of_road             | 0          |
+|    route_completion        | 0.699      |
+|    shaped_reward           | 446        |
+|    steering_variation      | 0.281      |
+|    success                 | 0          |
+|    ttc_risk                | 4.42e-05   |
+| rollout/                   |            |
+|    ep_len_mean             | 942        |
+|    ep_rew_mean             | 433        |
+|    success_rate            | 0.25       |
+| time/                      |            |
+|    fps                     | 1009       |
+|    iterations              | 54         |
+|    time_elapsed            | 876        |
+|    total_timesteps         | 884736     |
+| train/                     |            |
+|    approx_kl               | 0.04672942 |
+|    clip_fraction           | 0.289      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -0.863     |
+|    explained_variance      | 0.798      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.445      |
+|    n_updates               | 530        |
+|    policy_gradient_loss    | 0.0127     |
+|    std                     | 0.4        |
+|    value_loss              | 1.28       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.79        |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.5         |
+|    base_reward             | 342         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.441       |
+|    lane_deviation          | 0.338       |
+|    max_lane_deviation      | 1.03        |
+|    mean_speed_kmh          | 17.6        |
+|    min_ttc                 | 7.22        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.913       |
+|    shaped_reward           | 342         |
+|    steering_variation      | 0.292       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00134     |
+| rollout/                   |             |
+|    ep_len_mean             | 937         |
+|    ep_rew_mean             | 423         |
+|    success_rate            | 0.22        |
+| time/                      |             |
+|    fps                     | 1003        |
+|    iterations              | 55          |
+|    time_elapsed            | 897         |
+|    total_timesteps         | 901120      |
+| train/                     |             |
+|    approx_kl               | 0.031502374 |
+|    clip_fraction           | 0.237       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.836      |
+|    explained_variance      | 0.859       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.626       |
+|    n_updates               | 540         |
+|    policy_gradient_loss    | 0.00569     |
+|    std                     | 0.397       |
+|    value_loss              | 1.26        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.1         |
+|    window_route_completion | 0.821       |
+|    window_success          | 0.233       |
+| paper/                     |             |
+|    accel_variation         | 0.511       |
+|    base_reward             | 360         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.465       |
+|    lane_deviation          | 0.31        |
+|    max_lane_deviation      | 0.955       |
+|    mean_speed_kmh          | 17.8        |
+|    min_ttc                 | 5.54        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.785       |
+|    shaped_reward           | 360         |
+|    steering_variation      | 0.282       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00132     |
+| rollout/                   |             |
+|    ep_len_mean             | 941         |
+|    ep_rew_mean             | 414         |
+|    success_rate            | 0.23        |
+| time/                      |             |
+|    fps                     | 1000        |
+|    iterations              | 56          |
+|    time_elapsed            | 916         |
+|    total_timesteps         | 917504      |
+| train/                     |             |
+|    approx_kl               | 0.028550128 |
+|    clip_fraction           | 0.316       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.833      |
+|    explained_variance      | 0.698       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.538       |
+|    n_updates               | 550         |
+|    policy_gradient_loss    | 0.0117      |
+|    std                     | 0.398       |
+|    value_loss              | 1.72        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.888       |
+|    window_success          | 0.2         |
+| paper/                     |             |
+|    accel_variation         | 0.527       |
+|    base_reward             | 403         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.458       |
+|    lane_deviation          | 0.205       |
+|    max_lane_deviation      | 0.589       |
+|    mean_speed_kmh          | 17.7        |
+|    min_ttc                 | 8.49        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.753       |
+|    shaped_reward           | 403         |
+|    steering_variation      | 0.293       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00079     |
+| rollout/                   |             |
+|    ep_len_mean             | 944         |
+|    ep_rew_mean             | 408         |
+|    success_rate            | 0.25        |
+| time/                      |             |
+|    fps                     | 999         |
+|    iterations              | 57          |
+|    time_elapsed            | 933         |
+|    total_timesteps         | 933888      |
+| train/                     |             |
+|    approx_kl               | 0.023113094 |
+|    clip_fraction           | 0.281       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.835      |
+|    explained_variance      | 0.714       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.688       |
+|    n_updates               | 560         |
+|    policy_gradient_loss    | 0.007       |
+|    std                     | 0.397       |
+|    value_loss              | 2.36        |
+--------------------------------------------
+-------------------------------------------
+| curriculum/                |            |
+|    stage                   | 2          |
+|    window_cost             | 0          |
+|    window_route_completion | 0.894      |
+|    window_success          | 0.267      |
+| paper/                     |            |
+|    accel_variation         | 0.484      |
+|    base_reward             | 390        |
+|    collision               | 0          |
+|    crash_object            | 0          |
+|    crash_vehicle           | 0          |
+|    episode_cost            | 0          |
+|    episode_length          | 1000       |
+|    jerk                    | 0.438      |
+|    lane_deviation          | 0.259      |
+|    max_lane_deviation      | 0.582      |
+|    mean_speed_kmh          | 17.9       |
+|    min_ttc                 | 11         |
+|    out_of_road             | 0          |
+|    route_completion        | 0.835      |
+|    shaped_reward           | 390        |
+|    steering_variation      | 0.267      |
+|    success                 | 0          |
+|    ttc_risk                | 0.000146   |
+| rollout/                   |            |
+|    ep_len_mean             | 965        |
+|    ep_rew_mean             | 409        |
+|    success_rate            | 0.23       |
+| time/                      |            |
+|    fps                     | 997        |
+|    iterations              | 58         |
+|    time_elapsed            | 952        |
+|    total_timesteps         | 950272     |
+| train/                     |            |
+|    approx_kl               | 0.04057391 |
+|    clip_fraction           | 0.255      |
+|    clip_range              | 0.2        |
+|    entropy_loss            | -0.829     |
+|    explained_variance      | 0.867      |
+|    learning_rate           | 0.0003     |
+|    loss                    | 0.579      |
+|    n_updates               | 570        |
+|    policy_gradient_loss    | 0.00777    |
+|    std                     | 0.397      |
+|    value_loss              | 1.15       |
+-------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0333      |
+|    window_route_completion | 0.869       |
+|    window_success          | 0.367       |
+| paper/                     |             |
+|    accel_variation         | 0.508       |
+|    base_reward             | 405         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.463       |
+|    lane_deviation          | 0.207       |
+|    max_lane_deviation      | 0.652       |
+|    mean_speed_kmh          | 17.9        |
+|    min_ttc                 | 14.3        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.785       |
+|    shaped_reward           | 405         |
+|    steering_variation      | 0.281       |
+|    success                 | 0           |
+|    ttc_risk                | 0           |
+| rollout/                   |             |
+|    ep_len_mean             | 959         |
+|    ep_rew_mean             | 399         |
+|    success_rate            | 0.26        |
+| time/                      |             |
+|    fps                     | 995         |
+|    iterations              | 59          |
+|    time_elapsed            | 971         |
+|    total_timesteps         | 966656      |
+| train/                     |             |
+|    approx_kl               | 0.029339729 |
+|    clip_fraction           | 0.226       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.81       |
+|    explained_variance      | 0.875       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.593       |
+|    n_updates               | 580         |
+|    policy_gradient_loss    | 0.00375     |
+|    std                     | 0.391       |
+|    value_loss              | 1.38        |
+--------------------------------------------
+------------------------------------------
+| curriculum/                |           |
+|    stage                   | 2         |
+|    window_cost             | 0.1       |
+|    window_route_completion | 0.853     |
+|    window_success          | 0.267     |
+| paper/                     |           |
+|    accel_variation         | 0.468     |
+|    base_reward             | 323       |
+|    collision               | 0         |
+|    crash_object            | 0         |
+|    crash_vehicle           | 0         |
+|    episode_cost            | 0         |
+|    episode_length          | 660       |
+|    jerk                    | 0.442     |
+|    lane_deviation          | 0.0887    |
+|    max_lane_deviation      | 0.278     |
+|    mean_speed_kmh          | 17.4      |
+|    min_ttc                 | 3.39      |
+|    out_of_road             | 0         |
+|    route_completion        | 0.99      |
+|    shaped_reward           | 323       |
+|    steering_variation      | 0.262     |
+|    success                 | 1         |
+|    ttc_risk                | 0.00864   |
+| rollout/                   |           |
+|    ep_len_mean             | 953       |
+|    ep_rew_mean             | 393       |
+|    success_rate            | 0.25      |
+| time/                      |           |
+|    fps                     | 989       |
+|    iterations              | 60        |
+|    time_elapsed            | 993       |
+|    total_timesteps         | 983040    |
+| train/                     |           |
+|    approx_kl               | 0.0232304 |
+|    clip_fraction           | 0.24      |
+|    clip_range              | 0.2       |
+|    entropy_loss            | -0.79     |
+|    explained_variance      | 0.809     |
+|    learning_rate           | 0.0003    |
+|    loss                    | 0.53      |
+|    n_updates               | 590       |
+|    policy_gradient_loss    | 0.00533   |
+|    std                     | 0.39      |
+|    value_loss              | 1.7       |
+------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.843       |
+|    window_success          | 0.167       |
+| paper/                     |             |
+|    accel_variation         | 0.481       |
+|    base_reward             | 458         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.447       |
+|    lane_deviation          | 0.0937      |
+|    max_lane_deviation      | 0.606       |
+|    mean_speed_kmh          | 17.5        |
+|    min_ttc                 | 2.18        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.768       |
+|    shaped_reward           | 458         |
+|    steering_variation      | 0.263       |
+|    success                 | 0           |
+|    ttc_risk                | 0.00935     |
+| rollout/                   |             |
+|    ep_len_mean             | 962         |
+|    ep_rew_mean             | 405         |
+|    success_rate            | 0.25        |
+| time/                      |             |
+|    fps                     | 988         |
+|    iterations              | 61          |
+|    time_elapsed            | 1011        |
+|    total_timesteps         | 999424      |
+| train/                     |             |
+|    approx_kl               | 0.018592011 |
+|    clip_fraction           | 0.245       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.776      |
+|    explained_variance      | 0.695       |
+|    learning_rate           | 0.0003      |
+|    loss                    | 1.2         |
+|    n_updates               | 600         |
+|    policy_gradient_loss    | 0.00617     |
+|    std                     | 0.389       |
+|    value_loss              | 2.57        |
+--------------------------------------------
+--------------------------------------------
+| curriculum/                |             |
+|    stage                   | 2           |
+|    window_cost             | 0.0667      |
+|    window_route_completion | 0.856       |
+|    window_success          | 0.367       |
+| paper/                     |             |
+|    accel_variation         | 0.477       |
+|    base_reward             | 477         |
+|    collision               | 0           |
+|    crash_object            | 0           |
+|    crash_vehicle           | 0           |
+|    episode_cost            | 0           |
+|    episode_length          | 1000        |
+|    jerk                    | 0.456       |
+|    lane_deviation          | 0.0807      |
+|    max_lane_deviation      | 0.308       |
+|    mean_speed_kmh          | 17.9        |
+|    min_ttc                 | 11.4        |
+|    out_of_road             | 0           |
+|    route_completion        | 0.842       |
+|    shaped_reward           | 477         |
+|    steering_variation      | 0.267       |
+|    success                 | 0           |
+|    ttc_risk                | 5.57e-05    |
+| rollout/                   |             |
+|    ep_len_mean             | 952         |
+|    ep_rew_mean             | 413         |
+|    success_rate            | 0.28        |
+| time/                      |             |
+|    fps                     | 987         |
+|    iterations              | 62          |
+|    time_elapsed            | 1029        |
+|    total_timesteps         | 1015808     |
+| train/                     |             |
+|    approx_kl               | 0.021266297 |
+|    clip_fraction           | 0.238       |
+|    clip_range              | 0.2         |
+|    entropy_loss            | -0.765      |
+|    explained_variance      | 0.83        |
+|    learning_rate           | 0.0003      |
+|    loss                    | 0.952       |
+|    n_updates               | 610         |
+|    policy_gradient_loss    | 0.00733     |
+|    std                     | 0.386       |
+|    value_loss              | 1.59        |
+--------------------------------------------
+saved_model=outputs/tuned_ablation_guard_only_nenv16_seed1_1m/runs/guard_only_ppo_s1/model/final_model.zip
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost      reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                         
+0.00        0.96          0.988828       0.00          0.0  0.00  578.527116                  0.869705          0.000000          0.000000              0.869705
+0.08        0.88          0.934103       0.10          0.0  0.10  548.590083                  0.835118          0.007808          0.005081              0.822229
+0.15        0.66          0.895265       0.16          0.0  0.16  469.962167                  0.708085          0.042400          0.018422              0.647263
+saved_evaluation=outputs/tuned_ablation_guard_only_nenv16_seed1_1m/evaluations/guard_only_ppo_s1.csv
+                         seed  success  route_completion  collision  out_of_road  cost      reward  shaped_reward  episode_length      speed  lane_deviation  steering_variation  accel_variation  ttc_risk   min_ttc
+variant    algo density                                                                                                                                                                                              
+guard_only ppo  0.00      1.0     0.96          0.988828       0.00          0.0  0.00  578.527116     578.527116         1099.20  18.306723        0.042851            0.016354         0.226933  0.000000       NaN
+                0.08      1.0     0.88          0.934103       0.10          0.0  0.10  548.590083     548.590083         1091.02  17.882168        0.060862            0.019398         0.242286  0.004510  6.191662
+                0.15      1.0     0.66          0.895265       0.16          0.0  0.16  469.962167     469.962167         1156.82  16.021550        0.146338            0.026573         0.318668  0.017436  3.266412
+curve_source=tensorboard
+saved_summary=outputs/tuned_ablation_guard_only_nenv16_seed1_1m/evaluations/summary.csv
+saved_figures=outputs/tuned_ablation_guard_only_nenv16_seed1_1m/figures
+saved_report=outputs/tuned_ablation_guard_only_nenv16_seed1_1m/运行记录.md
+end_time=2026-06-30T19:48:18+08:00

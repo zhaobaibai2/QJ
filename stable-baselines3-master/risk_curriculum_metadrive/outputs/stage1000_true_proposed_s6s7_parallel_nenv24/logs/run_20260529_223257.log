@@ -1,0 +1,69 @@
+Using cuda device
+Using cuda device
+Process Process-2:
+Process Process-1:
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/scripts/launch_stage1000_true_proposed_s6s7_parallel_nenv24.py", line 21, in run_seed
+    model_path = train(config, run_dir, device='cuda')
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/racrl/experiment.py", line 49, in train
+    model = create_model(config, env, run_dir, device)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/racrl/experiment.py", line 35, in create_model
+    return PPO(n_steps=1024, batch_size=256, n_epochs=10, gae_lambda=0.95, clip_range=0.2, **common)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/ppo/ppo.py", line 171, in __init__
+    self._setup_model()
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/ppo/ppo.py", line 174, in _setup_model
+    super()._setup_model()
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py", line 138, in _setup_model
+    self.policy = self.policy.to(self.device)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1340, in to
+    return self._apply(convert)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 927, in _apply
+    param_applied = fn(param)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1326, in convert
+    return t.to(
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/cuda/__init__.py", line 305, in _lazy_init
+    raise RuntimeError(
+RuntimeError: Cannot re-initialize CUDA in forked subprocess. To use CUDA with multiprocessing, you must use the 'spawn' start method
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/scripts/launch_stage1000_true_proposed_s6s7_parallel_nenv24.py", line 21, in run_seed
+    model_path = train(config, run_dir, device='cuda')
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/racrl/experiment.py", line 49, in train
+    model = create_model(config, env, run_dir, device)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/risk_curriculum_metadrive/racrl/experiment.py", line 35, in create_model
+    return PPO(n_steps=1024, batch_size=256, n_epochs=10, gae_lambda=0.95, clip_range=0.2, **common)
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/ppo/ppo.py", line 171, in __init__
+    self._setup_model()
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/ppo/ppo.py", line 174, in _setup_model
+    super()._setup_model()
+  File "/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py", line 138, in _setup_model
+    self.policy = self.policy.to(self.device)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1340, in to
+    return self._apply(convert)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 927, in _apply
+    param_applied = fn(param)
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1326, in convert
+    return t.to(
+  File "/root/autodl-tmp/envs/sb3/lib/python3.10/site-packages/torch/cuda/__init__.py", line 305, in _lazy_init
+    raise RuntimeError(
+RuntimeError: Cannot re-initialize CUDA in forked subprocess. To use CUDA with multiprocessing, you must use the 'spawn' start method
+failed_exitcodes=[1, 1]
