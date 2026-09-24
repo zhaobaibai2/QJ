@@ -1,0 +1,53 @@
+{
+  "variant": "baseline",
+  "algo": "ppo",
+  "seed": 0,
+  "train_scenarios": 100,
+  "test_scenarios": 50,
+  "train_start_seed": 0,
+  "test_start_seed": 10000,
+  "horizon": 1000,
+  "timesteps": 100000,
+  "risk_reward": false,
+  "curriculum": false,
+  "fixed_traffic_density": 0.1,
+  "fixed_map_blocks": 3,
+  "reward_weights": {
+    "ttc": 0.6,
+    "lane": 0.05,
+    "smooth": 0.005,
+    "cost": 1.0,
+    "ttc_threshold": 4.0
+  },
+  "stages": [
+    {
+      "name": "easy",
+      "traffic_density": 0.0,
+      "map_blocks": 1,
+      "accident_prob": 0.0
+    },
+    {
+      "name": "medium",
+      "traffic_density": 0.1,
+      "map_blocks": 3,
+      "accident_prob": 0.0
+    },
+    {
+      "name": "hard",
+      "traffic_density": 0.25,
+      "map_blocks": 5,
+      "accident_prob": 0.03
+    }
+  ],
+  "curriculum_window": 20,
+  "promote_success": 0.6,
+  "promote_cost": 0.35,
+  "demote_success": 0.28,
+  "demote_grace_episodes": 60,
+  "eval_episodes": 30,
+  "eval_freq": 20000,
+  "policy_layers": [
+    256,
+    256
+  ]
+}

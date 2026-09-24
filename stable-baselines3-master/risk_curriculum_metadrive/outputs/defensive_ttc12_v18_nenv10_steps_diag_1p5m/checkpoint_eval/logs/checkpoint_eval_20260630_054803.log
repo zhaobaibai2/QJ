@@ -1,0 +1,32 @@
+CHECKPOINT:375000
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost      reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                         
+0.08        0.70          0.915996       0.20          0.0  0.20  443.618546                  0.840248          0.004093          0.005871              0.830284
+0.15        0.55          0.880680       0.35          0.0  0.35  369.024818                  0.759038          0.027401          0.038842              0.692796
+saved_evaluation=outputs/defensive_ttc12_v18_nenv10_steps_diag_1p5m/checkpoint_eval/step_375000/proposed_ppo_s28.csv
+CHECKPOINT:750000
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost      reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                         
+0.08        0.90          0.953540       0.05         0.00  0.05  419.777178                  0.837508          0.005513          0.023498              0.808497
+0.15        0.45          0.765196       0.25         0.15  0.40  309.307432                  0.755532          0.022754          0.033258              0.699520
+saved_evaluation=outputs/defensive_ttc12_v18_nenv10_steps_diag_1p5m/checkpoint_eval/step_750000/proposed_ppo_s28.csv
+CHECKPOINT:1125000
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost     reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                        
+0.08        0.85          0.986924        0.0          0.0   0.0  540.28680                  0.848397          0.005627          0.003413              0.839356
+0.15        0.60          0.796689        0.4          0.0   0.4  373.22259                  0.706437          0.042888          0.012260              0.651290
+saved_evaluation=outputs/defensive_ttc12_v18_nenv10_steps_diag_1p5m/checkpoint_eval/step_1125000/proposed_ppo_s28.csv
+CHECKPOINT:1500000
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+         success  route_completion  collision  out_of_road  cost      reward  shield_intervention_rate  shield_soft_rate  shield_hard_rate  overspeed_guard_rate
+density                                                                                                                                                         
+0.08        0.85          0.946842       0.05         0.05   0.1  508.304136                  0.848957          0.003391          0.008881              0.836685
+0.15        0.60          0.861214       0.25         0.05   0.3  440.624082                  0.752906          0.030914          0.013521              0.708471
+saved_evaluation=outputs/defensive_ttc12_v18_nenv10_steps_diag_1p5m/checkpoint_eval/step_1500000/proposed_ppo_s28.csv

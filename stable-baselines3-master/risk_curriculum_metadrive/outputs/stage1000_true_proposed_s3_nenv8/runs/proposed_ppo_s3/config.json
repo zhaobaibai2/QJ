@@ -1,0 +1,82 @@
+{
+  "variant": "proposed",
+  "algo": "ppo",
+  "seed": 3,
+  "train_scenarios": 200,
+  "test_scenarios": 100,
+  "train_start_seed": 0,
+  "test_start_seed": 10000,
+  "horizon": 1200,
+  "timesteps": 1000000,
+  "risk_reward": true,
+  "curriculum": true,
+  "fixed_traffic_density": 0.08,
+  "fixed_map_blocks": 5,
+  "reward_weights": {
+    "base_scale": 0.5,
+    "ttc": 4.0,
+    "lane": 0.5,
+    "smooth": 0.02,
+    "accel": 0.01,
+    "cost": 30.0,
+    "overspeed": 2.5,
+    "target_speed_kmh": 20.0,
+    "progress": 35.0,
+    "idle_penalty": 0.15,
+    "min_speed_kmh": 2.0,
+    "success_bonus": 50.0,
+    "crash_penalty": 100.0,
+    "out_of_road_penalty": 100.0,
+    "ttc_threshold": 6.0
+  },
+  "stages": [
+    {
+      "name": "warmup",
+      "traffic_density": 0.0,
+      "map_blocks": "S",
+      "accident_prob": 0.0,
+      "horizon": 600
+    },
+    {
+      "name": "easy",
+      "traffic_density": 0.03,
+      "map_blocks": 3,
+      "accident_prob": 0.0,
+      "horizon": 800
+    },
+    {
+      "name": "medium",
+      "traffic_density": 0.08,
+      "map_blocks": 5,
+      "accident_prob": 0.0,
+      "horizon": 1000
+    },
+    {
+      "name": "hard",
+      "traffic_density": 0.15,
+      "map_blocks": 7,
+      "accident_prob": 0.02,
+      "horizon": 1000
+    }
+  ],
+  "curriculum_window": 30,
+  "stage0_route_completion": 0.65,
+  "stage0_cost": 0.2,
+  "stage1_success": 0.35,
+  "stage1_route_completion": 0.8,
+  "stage1_cost": 0.25,
+  "stage2_success": 0.5,
+  "stage2_cost": 0.3,
+  "demote_success": 0.1,
+  "demote_route_completion": 0.45,
+  "demote_cost": 0.65,
+  "demote_grace_episodes": 20,
+  "allow_demote": true,
+  "eval_episodes": 50,
+  "eval_freq": 20000,
+  "policy_layers": [
+    256,
+    256
+  ],
+  "n_envs": 8
+}

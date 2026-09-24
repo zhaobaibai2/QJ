@@ -1,0 +1,20 @@
+/root/autodl-tmp/projects/sb3/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+Wrapping the env in a DummyVecEnv.
+Wrapping the env in a DummyVecEnv.
+Wrapping the env in a DummyVecEnv.
+         success  route_completion  collision  out_of_road  cost      reward
+density                                                                     
+0.00        0.84          0.974098        0.0         0.00  0.00  490.070461
+0.08        0.74          0.916702        0.1         0.00  0.10  453.886492
+0.15        0.48          0.760909        0.4         0.02  0.42  350.336414
+saved_evaluation=outputs/stage1000_final_candidate/evaluations/proposed_ppo_s0.csv
+                       seed  success  route_completion  collision  out_of_road  cost      reward  shaped_reward  episode_length      speed  lane_deviation  steering_variation  accel_variation  ttc_risk   min_ttc
+variant  algo density                                                                                                                                                                                              
+proposed ppo  0.00      0.0     0.84          0.974098        0.0         0.00  0.00  490.070461     295.556472          976.38  20.141334        0.174422            0.018553         0.220805  0.000000       NaN
+              0.08      0.0     0.74          0.916702        0.1         0.00  0.10  453.886492     248.127989          933.44  19.763159        0.184605            0.019920         0.214409  0.002205  6.129030
+              0.15      0.0     0.48          0.760909        0.4         0.02  0.42  350.336414     102.442661          813.18  18.203255        0.201253            0.023340         0.214229  0.008497  2.852352
+curve_source=tensorboard
+saved_summary=outputs/stage1000_final_candidate/evaluations/summary.csv
+saved_figures=outputs/stage1000_final_candidate/figures
+saved_report=outputs/stage1000_final_candidate/运行记录.md
