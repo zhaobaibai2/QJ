@@ -1,0 +1,31 @@
+
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage{ctex}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,backgrounds}
+\pgfplotsset{compat=1.18}
+\definecolor{guardblue}{HTML}{2F5597}
+\definecolor{riskorange}{HTML}{C55A11}
+\definecolor{softgreen}{HTML}{548235}
+\definecolor{lightgray}{HTML}{F2F4F7}
+\begin{document}
+
+\begin{tikzpicture}
+\begin{axis}[
+    ybar, width=15.5cm, height=6.0cm, ymin=0, ymax=0.75,
+    bar width=5pt, enlarge x limits=0.08,
+    ylabel={比例}, symbolic x coords={Shield,Retuned,Gated,Guard,Full,Risk}, xtick=data,
+    x tick label style={rotate=25, anchor=east, font=\scriptsize},
+    legend style={at={(0.5,1.08)},anchor=south,legend columns=4,draw=none},
+    grid=major, grid style={black!8},
+]
+\addplot[fill=guardblue!78, draw=guardblue] coordinates {(Shield,0.480) (Retuned,0.453) (Gated,0.447) (Guard,0.413) (Full,0.380) (Risk,0.000)};
+\addplot[fill=guardblue!35, draw=guardblue] coordinates {(Guard,0.267) (Gated,0.220) (Full,0.207) (Shield,0.193) (Retuned,0.173) (Risk,0.000)};
+\addplot[fill=riskorange!70, draw=riskorange] coordinates {(Shield,0.360) (Retuned,0.380) (Gated,0.367) (Guard,0.407) (Full,0.400) (Risk,0.000)};
+\addplot[fill=riskorange!30, draw=riskorange] coordinates {(Guard,0.487) (Gated,0.527) (Full,0.587) (Shield,0.587) (Retuned,0.687) (Risk,0.000)};
+\legend{成功率 d0.20, 成功率 d0.25, Cost d0.20, Cost d0.25}
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

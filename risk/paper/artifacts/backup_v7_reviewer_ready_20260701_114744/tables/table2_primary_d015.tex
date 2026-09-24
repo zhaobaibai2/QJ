@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{Primary held-out comparison at density $d=0.15$. The no-guard row directly isolates the contribution of runtime action guarding. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:primary}
+\scriptsize
+\setlength{\tabcolsep}{4.6pt}
+\renewcommand{\arraystretch}{1.10}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrr}
+\toprule
+Variant & Mechanism & Success $\uparrow$ & Cost $\downarrow$ & Route completion $\uparrow$ & Collision $\downarrow$ & Off-road $\downarrow$ & $\Delta$ vs. Guard \\
+\midrule
+Ours-Guard mode & guard runtime mode & \best{63.3} & \best{20.7} & \second{0.868} & \best{20.0} & \second{0.7} & reference \\
+Ours-Shield mode & shield runtime mode & \second{62.7} & \second{22.7} & \best{0.871} & \second{22.7} & \best{0.0} & $-0.6$ succ., $+2.0$ cost \\
+w/o lane reward & mechanism ablation & 60.7 & 28.0 & 0.844 & 28.0 & \best{0.0} & $-2.7$ succ., $+7.3$ cost \\
+w/o smoothness reward & mechanism ablation & 56.7 & 28.7 & 0.821 & 28.0 & \second{0.7} & $-6.7$ succ., $+8.0$ cost \\
+w/o TTC reward & mechanism ablation & 54.0 & 36.0 & 0.823 & 36.0 & \best{0.0} & $-9.3$ succ., $+15.3$ cost \\
+Action guard removed & guard removed & 0.0 & 100.0 & 0.172 & 51.3 & 48.7 & $-63.3$ succ., $+79.3$ cost \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

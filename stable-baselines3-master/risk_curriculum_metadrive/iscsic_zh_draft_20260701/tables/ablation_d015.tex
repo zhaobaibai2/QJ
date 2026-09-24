@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{密度 $0.15$ 下的机制消融。动作守护移除后完全失效，TTC、车道和平滑项表现为机制细化。}
+\label{tab:ablation-d015}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+方法 & 成功率$\uparrow$ & Cost$\downarrow$ & 路线$\uparrow$ & 碰撞$\downarrow$ \\
+\midrule
+无动作守护 & 0.000 & 1.000 & 0.172 & 0.513 \\
+去 TTC & 0.540 & 0.360 & 0.823 & 0.360 \\
+去车道项 & 0.607 & 0.280 & 0.844 & 0.280 \\
+去平滑项 & 0.567 & 0.287 & 0.821 & 0.280 \\
+仅动作守护 & 0.633 & 0.207 & 0.868 & 0.200 \\
+\bottomrule
+\end{tabular}
+\end{table}

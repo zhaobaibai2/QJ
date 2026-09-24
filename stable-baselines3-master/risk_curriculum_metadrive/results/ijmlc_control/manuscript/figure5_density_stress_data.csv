@@ -1,0 +1,25 @@
+label,method,density,episodes,success,cost,route_completion,low_progress
+baseline,PPO,0.08,120,0.0,1.0,0.25789,0.425
+risk_only,Risk-only,0.08,120,0.0,0.0,0.00899,1.0
+no_action_guard,No-action guard,0.08,120,0.025,0.975,0.28662,0.43333
+guard_only,Guard,0.08,120,0.85,0.05,0.96784,0.0
+shield_only,Shield,0.08,120,0.83333,0.06667,0.96482,0.0
+gated_risk,Gated-risk,0.08,120,0.85,0.04167,0.96882,0.0
+baseline,PPO,0.15,120,0.0,1.0,0.20746,0.575
+risk_only,Risk-only,0.15,120,0.0,0.0,0.00899,1.0
+no_action_guard,No-action guard,0.15,120,0.00833,1.0,0.21726,0.55833
+guard_only,Guard,0.15,120,0.59167,0.20833,0.86382,0.0
+shield_only,Shield,0.15,120,0.625,0.19167,0.85687,0.00833
+gated_risk,Gated-risk,0.15,120,0.61667,0.18333,0.86874,0.00833
+baseline,PPO,0.2,120,0.0,1.0,0.18931,0.675
+risk_only,Risk-only,0.2,120,0.0,0.0,0.00899,1.0
+no_action_guard,No-action guard,0.2,120,0.0,1.0,0.20338,0.66667
+guard_only,Guard,0.2,120,0.525,0.26667,0.77462,0.025
+shield_only,Shield,0.2,120,0.475,0.33333,0.76372,0.0
+gated_risk,Gated-risk,0.2,120,0.39167,0.325,0.75401,0.025
+baseline,PPO,0.25,120,0.0,1.0,0.17322,0.74167
+risk_only,Risk-only,0.25,120,0.0,0.0,0.00899,1.0
+no_action_guard,No-action guard,0.25,120,0.0,1.0,0.16813,0.73333
+guard_only,Guard,0.25,120,0.3,0.43333,0.64124,0.04167
+shield_only,Shield,0.25,120,0.25,0.5,0.64621,0.05
+gated_risk,Gated-risk,0.25,120,0.18333,0.525,0.61291,0.04167

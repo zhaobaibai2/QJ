@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+"""Write a Chinese Markdown report for code changes, commands and artifacts."""
+
+from __future__ import annotations
+
+import argparse
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def summarize(path: Path) -> str:
+    summary = path / "evaluations" / "summary.csv"
+    if not summary.exists():
+        return "尚未生成 summary.csv。"
+    frame = pd.read_csv(summary)
+    cols = ["variant", "algo", "density", "success", "route_completion", "collision", "out_of_road", "cost", "reward"]
+    existing = [col for col in cols if col in frame.columns]
+    rounded = frame[existing].copy()
+    numeric = rounded.select_dtypes(include="number").columns
+    rounded[numeric] = rounded[numeric].round(4)
+    return "```text\n" + rounded.to_string(index=False) + "\n```"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--experiment-root", type=Path, default=ROOT / "outputs" / "paper")
+    parser.add_argument("--preset", default="paper")
+    parser.add_argument("--include-sac", action="store_true")
+    parser.add_argument("--status", default="completed")
+    args = parser.parse_args()
+
+    report = args.experiment_root / "运行记录.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    text = f"""# 风险感知课程强化学习实验运行记录
+
+生成时间：{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+
+## 本次代码修改
+
+- 将 `RewardWeights` 调整为当前论文方案：`base_scale=0.5`、`ttc=2.0`、`lane=0.5`、`smooth=0.02`、`accel=0.01`、`cost=20.0`，并保留成功、碰撞和越界终止奖励/惩罚。
+- 针对 30 万步 tuning 中出现的高速越界/碰撞，加入超过 20 km/h 的二次超速惩罚 `overspeed=2.0`，并将 crash/out-of-road 终止惩罚提高到 80。
+- 在 wrapper 中加入速度动作守护：超过目标速度时禁止继续正油门，超过目标速度 5 km/h 以上时施加保守制动，避免策略利用高速冲刺获取短期路线奖励。
+- 课程升级阈值改为更重安全：stage0 cost <= 0.25、stage1 cost <= 0.35、stage2 success >= 0.50 且 cost <= 0.40，避免过早进入中高难度地图。
+- 将主评估从 hard OOD（map=7 且 accident_prob=0.02）改为 Unseen Standard（map=5 且 accident_prob=0.0）；hard/OOD 后续作为单独压力测试报告。
+- 针对 pilot 中出现的“安全但静止”策略，加入路线完成度增量奖励 `progress=50.0`、低速停滞惩罚 `idle_penalty=0.10`、最低速度阈值 `min_speed_kmh=2.0`。
+- 将课程 warm-up 从随机 2-block 地图改为固定直道 `"S"`，降低早期探索难度，避免 PPO 在尚未学会前进时被复杂道路和车道惩罚压成静止策略。
+- 针对高密度评估碰撞率高的问题，将观测中的 lidar 周围车辆数从 `num_others=0` 改为 `num_others=4`，让策略能够看到邻近交通参与者。
+- 保留四阶段自适应课程：warmup/easy/medium/hard，升级依据为路线完成度、成功率和 episode cost。
+- 训练和评估记录 route completion、episode length、车道偏离、TTC、控制变化、jerk、collision/out-of-road/cost 等指标。
+- TensorBoard 写入 `paper/*` 和 `curriculum/*` 标量，绘图脚本优先从 TensorBoard event 文件读取并进行指数平滑。
+- 新增定性轨迹图脚本 `scripts/plot_trajectories.py`，输出 `trajectory_visualization.pdf/png` 和逐步轨迹 CSV。
+- 新增 `scripts/build_paper.py` 用于编译 `paper/main_zh.tex`，新增 `scripts/write_run_report.py` 自动写入本报告。
+
+## 运行命令
+
+```bash
+conda activate sb3
+cd {ROOT}
+python scripts/check_env.py --require-gpu
+python scripts/run_suite.py --preset {args.preset}{' --include-sac' if args.include_sac else ''} --device cuda
+python scripts/plot_results.py --input-dir {args.experiment_root / 'evaluations'} --output-dir {args.experiment_root / 'figures'} --runs-dir {args.experiment_root / 'runs'}
+python scripts/plot_trajectories.py --runs-dir {args.experiment_root / 'runs'} --output-dir {args.experiment_root / 'figures'} --algo ppo --seed 0 --density 0.25
+python scripts/build_paper.py
+```
+
+## 主要输出
+
+- 模型：`{args.experiment_root / 'runs'}`
+- TensorBoard：`{args.experiment_root / 'runs'}/*/tensorboard`
+- 评估 CSV：`{args.experiment_root / 'evaluations'}`
+- 论文图：`{args.experiment_root / 'figures'}`
+- LaTeX：`{ROOT / 'paper' / 'main_zh.tex'}`
+- PDF：`{ROOT / 'paper' / 'main_zh.pdf'}`
+
+## 当前执行状态
+
+{args.status}
+
+## 当前结果摘要
+
+{summarize(args.experiment_root)}
+"""
+    report.write_text(text, encoding="utf-8")
+    print(f"saved_report={report}")
+
+
+if __name__ == "__main__":
+    main()

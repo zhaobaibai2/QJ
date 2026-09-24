@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Collision $\downarrow$ \\
+\midrule
+no\_action\_guard & 0.000 & 1.000 & 0.172 & 0.513 \\
+wo\_ttc & 0.540 & 0.360 & 0.823 & 0.360 \\
+wo\_lane & 0.607 & 0.280 & 0.844 & 0.280 \\
+wo\_smooth & 0.567 & 0.287 & 0.821 & 0.280 \\
+guard\_only & 0.633 & 0.207 & 0.868 & 0.200 \\
+\bottomrule
+\end{tabular}
+\caption{Mechanism ablation at density 0.15. Removing the action guard collapses held-out performance, while TTC, lane, and smoothness terms act as refinements around the guard-centered mechanism.}
+\label{tab:ablation-d015}
+\end{table}

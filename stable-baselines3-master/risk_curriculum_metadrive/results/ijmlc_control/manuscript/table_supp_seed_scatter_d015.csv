@@ -1,0 +1,25 @@
+label,train_seed,episodes,success,cost,route_completion,low_progress,method
+baseline,0,40,0.0,1.0,0.20866568585407194,0.55,PPO
+baseline,1,40,0.0,1.0,0.19932662186294628,0.575,PPO
+baseline,2,40,0.0,1.0,0.21439484748869778,0.6,PPO
+gated_risk,0,40,0.6,0.2,0.8613493661715113,0.025,Gated-risk
+gated_risk,1,40,0.6,0.175,0.8626861915361712,0.0,Gated-risk
+gated_risk,2,40,0.65,0.175,0.8821966185041246,0.0,Gated-risk
+guard_only,0,40,0.575,0.3,0.8549176409810242,0.0,Guard
+guard_only,1,40,0.6,0.15,0.8695936055589565,0.0,Guard
+guard_only,2,40,0.6,0.175,0.8669410852313032,0.0,Guard
+no_action_guard,0,40,0.0,1.0,0.2314133000097364,0.5,No-action guard
+no_action_guard,1,40,0.0,1.0,0.21079686414826804,0.575,No-action guard
+no_action_guard,2,40,0.025,1.0,0.20956099809033607,0.6,No-action guard
+rcpo_lagrangian,0,40,0.0,1.0,0.20110039535171365,0.575,RCPO-Lagrangian
+rcpo_lagrangian,1,40,0.0,1.0,0.20847447843459405,0.6,RCPO-Lagrangian
+rcpo_lagrangian,2,40,0.0,1.0,0.25474662697989375,0.475,RCPO-Lagrangian
+risk_only,0,40,0.0,0.0,0.008989992797395405,1.0,Risk-only
+risk_only,1,40,0.0,0.0,0.008989754888489446,1.0,Risk-only
+risk_only,2,40,0.0,0.0,0.00898990176521271,1.0,Risk-only
+rss_ttc_filter,0,40,0.525,0.475,0.75995638938389,0.05,RSS/TTC filter
+rss_ttc_filter,1,40,0.5,0.45,0.7906814639380572,0.025,RSS/TTC filter
+rss_ttc_filter,2,40,0.575,0.4,0.8176550141925762,0.0,RSS/TTC filter
+shield_only,0,40,0.525,0.325,0.8196399404289044,0.0,Shield
+shield_only,1,40,0.65,0.15,0.8719949748722456,0.025,Shield
+shield_only,2,40,0.7,0.1,0.8789852152031248,0.0,Shield

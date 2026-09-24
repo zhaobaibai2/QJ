@@ -1,0 +1,183 @@
+\documentclass[conference,a4paper]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{stfloats}
+\usepackage{placeins}
+\usepackage{balance}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\graphicspath{{figures/}}
+\raggedbottom
+
+\newcommand{\method}{GuardShield-Runtime}
+\newcommand{\best}[1]{\cellcolor{black!8}\textbf{#1}}
+\newcommand{\second}[1]{\underline{#1}}
+\begin{document}
+\title{GuardShield-Runtime: Runtime Action Guarding and Shielding for Progress-Preserving Dense-Traffic Driving}
+\author{\IEEEauthorblockN{Anonymous Authors}\\
+\IEEEauthorblockA{Anonymous Affiliation}}
+\maketitle
+\begin{abstract}
+Dense-traffic autonomous driving requires reinforcement learning policies to preserve route progress while avoiding collision and off-road failures. Reward-only safety can be misleading in this setting: a policy may reduce measured cost by barely moving rather than by driving safely. This paper presents \method{}, a runtime safety architecture that separates policy learning, action guarding, final shielding, and progress-gated risk shaping. The action guard corrects unsafe short-horizon commands before execution, while the shield branch provides a final braking fallback under severe time-to-collision or overspeed conditions. In MetaDrive dense traffic at density $d=0.15$, the Guard runtime mode achieves 63.3\% success, 20.7\% episode-level safety cost, and 0.868 route completion. Removing the action guard collapses success to 0.0\% and increases cost to 100.0\%, identifying runtime guarding as the critical mechanism. External-seed evaluation over 300 episodes further shows that the Shield runtime mode obtains the highest mean success, although confidence intervals overlap with other competitive variants. These results support a simulator-bounded conclusion: runtime action intervention improves the progress--safety trade-off under the tested dense-traffic settings, while higher-density generalization remains open.
+\end{abstract}
+\begin{IEEEkeywords}
+safe reinforcement learning, autonomous driving, action guard, shielding, progress-gated risk penalty, MetaDrive, dense traffic
+\end{IEEEkeywords}
+
+\section{Introduction}
+Reinforcement learning (RL) for autonomous driving must make progress along the route while keeping the vehicle out of collision and off-road states. Dense traffic makes this requirement difficult because the progress objective and the safety objective can fail in opposite directions. A cautious policy may reduce the measured cost by barely moving, whereas an aggressive policy may finish more routes by accepting unsafe interactions. A dense-traffic evaluation is therefore meaningful only when success, episode-level safety cost rate, route completion, collision, and off-road rates are interpreted together.
+
+Reward-level safety alone is not sufficient for this setting. Safe RL methods often encode safety through constraints, costs, or risk-sensitive objectives, but a cost-minimizing driving policy can also create a non-motion artifact. It looks safe because it avoids traffic interaction, not because it drives safely. We therefore study whether safety intervention should be applied at the reward level, at the action-correction level, or at the final execution level. This question shifts the paper away from ranking a single scalar objective and toward identifying which mechanism changes the dense-traffic failure mode.
+
+This paper proposes \method{}, a progress-preserving runtime safety architecture for dense-traffic RL driving. The architecture separates a PPO policy, a runtime action guard, a final shield branch, and a progress-gated risk penalty. The policy first proposes an action, the guard corrects unsafe short-horizon longitudinal commands, the shield branch applies a stronger fallback under severe time-to-collision (TTC) or overspeed conditions, and the risk penalty is activated only when the vehicle is making measurable progress. This decomposition allows reward shaping, action guarding, and execution shielding to be evaluated as distinct intervention points.
+
+The contributions are threefold. First, we introduce \method{}, a runtime safety architecture that separates policy learning, action guarding, final shielding, and progress-gated risk shaping. This separation makes it possible to study safety as both a learning signal and an execution-time intervention. Second, we provide a mechanism-level evaluation protocol for dense-traffic RL driving. Instead of ranking policies by a single reward or cost score, the protocol jointly reports success, episode-level safety cost, route completion, collision, and off-road rates to expose non-motion artifacts. Third, we show that runtime action guarding is the decisive component under the tested MetaDrive protocol. The Guard runtime mode gives the best held-out success--cost balance, the Shield runtime mode gives the highest external-seed mean success, and removing the guard causes a complete failure. Stress-density results further identify the remaining boundary rather than claiming solved generalization.
+
+\section{Related Work}
+\subsection{Safe and Constrained Reinforcement Learning}
+Safe RL commonly encodes safety through constraints, costs, risk-sensitive objectives, or safe-exploration mechanisms \cite{garcia2015safe,gu2022review,achiam2017cpo,ray2019benchmarking}. Lagrangian and Lyapunov approaches optimise policies under cost constraints or stability-inspired conditions \cite{chow2018lyapunov,tessler2019reward}, while continuous-action safe-exploration methods modify proposed actions to satisfy local safety conditions \cite{dalal2018safe}. These methods are important for learning safety-aware policies, but dense-traffic driving exposes a specific reward-level failure: reducing cost can coincide with low route progress. \method{} therefore treats progress-gated risk shaping as one intervention point and compares it against action-space guarding and execution-time shielding.
+
+\subsection{Runtime Shielding and Safety Filters}
+Runtime shielding and safety filters prevent unsafe actions before execution through formal constraints, reachability-style checks, or predictive safety filters \cite{alshiekh2018safe,fulton2018safe,wabersich2021predictive}. Control-barrier-function methods similarly enforce safety-critical constraints in continuous control \cite{ames2017control,cheng2019end}. \method{} follows this runtime-intervention philosophy, but its contribution is empirical and mechanism-level. We isolate action guarding, final shielding, and risk shaping in the same dense-traffic RL protocol to determine which intervention changes the progress--safety failure mode.
+
+\subsection{Closed-Loop Autonomous Driving Evaluation}
+Closed-loop driving benchmarks require evaluating route progress and safety jointly, because open-loop prediction or isolated reward values do not capture interaction failures. MetaDrive provides configurable traffic density and procedural scenario generation \cite{li2022metadrive}; CARLA and highway-style environments similarly support closed-loop autonomous-driving evaluation under controlled scenarios \cite{dosovitskiy2017carla,leurent2018highway}. Deep RL has been widely studied for autonomous driving decision making \cite{kiran2021deep,kendall2019learning,paden2016survey}, with PPO and SAC serving as common continuous-control backbones \cite{schulman2017ppo,haarnoja2018soft}. Unlike work that reports a single final policy, this paper uses mechanism-level ablations to distinguish reward shaping, action guarding, and execution shielding. The non-motion issue is also related to reward hacking and specification gaming in AI systems \cite{amodei2016concrete}.
+
+\section{Method}
+\subsection{Runtime Decomposition}
+\method{} separates learning, runtime intervention, and risk shaping (Fig.~\ref{fig:framework}). At each step, the PPO policy samples a raw two-dimensional MetaDrive action $a_t=(\delta_t,u_t)$, where $\delta_t$ is steering and $u_t$ is the longitudinal command. The runtime safety layer maps this raw command to a guarded action, and the final shield branch can replace the longitudinal command with a braking fallback:
+\begin{equation}
+ a_t \sim \pi_\theta(\cdot \mid o_t), \quad
+ \tilde{a}_t = G(o_t,a_t), \quad
+ a_t^{\mathrm{exec}} = S(o_t,\tilde{a}_t).
+ \label{eq:runtime}
+\end{equation}
+Here, $G$ is the action guard, $S$ is the shield branch, $\tilde{a}_t$ is the corrected action, and $a_t^{\mathrm{exec}}$ is the executed action. In the implementation used for the reported experiments, guarding and shielding preserve the steering command and modify the longitudinal command when short-horizon TTC or speed predicates are violated.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{fig1_framework.pdf}
+\caption{Runtime action-intervention architecture of \method{}. The left panel shows the execution pipeline from observation to raw action, guarded action, shielded action, and MetaDrive transition. The bottom loop indicates that risk shaping is used for learning, not as a safety guarantee. The right panel shows the decision logic for TTC and speed predicates.}
+\label{fig:framework}
+\end{figure*}
+
+\subsection{TTC and Speed Guarding}
+The action guard estimates a forward TTC from observable nearby traffic. For each detected vehicle, the wrapper projects relative displacement and relative velocity onto the ego heading. A vehicle contributes to TTC only if it is in front of the ego vehicle, lies within $1.8$ ego widths laterally, and has positive closing speed. The minimum TTC is
+\begin{equation}
+ \mathrm{TTC}_{\min}=\min_i \frac{\Delta x_i^{\parallel}}{v_{\mathrm{ego},i}^{\parallel}-v_i^{\parallel}},
+ \label{eq:ttc}
+\end{equation}
+computed over valid forward vehicles. The continuous TTC risk is
+\begin{equation}
+ \rho_{\mathrm{ttc}}=\mathrm{clip}\left(\frac{\tau_{\mathrm{ttc}}-\mathrm{TTC}_{\min}}{\tau_{\mathrm{ttc}}},0,1\right),
+ \label{eq:ttc-risk}
+\end{equation}
+with $\tau_{\mathrm{ttc}}=12.0$ s in the reported protocol. The runtime thresholds are $\tau_{\mathrm{soft}}=12.0$ s and $\tau_{\mathrm{hard}}=7.2$ s. If $\mathrm{TTC}_{\min}<\tau_{\mathrm{soft}}$, the guard limits the longitudinal command to at most $-0.6$. If $\mathrm{TTC}_{\min}<\tau_{\mathrm{hard}}$, the shield branch limits it to at most $-1.0$. A separate speed predicate uses the target speed $v^*=18$ km h$^{-1}$: the command is capped at $0$ above $v^*$ and at $-0.35$ above $v^*+5$ km h$^{-1}$. These interventions are logged as soft, hard, and overspeed shield events.
+
+\subsection{Progress-Gated Risk Penalty}
+Risk shaping is used as a learning signal rather than as a safety guarantee. The route-progress gate prevents the policy from receiving risk-avoidance benefit while stationary:
+\begin{equation}
+ r_t = r_t^{\mathrm{task}} - \lambda \mathbb{I}(p_t > p_{\min})\rho(o_t,a_t),
+ \label{eq:gated-risk}
+\end{equation}
+where $p_t$ is one-step route-completion progress, $p_{\min}=10^{-4}$ in the gated-risk extension, and $\mathbb{I}(\cdot)$ is an indicator. The risk score is implemented as
+\begin{equation}
+\begin{aligned}
+ \rho(o_t,a_t) ={}& w_{\mathrm{ttc}}\rho_{\mathrm{ttc}} + w_{\mathrm{lane}}d_{\mathrm{lane}}^2 + w_{\mathrm{smooth}}|\Delta\delta_t| \\
+ &+ w_{\mathrm{accel}}|\Delta u_t| + w_{\mathrm{speed}}\rho_{\mathrm{speed}}^2 + w_{\mathrm{cost}}c_t,
+\end{aligned}
+\label{eq:risk-score}
+\end{equation}
+where $d_{\mathrm{lane}}$ is lane deviation normalised by half lane width, $c_t$ is the MetaDrive safety cost, and $\rho_{\mathrm{speed}}=\max(v_t-v^*,0)/v^*$. For the Guard and Shield runtime modes, reward-level risk shaping is disabled and the runtime filter is the active safety mechanism. For the gated-risk extension, the penalty is active only when the vehicle is moving at least 3 km h$^{-1}$ or makes route progress above $10^{-4}$ and a TTC, lane, or speed risk is present.
+
+\begin{algorithm}[t]
+\caption{\method{} execution step}
+\label{alg:guardshield}
+\begin{algorithmic}[1]
+\State Observe $o_t$ and sample $a_t=(\delta_t,u_t)\sim\pi_\theta(\cdot|o_t)$.
+\State Compute $\mathrm{TTC}_{\min}$ from detected forward vehicles and measure ego speed $v_t$.
+\State Set $\tilde a_t\leftarrow a_t$.
+\If{$\mathrm{TTC}_{\min}<7.2$ s}
+    \State $\tilde u_t\leftarrow \min(u_t,-1.0)$ \Comment{hard shield fallback}
+\ElsIf{$\mathrm{TTC}_{\min}<12.0$ s}
+    \State $\tilde u_t\leftarrow \min(u_t,-0.6)$ \Comment{soft guard correction}
+\EndIf
+\If{$v_t>23$ km h$^{-1}$}
+    \State $\tilde u_t\leftarrow \min(\tilde u_t,-0.35)$.
+\ElsIf{$v_t>18$ km h$^{-1}$}
+    \State $\tilde u_t\leftarrow \min(\tilde u_t,0)$.
+\EndIf
+\State Execute $a_t^{\mathrm{exec}}=(\delta_t,\tilde u_t)$ and log success, cost, route completion, collision, off-road, and intervention events.
+\end{algorithmic}
+\end{algorithm}
+
+The guard and shield differ in intervention strength. The guard is a corrective layer that attempts to preserve the policy command through soft braking. The shield branch is a conservative fallback for severe TTC or overspeed violations. Lane deviation is not used as a separate lane-centering fallback in this implementation; it enters the risk penalty and the evaluation metrics. This distinction is important for reproducibility because the reported runtime effect comes from TTC and speed action intervention, not from an unreported lane controller.
+
+\section{Experimental Protocol}
+\subsection{Environment and Metrics}
+All experiments are conducted in MetaDrive dense-traffic scenarios with random traffic, random lane width, random lane number, 120 lidar rays, 60 m lidar range, and four tracked surrounding objects. Traffic density is varied across $d\in\{0.00,0.08,0.15,0.20,0.25\}$. We report success rate, episode-level safety cost rate, route completion, collision rate, and off-road rate. Safety cost is the episode-level MetaDrive cost and, in the reported tables, equals the union of collision and off-road failures. Route completion is reported as a continuous value in $[0,1]$.
+
+\subsection{Training and Evaluation Splits}
+All competitive variants use the same PPO backbone, observation space, action space, and deterministic evaluation path. Unless otherwise stated, models are trained for $10^6$ environment steps with 16 vectorised environments, horizon 1500, two hidden layers of width 256, learning rate $3\times10^{-4}$, entropy coefficient 0.01, $\gamma=0.99$, GAE $\lambda=0.95$, PPO clip 0.2, 1024 rollout steps, batch size 256, and 10 epochs per update. The training split uses 200 scenarios from start seed 0. The held-out evaluation split uses 100 scenarios from start seed 10000 and 50 episodes per density for each training seed. The primary tables report means over three training seeds. External-seed evaluation uses the same frozen models under additional scenario starts 20000 and 30000, giving six evaluation units and 300 episodes per variant at each reported density.
+
+\subsection{Compared Variants}
+Guard runtime refers to the three-seed `guard\_only' configuration: action guard on, reward-level risk penalty off, and curriculum on. Shield runtime refers to the `shield\_only' configuration: the same runtime TTC/speed filter is active, reward-level risk penalty is off, and the model is trained without curriculum progression. Full extension combines action intervention, curriculum, and risk shaping. Retuned full extension uses the same component family with the selected retuning. Gated-risk extension activates the progress-gated risk penalty. The ablations remove the TTC penalty, lane penalty, smoothness and acceleration penalties, or the runtime action guard from the guard-centred protocol. Baseline, curriculum-only, and risk-only controls are retained as lower-bound diagnostics because they expose unsafe driving or non-motion artifacts.
+
+\subsection{Statistical Reporting}
+Table~\ref{tab:protocol} summarises how each evaluation block supports the claim. For binary rates such as success and cost, the external-seed block reports Wilson 95\% confidence intervals \cite{wilson1927probable}. Since intervals overlap, the Shield runtime mode is interpreted as the highest mean result rather than as a statistically isolated winner.
+\input{tables/table1_protocol.tex}
+
+\section{Results}
+\subsection{Primary Held-Out Comparison}
+Runtime action guarding provides the strongest held-out success--cost balance at $d=0.15$. Table~\ref{tab:primary} and Fig.~\ref{fig:primary} show that Guard runtime achieves 63.3\% success, 20.7\% cost, and 0.868 route completion. Shield runtime is close on the same held-out slice and is tested again under external seeds. Removing the action guard directly isolates the critical runtime component, reducing success from 63.3\% to 0.0\% and increasing cost from 20.7\% to 100.0\%.
+\input{tables/table2_primary_d015.tex}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig3_primary_tradeoff.pdf}
+\caption{Primary result summary. Panel (a) reports formal held-out success and cost for runtime modes and mechanism ablations. Panel (b) shows the progress--safety frontier, including each ablation and the no-guard off-scale collapse. Panel (c) reports external-seed Wilson intervals using 300 episodes per variant.}
+\label{fig:primary}
+\end{figure*}
+
+\subsection{Normal-Density Generalisation}
+Increasing traffic density consistently reduces success and increases cost across all competitive variants. As shown in Table~\ref{tab:density}, Guard and Shield remain on the leading frontier from $d=0.00$ to $d=0.15$, but neither removes the density dependence of the task. This result supports a bounded runtime-family claim rather than a general dense-traffic solution.
+\input{tables/table3_density_sweep.tex}
+
+\subsection{Mechanism Ablation}
+The ablation results identify action guarding as the critical mechanism. Table~\ref{tab:ablation} shows that reward-term removals degrade performance gradually, whereas removing the runtime action guard changes the failure mode completely. The TTC, lane, and smoothness terms act as refinements around the guard-centred mechanism, but the no-guard row explains why runtime intervention is necessary.
+\input{tables/table4_ablation.tex}
+
+\subsection{External-Seed Robustness}
+External-seed evaluation tests whether the ranking is stable under additional scenario seeds. Table~\ref{tab:external} and Fig.~\ref{fig:primary}(c) show that Shield runtime obtains the highest mean success over 300 episodes at $d=0.15$. Wilson intervals overlap, so this block supports a highest-mean robustness claim rather than a statistically isolated superiority claim.
+\input{tables/table5_external_ci.tex}
+
+\subsection{Stress-Boundary Evaluation}
+Stress-density evaluation exposes the boundary of the current method. At $d=0.20$ and $d=0.25$, all variants degrade substantially. Table~\ref{tab:stress} shows that Shield runtime obtains the best result at $d=0.20$, while Guard runtime obtains the best result at $d=0.25$. The absolute success rates show that high-density generalisation remains unsolved.
+\input{tables/table6_stress.tex}
+
+\subsection{Model-Selection Closure}
+Seed-level and parameter-sensitivity checks were used as closure tests. Several probes improve one metric while worsening another; for example, a lower-cost guard probe reduces success, and a higher-success probe raises cost. These checks are retained as diagnostics rather than main configurations because the paper's claim is based on the joint progress--safety criterion.
+\FloatBarrier
+
+\section{Discussion}
+The main empirical finding is that execution-time intervention changes the dense-traffic failure mode more reliably than reward shaping alone. Reward-only safety can reduce measured cost through non-motion, whereas the guard modifies unsafe commands while preserving route progress. The no-guard collapse provides the clearest evidence: once runtime action correction is removed, the policy loses both safety and progress.
+
+Guard and Shield play different roles. The guard is less conservative because it applies soft TTC and speed corrections before execution, which explains its stronger success--cost balance in the formal held-out slice. The shield branch applies stronger braking fallback under severe TTC or overspeed predicates and gives the highest external-seed mean success. However, overlapping confidence intervals prevent a statistically isolated superiority claim.
+
+The gated-risk extension should not be interpreted as the final algorithm. It is useful diagnostically because it tests whether progress-gated risk penalties improve learning, but its advantage is not consistent across evaluation blocks. Therefore, the supported contribution is the runtime safety family rather than reward shaping alone.
+
+\textit{Limitations.} The claim remains simulator-bounded. The study is limited to MetaDrive simulation and does not establish real-world deployment validity or formal verification. The runtime filter uses observable short-horizon TTC and speed cues rather than learned intent prediction, so it may fail in dense interactive scenarios where future traffic behaviour is ambiguous. The stress-density results show substantial degradation at $d=0.20$ and $d=0.25$. These limitations motivate adaptive guard thresholds, learned risk prediction, stronger interaction modelling, and real-time deployment studies.
+
+\section{Conclusion}
+This paper introduced \method{}, a runtime safety architecture for progress-preserving dense-traffic RL driving. By separating action guarding, final shielding, and progress-gated risk shaping, the method identifies where safety intervention should occur in the decision pipeline. In MetaDrive, the Guard runtime mode achieves the best held-out success--cost balance at $d=0.15$, while the Shield runtime mode obtains the highest external-seed mean success. The no-guard collapse shows that runtime action guarding is the critical component. The results support a simulator-bounded improvement in the progress--safety trade-off and identify high-density generalisation as the main remaining challenge.
+\FloatBarrier
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

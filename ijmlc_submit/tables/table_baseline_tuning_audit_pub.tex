@@ -1,0 +1,28 @@
+\begin{table}[!htbp]
+\centering
+\caption{Baseline audit for external comparator rows.}
+\label{tab_baseline_tuning_audit}
+\footnotesize
+\setlength{\tabcolsep}{4.0pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.28\textwidth}@{}}
+\toprule
+Comparator & Evidence run and logged configuration & Interpretation boundary \\
+\midrule
+PPO-Lagrangian &
+Three 1M-step training seeds with 16 parallel environments and the same diagnostic protocol. Logged settings include cost limit 0.25, $\lambda_0=20$, Lagrange lr 5, update window 20, retained manifests, and retained logs. &
+Protocol-specific constrained-RL baseline, not a universal claim that PPO-Lagrangian or CPO-style methods fail. \\
+\addlinespace[2pt]
+RSS/TTC filter &
+Three diagnostic seeds on frozen PPO checkpoints with an external action filter. Logged settings include soft/hard TTC thresholds of 6.0/3.5 s, 20 km/h target speed, and retained raw episode CSVs. &
+Interpretable runtime-filter comparator, not an optimized upper bound over all RSS/TTC thresholds. \\
+\addlinespace[2pt]
+TTC sensitivity &
+Independent Guard/Shield/Gated-risk diagnostic reruns across TTC thresholds. The TTC sweep is shown in Fig.~\ref{fig_ttc_sensitivity}; the target-speed sweep is retained in Appendix~\ref{app_sensitivity_runtime}. &
+Supports a trade-off interpretation and reduces dependence on a single selected threshold. \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}
+\item This audit records the baseline evidence available for this manuscript revision. It does not replace a future full constrained-RL or rule-filter hyperparameter search.
+\end{tablenotes}
+\end{table}

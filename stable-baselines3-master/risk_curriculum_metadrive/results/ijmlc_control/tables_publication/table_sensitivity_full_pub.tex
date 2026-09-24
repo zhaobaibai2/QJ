@@ -1,0 +1,68 @@
+\begin{table}[!htbp]
+\centering
+\caption{Full parameter-sensitivity sweep at density 0.15.}
+\label{tab_sensitivity}
+\tiny
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.08}
+\textit{Outcome metrics}\par
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Axis & Value & Method & Ep & Seeds & Success & Cost & Route \\
+\midrule
+target speed & 15.0 & Guard & 120 & 3 & 52.5 & 14.2 & 88.2 \\
+target speed & 18.0 & Guard & 120 & 3 & 62.5 & 23.3 & 84.8 \\
+target speed & 22.0 & Guard & 120 & 3 & 55.8 & 31.7 & 80.6 \\
+TTC threshold & 6.0 & Guard & 120 & 3 & 53.3 & 45.8 & 77.7 \\
+TTC threshold & 12.0 & Guard & 120 & 3 & 61.7 & 19.2 & 86.1 \\
+TTC threshold & 10.0 & Guard & 120 & 3 & 65.8 & 20.8 & 86.9 \\
+TTC threshold & 8.0 & Guard & 120 & 3 & 56.7 & 37.5 & 81.6 \\
+target speed & 15.0 & Shield & 120 & 3 & 54.2 & 15.8 & 86.5 \\
+TTC threshold & 8.0 & Shield & 120 & 3 & 55.8 & 35.0 & 82.3 \\
+TTC threshold & 6.0 & Shield & 120 & 3 & 55.0 & 43.3 & 80.2 \\
+target speed & 22.0 & Shield & 120 & 3 & 56.7 & 27.5 & 83.5 \\
+target speed & 18.0 & Shield & 120 & 3 & 60.0 & 20.8 & 86.0 \\
+TTC threshold & 10.0 & Shield & 120 & 3 & 59.2 & 25.0 & 85.7 \\
+TTC threshold & 12.0 & Shield & 120 & 3 & 61.7 & 22.5 & 85.9 \\
+target speed & 18.0 & Gated-risk & 120 & 3 & 61.7 & 19.2 & 87.1 \\
+target speed & 15.0 & Gated-risk & 120 & 3 & 48.3 & 19.2 & 85.7 \\
+target speed & 22.0 & Gated-risk & 120 & 3 & 56.7 & 27.5 & 82.8 \\
+TTC threshold & 6.0 & Gated-risk & 120 & 3 & 53.3 & 40.8 & 78.2 \\
+TTC threshold & 8.0 & Gated-risk & 120 & 3 & 58.3 & 34.2 & 80.5 \\
+TTC threshold & 10.0 & Gated-risk & 120 & 3 & 57.5 & 29.2 & 85.0 \\
+TTC threshold & 12.0 & Gated-risk & 120 & 3 & 55.0 & 21.7 & 84.6 \\
+\bottomrule
+\end{tabular}
+\vspace{3pt}
+\textit{Artifact, intervention, and runtime diagnostics}\par
+\begin{tabular}{@{}lllrrrrr@{}}
+\toprule
+Axis & Value & Method & Low-prog. & Stop & TTC-danger (\%) & Int./100 steps & Loop p95 (ms) \\
+\midrule
+target speed & 15.0 & Guard & 0.0 & 1.7 & 8.4 & 76.3 & 25.67 \\
+target speed & 18.0 & Guard & 0.8 & 2.1 & 9.6 & 69.6 & 25.29 \\
+target speed & 22.0 & Guard & 6.7 & 3.1 & 9.9 & 61.8 & 26.80 \\
+TTC threshold & 6.0 & Guard & 1.7 & 1.1 & 13.0 & 77.9 & 25.19 \\
+TTC threshold & 12.0 & Guard & 0.8 & 1.7 & 12.1 & 69.7 & 25.77 \\
+TTC threshold & 10.0 & Guard & 0.0 & 2.7 & 11.2 & 72.4 & 25.47 \\
+TTC threshold & 8.0 & Guard & 2.5 & 1.9 & 9.8 & 74.4 & 25.87 \\
+target speed & 15.0 & Shield & 0.0 & 2.2 & 9.4 & 76.6 & 25.81 \\
+TTC threshold & 8.0 & Shield & 1.7 & 2.5 & 12.5 & 74.5 & 25.08 \\
+TTC threshold & 6.0 & Shield & 0.8 & 1.5 & 13.8 & 77.0 & 25.23 \\
+target speed & 22.0 & Shield & 2.5 & 3.2 & 13.1 & 62.8 & 26.59 \\
+target speed & 18.0 & Shield & 0.0 & 3.4 & 8.9 & 69.1 & 27.02 \\
+TTC threshold & 10.0 & Shield & 0.8 & 2.1 & 13.0 & 72.4 & 26.25 \\
+TTC threshold & 12.0 & Shield & 0.8 & 2.3 & 11.0 & 70.8 & 25.69 \\
+target speed & 18.0 & Gated-risk & 0.0 & 2.3 & 11.2 & 69.1 & 22.23 \\
+target speed & 15.0 & Gated-risk & 0.0 & 2.6 & 10.2 & 76.4 & 21.94 \\
+target speed & 22.0 & Gated-risk & 4.2 & 2.9 & 10.4 & 60.6 & 22.26 \\
+TTC threshold & 6.0 & Gated-risk & 1.7 & 2.3 & 13.9 & 74.9 & 24.45 \\
+TTC threshold & 8.0 & Gated-risk & 3.3 & 2.4 & 16.5 & 73.1 & 23.89 \\
+TTC threshold & 10.0 & Gated-risk & 0.0 & 2.0 & 10.9 & 71.2 & 24.43 \\
+TTC threshold & 12.0 & Gated-risk & 1.7 & 2.7 & 12.5 & 68.1 & 22.77 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. The sweep covers target speed and TTC threshold for the three runtime variants.
+\end{tablenotes}
+\end{table}

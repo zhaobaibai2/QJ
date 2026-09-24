@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Seed-level robustness at $d=0.15$ for competitive variants. Ours-Guard remains the strongest seed-mean result under the formal objective. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:seed}
+\scriptsize
+\setlength{\tabcolsep}{4.7pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+Variant & Seeds & Success $\uparrow$ & Success range & Cost $\downarrow$ & Route $\uparrow$ & Collision $\downarrow$ & Off-road $\downarrow$ \\
+\midrule
+Ours-Guard mode & 3 & \best{63.3 $\pm$ 2.3} & [62.0, 66.0] & \best{20.7 $\pm$ 4.2} & \second{0.868 $\pm$ 0.025} & \best{20.0} & \second{0.7} \\
+Ours-Shield mode & 3 & \second{62.7 $\pm$ 11.5} & [56.0, 76.0] & \second{22.7 $\pm$ 9.0} & \best{0.871 $\pm$ 0.040} & 22.7 & \best{0.0} \\
+Retuned full extension & 3 & 62.0 $\pm$ 6.0 & [56.0, 68.0] & 24.0 $\pm$ 7.2 & 0.853 $\pm$ 0.029 & \second{22.0} & 2.0 \\
+Gated-risk extension & 3 & 60.0 $\pm$ 3.5 & [56.0, 62.0] & 25.3 $\pm$ 4.6 & 0.849 $\pm$ 0.013 & 25.3 & \best{0.0} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

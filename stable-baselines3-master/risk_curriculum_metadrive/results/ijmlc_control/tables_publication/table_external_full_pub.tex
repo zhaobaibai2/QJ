@@ -1,0 +1,38 @@
+\begin{table}[!htbp]
+\centering
+\caption{External baseline comparison with complete diagnostic columns at density 0.15.}
+\label{tab_external}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.08}
+\textit{Outcome and event metrics}\par
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Method & Ep & Seeds & Success & Cost & Route & Collision & Out-road \\
+\midrule
+PPO backbone & 120 & 3 & 0.0 & 100.0 & 20.7 & 63.3 & 36.7 \\
+RSS/TTC filter & 120 & 3 & 53.3 & 44.2 & 78.9 & 41.7 & 2.5 \\
+PPO-Lagrangian & 120 & 3 & 0.0 & 100.0 & 22.1 & 69.2 & 30.8 \\
+Guard & 120 & 3 & 59.2 & 20.8 & 86.4 & 18.3 & 2.5 \\
+Shield & 120 & 3 & 62.5 & 19.2 & 85.7 & 15.8 & 3.3 \\
+Gated-risk & 120 & 3 & 61.7 & 18.3 & 86.9 & 18.3 & 0.0 \\
+\bottomrule
+\end{tabular}
+\vspace{3pt}
+\textit{Artifact and runtime diagnostics}\par
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Method & Low-prog. & Stop & Speed & TTC-danger (\%) & Int./100 steps & Loop p95 (ms) \\
+\midrule
+PPO backbone & 57.5 & 0.1 & 41.1 & 60.4 & 0.0 & 16.93 \\
+RSS/TTC filter & 2.5 & 1.8 & 18.2 & 13.4 & 71.7 & 9.77 \\
+PPO-Lagrangian & 55.0 & 0.3 & 39.4 & 60.1 & 0.0 & 4.62 \\
+Guard & 0.0 & 2.4 & 15.8 & 11.8 & 69.6 & 13.31 \\
+Shield & 0.8 & 2.8 & 15.9 & 11.4 & 70.8 & 12.68 \\
+Gated-risk & 0.8 & 3.5 & 15.3 & 11.4 & 67.9 & 12.40 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. The same episode-level diagnostic protocol is used for all rows.
+\end{tablenotes}
+\end{table}

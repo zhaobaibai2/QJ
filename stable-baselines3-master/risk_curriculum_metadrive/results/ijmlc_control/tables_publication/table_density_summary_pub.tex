@@ -1,0 +1,22 @@
+
+\begin{table}[t]
+\centering
+\caption{Density-stress summary: post-hoc lowest-cost runtime row at each density.}
+\label{tab_density_summary}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrlrrrr@{}}
+\toprule
+Dens. & PPO C & PPO R & Best runtime variant by cost & C & R & Cost red. & Route gain \\
+\midrule
+0.08 & 100.0 & 25.8 & Gated-risk & 4.2 & 96.9 & 95.8 & 71.1 \\
+0.15 & 100.0 & 20.7 & Gated-risk & 18.3 & 86.9 & 81.7 & 66.1 \\
+0.20 & 100.0 & 18.9 & Guard & 26.7 & 77.5 & 73.3 & 58.5 \\
+0.25 & 100.0 & 17.3 & Guard & 43.3 & 64.1 & 56.7 & 46.8 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item C and R denote cost and route completion in percent. This is a compact lowest-cost runtime summary at each density, not a claim that one fixed variant dominates across densities. Fig.~\ref{fig_density} and Appendix~\ref{app_density} show the fixed-variant trends and operating-envelope table.
+\end{tablenotes}
+\end{table}

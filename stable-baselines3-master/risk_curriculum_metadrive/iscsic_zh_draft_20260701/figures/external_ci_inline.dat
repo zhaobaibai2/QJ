@@ -1,0 +1,7 @@
+method success errlow errhigh
+Shield 0.687 0.055 0.050
+Gated 0.663 0.055 0.051
+Guard 0.613 0.056 0.053
+Retuned 0.597 0.056 0.054
+Risk 0.000 0.000 0.013
+NoGuard 0.000 0.000 0.013

@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+"""Evaluate a saved policy on unseen maps and traffic densities."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from racrl.config import get_variant_config  # noqa: E402
+from racrl.experiment import evaluate  # noqa: E402
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=Path, required=True)
+    parser.add_argument(
+        "--variant",
+        choices=[
+            "baseline",
+            "risk",
+            "curriculum",
+            "proposed",
+            "proposed_wo_ttc",
+            "proposed_wo_lane",
+            "proposed_wo_smooth",
+            "reward_only",
+            "guard_only",
+            "no_action_guard",
+            "shield_only",
+            "rcpo_lagrangian",
+        ],
+        required=True,
+    )
+    parser.add_argument("--algo", choices=["ppo", "sac"], default="ppo")
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--device", default="cuda")
+    parser.add_argument("--episodes", type=int, default=30)
+    parser.add_argument("--densities", type=float, nargs="+", default=[0.00, 0.10, 0.25])
+    parser.add_argument("--horizon", type=int, default=None)
+    parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs" / "evaluations")
+    args = parser.parse_args()
+    config = get_variant_config(args.variant, args.algo, args.seed)
+    if args.horizon is not None:
+        config.horizon = args.horizon
+    output = args.output_dir / f"{args.variant}_{args.algo}_s{args.seed}.csv"
+    frame = evaluate(config, args.model, output, args.device, args.densities, args.episodes)
+    summary = frame.groupby("density")[["success", "route_completion", "collision", "out_of_road", "cost", "reward"]].mean()
+    print(summary.to_string())
+    print(f"saved_evaluation={output}")
+
+
+if __name__ == "__main__":
+    main()

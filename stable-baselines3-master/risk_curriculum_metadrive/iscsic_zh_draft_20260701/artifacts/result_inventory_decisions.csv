@@ -1,0 +1,28 @@
+path,decision_class,first_heading
+outputs/candidate_lane1_out150_cost50_nenv16_aggregate/DECISION.md,diagnostic_or_rejected,# Candidate lane1/out150 cost50 n_envs16 aggregate
+outputs/defensive_ttc14_v18_nenv16_tuning/aggregate/DECISION.md,diagnostic_or_rejected,# Decision: defensive ttc14/v18 nenv16 tuning aggregate
+outputs/external_seed_robustness_nenv16_20260701_0425/aggregate/DECISION.md,diagnostic,# External Seed Robustness Decision
+outputs/gated_risk_proposed_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: proposed_gated_risk three-seed diagnostic
+outputs/gated_risk_proposed_nenv16_seed1_seed2_prelim_aggregate/DECISION.md,diagnostic_or_rejected,# PRELIMINARY 2-seed decision: proposed_gated_risk
+outputs/retune_guard_only_ttc12_v19_nenv16_seed1_seed2_diagnostic_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: guard_only ttc12/v19 diagnostic aggregate
+outputs/retune_guard_only_ttc13_v18_nenv16_seed1_seed2_diagnostic_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: guard_only ttc13/v18 diagnostic aggregate
+outputs/retune_proposed_ttc4_cost10_lane125_smooth003_accel0015_progress45_nenv16_seed1_seed2_diagnostic_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: moderate lateral retune ttc4-cost10-lane1.25-smooth0.03-accel0.015-progress45 diagnostic aggregate
+outputs/retune_proposed_ttc4_cost10_lane1_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: retune proposed ttc4-cost10-lane1 three-seed aggregate
+outputs/retune_proposed_ttc4_cost10_lane1_nenv16_seed2_1m/DECISION.md,candidate_or_promoted,# Decision: proposed retune ttc4-cost10-lane1 seed2
+outputs/stress_density_020_025_nenv16_20260701_0153/aggregate/DECISION.md,diagnostic,# Decision: stress density 0.20/0.25 aggregate
+outputs/stress_gated_risk_density_020_025_nenv16_20260701_0346/aggregate/DECISION.md,diagnostic,# Stress decision: proposed_gated_risk 0.20/0.25
+outputs/tuned_ablation_guard_only_nenv16_aggregate/DECISION.md,diagnostic,# Guard-only n_envs=16 aggregate decision
+outputs/tuned_ablation_no_action_guard_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: no_action_guard three-seed ablation aggregate
+outputs/tuned_ablation_wo_lane_nenv16_seed0_seed1_aggregate/DECISION.md,candidate_or_promoted,# proposed_wo_lane n_envs=16 seed0-1 aggregate
+outputs/tuned_ablation_wo_lane_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic,# Decision: proposed_wo_lane three-seed ablation aggregate
+outputs/tuned_ablation_wo_smooth_nenv16_seed0_seed1_aggregate/DECISION.md,diagnostic,# proposed_wo_smooth n_envs=16 seed0-1 aggregate
+outputs/tuned_ablation_wo_smooth_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: proposed_wo_smooth three-seed ablation aggregate
+outputs/tuned_ablation_wo_ttc_nenv16_seed0_seed1_aggregate/DECISION.md,diagnostic,# Mechanism Screen Update
+outputs/tuned_ablation_wo_ttc_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,candidate_or_promoted,# proposed_wo_ttc n_envs=16 seed0-2 aggregate
+outputs/tuned_compare_baseline_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: baseline three-seed formal comparator aggregate
+outputs/tuned_compare_curriculum_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: curriculum three-seed formal comparator aggregate
+outputs/tuned_compare_risk_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,diagnostic_or_rejected,# Decision: risk three-seed formal comparator aggregate
+outputs/tuned_compare_shield_only_nenv16_seed0_seed1_aggregate/DECISION.md,diagnostic,# shield_only n_envs=16 seed0-1 interim aggregate
+outputs/tuned_compare_shield_only_nenv16_seed0_seed1_seed2_aggregate/DECISION.md,candidate_or_promoted,# shield_only n_envs=16 seed0-2 aggregate
+outputs/tuned_reward_component_ablation_seed0_aggregate/DECISION.md,candidate_or_promoted,# Seed0 Reward Component Ablation Summary
+outputs/tuning_proposed_light_risk_ttc3_cost25_lane03_nenv16_aggregate/DECISION.md,diagnostic_or_rejected,# Light-Risk Proposed Retuning Decision

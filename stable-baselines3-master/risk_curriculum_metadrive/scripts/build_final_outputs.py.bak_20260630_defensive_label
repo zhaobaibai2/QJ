@@ -1,0 +1,285 @@
+#!/usr/bin/env python
+"""Build traceable ISCSIC result tables and figures from available evaluations."""
+
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "outputs" / "final_iscsic_results"
+EVAL = OUT / "evaluations"
+FIG = OUT / "figures"
+TABLE = OUT / "tables"
+
+EXCLUDE_PARTS = {
+    "final_iscsic_results",
+    "final_paper_results",
+    "incomplete",
+    "failed",
+    "interrupted",
+    "diagnostic_failed",
+    "entropy_v2",
+    "tuning_extend",
+    "parallel",
+    "smoke",
+    "probe",
+}
+
+METRIC_COLUMNS = [
+    "success",
+    "route_completion",
+    "collision",
+    "out_of_road",
+    "cost",
+    "reward",
+    "shaped_reward",
+    "episode_length",
+    "mean_speed_kmh",
+    "shield_intervention_rate",
+    "shield_soft_rate",
+    "shield_hard_rate",
+    "overspeed_guard_rate",
+]
+
+
+def excluded(path: Path) -> bool:
+    text = str(path).lower()
+    return any(part in text for part in EXCLUDE_PARTS)
+
+
+def infer_run_dir(csv_path: Path, frame: pd.DataFrame) -> Path | None:
+    if "source_config_json" in frame.columns and frame["source_config_json"].notna().any():
+        return Path(str(frame["source_config_json"].dropna().iloc[0])).parent
+    variant = str(frame["variant"].dropna().iloc[0]) if "variant" in frame and frame["variant"].notna().any() else None
+    algo = str(frame["algo"].dropna().iloc[0]) if "algo" in frame and frame["algo"].notna().any() else "ppo"
+    seed = int(frame["seed"].dropna().iloc[0]) if "seed" in frame and frame["seed"].notna().any() else None
+    if not variant or seed is None:
+        return None
+    candidates = [
+        csv_path.parents[1] / "runs" / f"{variant}_{algo}_s{seed}",
+        csv_path.parents[2] / "runs" / f"{variant}_{algo}_s{seed}" if len(csv_path.parents) > 2 else None,
+    ]
+    if variant.startswith("defensive_") or "defensive" in str(csv_path).lower():
+        candidates.extend(
+            [
+                csv_path.parents[1] / "runs" / f"defensive_proposed_ppo_s{seed}",
+                csv_path.parents[2] / "runs" / f"defensive_proposed_ppo_s{seed}" if len(csv_path.parents) > 2 else None,
+            ]
+        )
+    for candidate in candidates:
+        if candidate and candidate.exists():
+            return candidate
+    return None
+
+
+def classify_protocol(run_dir: Path | None, frame: pd.DataFrame) -> str:
+    if run_dir is None:
+        return "preliminary"
+    config_path = run_dir / "config.json"
+    if not config_path.exists():
+        return "preliminary"
+    try:
+        cfg = json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception:
+        return "preliminary"
+    densities = sorted(round(float(x), 2) for x in frame["density"].dropna().unique()) if "density" in frame else []
+    episodes = frame.groupby("density").size().min() if "density" in frame and not frame.empty else 0
+    eval_n_envs = set()
+    if "eval_n_envs" in frame:
+        eval_n_envs = {int(float(x)) for x in frame["eval_n_envs"].dropna().unique()}
+    has_nenv10_eval = not eval_n_envs or eval_n_envs == {10}
+    train_nenvs = int(cfg.get("n_envs") or 0)
+    timesteps = int(cfg.get("timesteps") or cfg.get("total_timesteps") or 0)
+    horizon = int(cfg.get("horizon") or 0)
+
+    common_ok = episodes >= 50 and densities == [0.0, 0.08, 0.15] and train_nenvs == 10 and has_nenv10_eval
+    is_main_candidate = timesteps == 1_500_000 and horizon == 1200
+    is_defensive_fixed = timesteps == 1_000_000 and horizon == 1500 and "defensive" in str(run_dir).lower()
+    if common_ok and (is_main_candidate or is_defensive_fixed):
+        return "final_benchmark"
+    if episodes < 50:
+        return "screening"
+    return "inconsistent_protocol"
+
+
+def load_evaluations() -> pd.DataFrame:
+    rows = []
+    for csv_path in sorted((ROOT / "outputs").glob("**/evaluations/*.csv")):
+        if excluded(csv_path) or csv_path.name.startswith("summary"):
+            continue
+        try:
+            frame = pd.read_csv(csv_path)
+        except Exception:
+            continue
+        if frame.empty or not {"variant", "seed", "density"}.issubset(frame.columns):
+            continue
+        run_dir = infer_run_dir(csv_path, frame)
+        model_path = None
+        config_path = None
+        if run_dir is not None:
+            config_path = run_dir / "config.json"
+            for candidate in [run_dir / "model" / "final_model.zip", run_dir / "model" / "final_model"]:
+                if candidate.exists():
+                    model_path = candidate
+                    break
+        frame = frame.copy()
+        frame["source_csv"] = str(csv_path)
+        frame["run_dir"] = str(run_dir) if run_dir else ""
+        frame["config_json"] = str(config_path) if config_path and config_path.exists() else ""
+        frame["model_path"] = str(model_path) if model_path else ""
+        frame["protocol_class"] = classify_protocol(run_dir, frame)
+        rows.append(frame)
+    if not rows:
+        raise FileNotFoundError("No usable evaluation CSV files found under outputs/**/evaluations")
+    return pd.concat(rows, ignore_index=True, sort=False)
+
+
+def write_table(path: Path, frame: pd.DataFrame, caption_density: float | None = None) -> None:
+    table = frame.copy()
+    if caption_density is not None:
+        table = table[table["density"].round(2).eq(caption_density)]
+    table = table.sort_values(["density", "success_mean"], ascending=[True, False])
+    with path.open("w", encoding="utf-8") as f:
+        f.write("\\begin{tabular}{lcccccc}\n\\toprule\n")
+        f.write("Method & Density & Success & Route & Collision & Cost & Seeds \\\\ \n\\midrule\n")
+        for _, r in table.iterrows():
+            success = f"{r.success_mean:.3f}$\\pm${r.success_std:.3f}" if pd.notna(r.success_std) else f"{r.success_mean:.3f}"
+            f.write(
+                f"{r.variant} & {r.density:.2f} & {success} & {r.route_completion_mean:.3f} & "
+                f"{r.collision_mean:.3f} & {r.cost_mean:.3f} & {int(r.seed_count)} \\\\ \n"
+            )
+        f.write("\\bottomrule\n\\end{tabular}\n")
+
+
+def plot_density(frame: pd.DataFrame) -> None:
+    sns.set_theme(style="whitegrid", context="paper", font_scale=1.0)
+    finalish = frame[frame["protocol_class"].isin(["final_benchmark", "inconsistent_protocol"])].copy()
+    if finalish.empty:
+        finalish = frame.copy()
+    fig, axes = plt.subplots(1, 2, figsize=(9.0, 3.8), constrained_layout=True)
+    sns.lineplot(data=finalish, x="density", y="success", hue="variant", errorbar="se", marker="o", ax=axes[0])
+    sns.lineplot(data=finalish, x="density", y="collision", hue="variant", errorbar="se", marker="o", ax=axes[1], legend=False)
+    axes[0].set_ylabel("Success rate")
+    axes[1].set_ylabel("Collision rate")
+    for ax in axes:
+        ax.set_xlabel("Traffic density")
+    fig.savefig(FIG / "density_sweep_success_collision.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_shield(seed_summary: pd.DataFrame) -> None:
+    if "shield_intervention_rate" in seed_summary.columns:
+        shield = seed_summary[seed_summary["shield_intervention_rate"].notna()].copy()
+    else:
+        shield = pd.DataFrame()
+    if shield.empty:
+        shield = seed_summary.copy()
+    if "shield_intervention_rate" not in shield.columns:
+        shield["shield_intervention_rate"] = 0.0
+    fig, ax = plt.subplots(figsize=(5.4, 4.0), constrained_layout=True)
+    sizes = (shield["shield_intervention_rate"].fillna(0.0) * 700 + 30).clip(30, 450)
+    ax.scatter(shield["collision"], shield["success"], s=sizes, alpha=0.65)
+    for _, r in shield.iterrows():
+        ax.annotate(str(r["variant"]), (r["collision"], r["success"]), fontsize=7, alpha=0.75)
+    ax.set_xlabel("Collision rate")
+    ax.set_ylabel("Success rate")
+    fig.savefig(FIG / "shield_pareto.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_training_curves() -> None:
+    monitor_files = sorted((ROOT / "outputs").glob("**/monitor*.csv")) + sorted((ROOT / "outputs").glob("**/monitor/*.csv"))
+    rows = []
+    for path in monitor_files:
+        if excluded(path):
+            continue
+        try:
+            df = pd.read_csv(path, comment="#")
+        except Exception:
+            continue
+        if df.empty:
+            continue
+        match = re.search(r"([A-Za-z_]+)_ppo_s(\\d+)", str(path))
+        df = df.copy()
+        df["step_index"] = range(len(df))
+        df["run"] = match.group(0) if match else path.parent.name
+        rows.append(df)
+    if not rows:
+        for name in ["training_curves.pdf", "curriculum_stage.pdf"]:
+            fig, ax = plt.subplots(figsize=(5, 3))
+            ax.text(0.5, 0.5, "No monitor data found", ha="center", va="center")
+            ax.axis("off")
+            fig.savefig(FIG / name, bbox_inches="tight")
+            plt.close(fig)
+        return
+    data = pd.concat(rows, ignore_index=True, sort=False)
+    fig, ax = plt.subplots(figsize=(7.0, 3.8), constrained_layout=True)
+    y = "r" if "r" in data.columns else data.select_dtypes("number").columns[0]
+    sns.lineplot(data=data, x="step_index", y=y, hue="run", errorbar=None, ax=ax, legend=False)
+    ax.set_xlabel("Monitor episode index")
+    ax.set_ylabel(y)
+    fig.savefig(FIG / "training_curves.pdf", bbox_inches="tight")
+    plt.close(fig)
+    fig, ax = plt.subplots(figsize=(7.0, 3.8), constrained_layout=True)
+    stage_col = "curriculum_stage" if "curriculum_stage" in data.columns else None
+    if stage_col:
+        sns.lineplot(data=data, x="step_index", y=stage_col, hue="run", errorbar=None, ax=ax, legend=False)
+    else:
+        ax.text(0.5, 0.5, "No curriculum_stage in monitor data", ha="center", va="center")
+    ax.set_xlabel("Monitor episode index")
+    ax.set_ylabel("Curriculum stage")
+    fig.savefig(FIG / "curriculum_stage.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
+def main() -> None:
+    EVAL.mkdir(parents=True, exist_ok=True)
+    FIG.mkdir(parents=True, exist_ok=True)
+    TABLE.mkdir(parents=True, exist_ok=True)
+
+    data = load_evaluations()
+    data.to_csv(EVAL / "summary_by_episode.csv", index=False)
+
+    metrics = [m for m in METRIC_COLUMNS if m in data.columns]
+    seed_summary = data.groupby(["variant", "algo", "seed", "density", "protocol_class"], as_index=False).agg(
+        **{m: (m, "mean") for m in metrics},
+        episode_count=("episode", "count") if "episode" in data.columns else ("density", "size"),
+        source_csv=("source_csv", lambda x: "|".join(sorted(set(map(str, x))))),
+        run_dir=("run_dir", lambda x: "|".join(sorted(set(map(str, x))))),
+        config_json=("config_json", lambda x: "|".join(sorted(set(map(str, x))))),
+        model_path=("model_path", lambda x: "|".join(sorted(set(map(str, x))))),
+    )
+    seed_summary.to_csv(EVAL / "summary_by_seed.csv", index=False)
+
+    agg = {}
+    for m in metrics:
+        agg[f"{m}_mean"] = (m, "mean")
+        agg[f"{m}_std"] = (m, "std")
+    method_summary = seed_summary.groupby(["variant", "density", "protocol_class"], as_index=False).agg(
+        **agg,
+        seed_count=("seed", "nunique"),
+        source_csv=("source_csv", lambda x: "|".join(sorted(set("|".join(map(str, x)).split("|"))))),
+        config_json=("config_json", lambda x: "|".join(sorted(set("|".join(map(str, x)).split("|"))))),
+    )
+    method_summary.to_csv(EVAL / "summary_by_method_density.csv", index=False)
+
+    write_table(TABLE / "main_table_density008.tex", method_summary, 0.08)
+    write_table(TABLE / "stress_table_density015.tex", method_summary, 0.15)
+    write_table(TABLE / "ablation_table.tex", method_summary[method_summary["variant"].str.contains("wo_|reward_only|guard_only|no_action_guard|shield_only", regex=True)])
+    write_table(TABLE / "defensive_table.tex", method_summary[method_summary["variant"].str.contains("defensive|shield", case=False, regex=True)])
+    plot_density(data)
+    plot_shield(seed_summary)
+    plot_training_curves()
+
+    print(f"saved={OUT}")
+    print(method_summary.sort_values(["density", "success_mean"], ascending=[True, False]).to_string(index=False))
+
+
+if __name__ == "__main__":
+    main()

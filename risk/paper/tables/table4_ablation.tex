@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\caption{Mechanism ablation around the Guard runtime reference at $d=0.15$. Deltas are measured relative to Guard runtime. Reward-term removals degrade the balance, while removing the action guard causes the decisive collapse.}
+\label{tab:ablation}
+\scriptsize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrl}
+\toprule
+Variant & Success $\uparrow$ & $\Delta$Succ. & Cost $\downarrow$ & $\Delta$Cost & Route $\uparrow$ & $\Delta$Route & Collision $\downarrow$ & Interpretation \\
+\midrule
+Guard runtime & 63.3 & +0.0 & 20.7 & +0.0 & 0.868 & +0.000 & 20.0 & reference \\
+w/o TTC reward & 54.0 & -9.3 & 36.0 & +15.3 & 0.823 & -0.045 & 36.0 & TTC loss hurts safety \\
+w/o lane reward & 60.7 & -2.7 & 28.0 & +7.3 & 0.844 & -0.024 & 28.0 & lane term improves stability \\
+w/o smoothness reward & 56.7 & -6.7 & 28.7 & +8.0 & 0.821 & -0.047 & 28.0 & smoothness term improves control \\
+No action guard & 0.0 & -63.3 & 100.0 & +79.3 & 0.172 & -0.695 & 51.3 & guard removal collapses \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

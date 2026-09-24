@@ -1,0 +1,23 @@
+\begin{table}[!htbp]
+\centering
+\caption{Evidence map and supplementary artifacts.}
+\label{tab_data_manifest}
+\footnotesize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.26\textwidth}@{}}
+\toprule
+Evidence block & Supports & Main location & Supplementary artifacts \\
+\midrule
+Core diagnostics & Non-motion artifact, core mechanism, density-0.15 headline table & Fig.~\ref{fig_core_evidence}; Table~\ref{tab_core_mechanism} & Episode CSVs and table-ready aggregates \\
+External baselines & Comparator evidence against runtime filter and training-time penalty & Fig.~\ref{fig_external}; Table~\ref{tab_external_baseline} & Baseline diagnostic CSVs \\
+Density stress & Operating-envelope evidence across densities 0.08, 0.15, 0.20, 0.25 & Fig.~\ref{fig_density}; Table~\ref{tab_density_summary}; App.~\ref{app_density} & All-density aggregate and episode CSVs \\
+Sensitivity & Independent diagnostic rerun for TTC threshold and target-speed trends & Fig.~\ref{fig_ttc_sensitivity}; App.~\ref{app_sensitivity_runtime} & Sensitivity aggregate and episode CSVs \\
+Runtime & Python simulation-loop timing and intervention-frequency evidence & Fig.~\ref{fig_runtime_overhead}; App.~\ref{app_sensitivity_runtime} & Runtime aggregate and per-seed CSVs \\
+Uncertainty and seed scatter & Episode-level intervals and seed variation at density 0.15 & App. B & Wilson/bootstrap and seed-scatter CSVs \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item The printed appendix groups the evidence package by claim rather than listing every generated file. Full raw and table-ready CSV files remain in the submission package.
+\end{tablenotes}
+\end{table}

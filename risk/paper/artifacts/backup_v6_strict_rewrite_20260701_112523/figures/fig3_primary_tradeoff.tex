@@ -1,0 +1,75 @@
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\begin{document}
+\begin{tikzpicture}
+\definecolor{oursblue}{RGB}{45,95,163}
+\definecolor{oursgreen}{RGB}{32,139,132}
+\definecolor{costred}{RGB}{190,92,82}
+\definecolor{neutral}{RGB}{115,123,132}
+\definecolor{lightgrid}{RGB}{225,228,232}
+\begin{groupplot}[
+  group style={group size=3 by 1, horizontal sep=1.0cm},
+  width=5.15cm,
+  height=5.25cm,
+  tick label style={font=\scriptsize},
+  label style={font=\scriptsize},
+  title style={font=\scriptsize\bfseries},
+  legend style={font=\tiny, draw=none, fill=none},
+  grid=major,
+  major grid style={draw=lightgrid,line width=0.25pt},
+  axis line style={black!60},
+]
+\nextgroupplot[
+  title={(a) Formal mechanism contrast},
+  ybar,
+  bar width=3.8pt,
+  ymin=0,ymax=105,
+  ylabel={Rate (\%)},
+  symbolic x coords={Ours-G,Ours-S,w/o lane,w/o smooth,w/o TTC,no guard},
+  xtick=data,
+  x tick label style={rotate=38,anchor=east,font=\tiny},
+  legend columns=2,
+  legend pos=north west,
+]
+\addplot+[draw=oursblue,fill=oursblue!72] coordinates {(Ours-G,63.3) (Ours-S,62.7) (w/o lane,60.7) (w/o smooth,56.7) (w/o TTC,54.0) (no guard,0.0)};
+\addlegendentry{Success}
+\addplot+[draw=costred,fill=costred!45] coordinates {(Ours-G,20.7) (Ours-S,22.7) (w/o lane,28.0) (w/o smooth,28.7) (w/o TTC,36.0) (no guard,100.0)};
+\addlegendentry{Cost}
+
+\nextgroupplot[
+  title={(b) Progress--safety frontier},
+  xlabel={Route completion},
+  ylabel={Cost (\%)},
+  xmin=0.12,xmax=0.93,
+  ymin=0,ymax=105,
+]
+\addplot+[only marks,mark=*,mark size=2.5pt,draw=oursblue,fill=oursblue] coordinates {(0.868,20.7)};
+\addplot+[only marks,mark=square*,mark size=2.4pt,draw=oursgreen,fill=oursgreen] coordinates {(0.871,22.7)};
+\addplot+[only marks,mark=*,mark size=2.1pt,draw=neutral,fill=neutral!70] coordinates {(0.844,28.0) (0.821,28.7) (0.823,36.0)};
+\node[font=\tiny,anchor=east,text=neutral] at (axis cs:0.823,36.0) {w/o TTC};
+\node[font=\tiny,anchor=north east,text=neutral] at (axis cs:0.844,28.0) {w/o lane};
+\addplot+[only marks,mark=triangle*,mark size=2.8pt,draw=costred,fill=costred!75] coordinates {(0.172,100.0)};
+\node[font=\tiny,anchor=south west,text=costred] at (axis cs:0.172,92.5) {no guard};
+\draw[dashed,draw=oursblue!55] (axis cs:0.80,25) rectangle (axis cs:0.900,0);
+
+\nextgroupplot[
+  title={(c) External-seed robustness},
+  xlabel={Success with Wilson 95\% CI},
+  xmin=50,xmax=75,
+  ymin=0.4,ymax=4.6,
+  ytick={1,2,3,4},
+  yticklabels={Retuned,Guard,Gated,Shield},
+]
+\draw[line width=1.2pt, color=neutral!55] (axis cs:54.0,1) -- (axis cs:65.1,1);
+\fill[neutral!80] (axis cs:59.7,1) circle (1.6pt);
+\draw[line width=1.2pt, color=oursblue!45] (axis cs:55.7,2) -- (axis cs:66.7,2);
+\fill[oursblue] (axis cs:61.3,2) circle (1.7pt);
+\draw[line width=1.2pt, color=neutral!55] (axis cs:60.8,3) -- (axis cs:71.4,3);
+\fill[neutral!80] (axis cs:66.3,3) circle (1.6pt);
+\draw[line width=1.2pt, color=oursgreen!55] (axis cs:63.2,4) -- (axis cs:73.7,4);
+\fill[oursgreen] (axis cs:68.7,4) circle (1.9pt);
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

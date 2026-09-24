@@ -1,0 +1,12 @@
+\begin{tabular}{lrrrrrrrrrrrrrr}
+\toprule
+method & episodes & train\_seeds & success\_pct & success\_seed\_std\_pct & cost\_pct & cost\_seed\_std\_pct & route\_completion\_pct & route\_seed\_std\_pct & low\_progress\_pct & stop\_ratio\_pct & mean\_speed\_kmh & ttc\_dangerous\_pct & interventions\_per\_100\_steps & control\_loop\_p95\_ms \\
+\midrule
+PPO & 120 & 3 & 0.000 & 0.000 & 100.000 & 0.000 & 20.746 & 0.761 & 57.500 & 0.145 & 41.053 & 60.353 & 0.000 & 16.932 \\
+Risk-only & 120 & 3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.899 & 0.000 & 100.000 & 100.000 & 0.013 & 0.000 & 0.000 & 6.148 \\
+No-action guard & 120 & 3 & 0.833 & 1.443 & 100.000 & 0.000 & 21.726 & 1.228 & 55.833 & 0.196 & 36.832 & 48.687 & 0.000 & 7.589 \\
+Guard & 120 & 3 & 59.167 & 1.443 & 20.833 & 8.036 & 86.382 & 0.782 & 0.000 & 2.449 & 15.802 & 11.818 & 69.646 & 13.310 \\
+Shield & 120 & 3 & 62.500 & 9.014 & 19.167 & 11.815 & 85.687 & 3.243 & 0.833 & 2.803 & 15.887 & 11.352 & 70.751 & 12.681 \\
+Gated-risk & 120 & 3 & 61.667 & 2.887 & 18.333 & 1.443 & 86.874 & 1.167 & 0.833 & 3.527 & 15.303 & 11.421 & 67.872 & 12.398 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,35 @@
+{\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\renewcommand{\arraystretch}{1.04}
+\begin{longtable}{@{}llrrrrrrrrr@{}}
+\caption{Full density diagnostics across the tested operating envelope.}\label{tab_full_density}\\
+\toprule
+Dens. & Method & Succ. & Cost & Route & Coll. & Out & Low & Stop & TTC & Int. \\
+\midrule
+\endfirsthead
+\caption[]{Full density diagnostics across the tested operating envelope. (continued).}\\
+\toprule
+Dens. & Method & Succ. & Cost & Route & Coll. & Out & Low & Stop & TTC & Int. \\
+\midrule
+\endhead
+\bottomrule
+\multicolumn{11}{@{}p{0.98\textwidth}@{}}{\footnotesize Values are percentages except Int., which denotes interventions per 100 steps. Dens., Succ., Coll., Low, and TTC denote density, success, collision, low-progress, and TTC-danger. Artifact-control density rows remain in the supplementary CSV package; the printed operating-envelope table focuses on the PPO backbone and runtime deployment variants.}\\
+\endlastfoot
+0.08 & PPO backbone & 0.0 & 100.0 & 25.8 & 43.3 & 56.7 & 42.5 & 0.1 & 55.5 & 0.0 \\
+0.08 & Guard & 85.0 & 5.0 & 96.8 & 2.5 & 2.5 & 0.0 & 0.5 & 13.8 & 84.5 \\
+0.08 & Shield & 83.3 & 6.7 & 96.5 & 6.7 & 0.0 & 0.0 & 0.5 & 10.3 & 84.7 \\
+0.08 & Gated-risk & 85.0 & 4.2 & 96.9 & 4.2 & 0.0 & 0.0 & 0.6 & 13.4 & 84.2 \\
+0.15 & PPO backbone & 0.0 & 100.0 & 20.7 & 63.3 & 36.7 & 57.5 & 0.1 & 60.4 & 0.0 \\
+0.15 & Guard & 59.2 & 20.8 & 86.4 & 18.3 & 2.5 & 0.0 & 2.4 & 11.8 & 69.6 \\
+0.15 & Shield & 62.5 & 19.2 & 85.7 & 15.8 & 3.3 & 0.8 & 2.8 & 11.4 & 70.8 \\
+0.15 & Gated-risk & 61.7 & 18.3 & 86.9 & 18.3 & 0.0 & 0.8 & 3.5 & 11.4 & 67.9 \\
+0.20 & PPO backbone & 0.0 & 100.0 & 18.9 & 68.3 & 31.7 & 67.5 & 0.2 & 60.1 & 0.0 \\
+0.20 & Guard & 52.5 & 26.7 & 77.5 & 26.7 & 0.0 & 2.5 & 5.3 & 8.2 & 59.3 \\
+0.20 & Shield & 47.5 & 33.3 & 76.4 & 30.8 & 2.5 & 0.0 & 5.1 & 8.2 & 58.9 \\
+0.20 & Gated-risk & 39.2 & 32.5 & 75.4 & 32.5 & 0.0 & 2.5 & 5.2 & 7.2 & 57.1 \\
+0.25 & PPO backbone & 0.0 & 100.0 & 17.3 & 69.2 & 30.8 & 74.2 & 0.2 & 56.7 & 0.0 \\
+0.25 & Guard & 30.0 & 43.3 & 64.1 & 40.0 & 3.3 & 4.2 & 8.0 & 7.4 & 50.6 \\
+0.25 & Shield & 25.0 & 50.0 & 64.6 & 45.8 & 4.2 & 5.0 & 8.2 & 8.3 & 52.0 \\
+0.25 & Gated-risk & 18.3 & 52.5 & 61.3 & 51.7 & 0.8 & 4.2 & 8.4 & 9.0 & 48.2 \\
+\end{longtable}
+}

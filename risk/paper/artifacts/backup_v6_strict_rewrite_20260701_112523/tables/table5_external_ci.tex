@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{External-seed robustness at $d=0.15$ for competitive variants. Ours-Shield is the selected robustness mode and has the highest mean success under this protocol. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:external}
+\scriptsize
+\setlength{\tabcolsep}{4.8pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{rlrrrrrr}
+\toprule
+Rank & Variant & Episodes & Success $\uparrow$ [95\% CI] & Cost $\downarrow$ [95\% CI] & Route $\uparrow$ & Collision $\downarrow$ & Off-road $\downarrow$ \\
+\midrule
+1 & Ours-Shield mode & 300 & \best{68.7 [63.2, 73.7]} & \best{20.7 [16.5, 25.6]} & \best{0.878} & \best{20.0} & \second{0.7} \\
+2 & Gated-risk extension & 300 & \second{66.3 [60.8, 71.4]} & \second{21.3 [17.1, 26.3]} & \second{0.866} & \second{21.3} & \best{0.0} \\
+3 & Ours-Guard mode & 300 & 61.3 [55.7, 66.7] & 24.0 [19.5, 29.1] & 0.852 & 23.0 & 1.0 \\
+4 & Retuned full extension & 300 & 59.7 [54.0, 65.1] & 28.0 [23.2, 33.3] & 0.838 & 26.7 & 1.3 \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{1mm}
+\begin{minipage}{0.97\textwidth}\scriptsize Intervals overlap, so the claim remains conservative: Ours-Shield is the best mean result in this evidence block, not a statistically isolated winner.\end{minipage}
+\end{table*}

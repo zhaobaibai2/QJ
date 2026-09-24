@@ -1,0 +1,35 @@
+{
+  "run_id": "p5_sensitivity_20260701_1825_target_speed_kmh_18_guard_only_s0",
+  "created_at": "2026-07-01T18:35:01",
+  "manifest": "results/ijmlc_control/06_EXISTING_MODEL_MANIFEST.csv",
+  "labels": [
+    "guard_only"
+  ],
+  "seeds": [
+    0
+  ],
+  "densities": [
+    0.15
+  ],
+  "test_start_seeds": [
+    10000,
+    20000
+  ],
+  "episodes_per_start": 20,
+  "selected_models": 1,
+  "episode_rows": 40,
+  "action_filter": "none",
+  "rss_soft_ttc": 6.0,
+  "rss_hard_ttc": 3.5,
+  "rss_target_speed_kmh": 20.0,
+  "override_ttc_threshold": null,
+  "override_target_speed_kmh": 18.0,
+  "sensitivity_axis": "target_speed_kmh",
+  "sensitivity_value": "18",
+  "episode_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/raw_csv/p5_sensitivity_20260701_1825_target_speed_kmh_18_guard_only_s0_episodes.csv",
+  "summary_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/summary_tables/p5_sensitivity_20260701_1825_target_speed_kmh_18_guard_only_s0_summary.csv",
+  "elapsed_sec": 603.8992102146149,
+  "status": "done",
+  "claim_supported": "IJMLC non-motion artifact, progress-safety frontier, runtime wall-clock diagnostics",
+  "boundary_note": "Frozen-model diagnostic evaluation; not new training or retuning evidence."
+}

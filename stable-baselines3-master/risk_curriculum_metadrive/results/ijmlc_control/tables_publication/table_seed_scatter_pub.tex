@@ -1,0 +1,41 @@
+\begin{table}[!htbp]
+\centering
+\caption{Per-seed scatter at density 0.15.}
+\label{tab_seed_scatter}
+\footnotesize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Method & Seed & Ep & Success & Cost & Route & Low-prog. \\
+\midrule
+PPO backbone & 0 & 40 & 0.0 & 100.0 & 20.9 & 55.0 \\
+PPO backbone & 1 & 40 & 0.0 & 100.0 & 19.9 & 57.5 \\
+PPO backbone & 2 & 40 & 0.0 & 100.0 & 21.4 & 60.0 \\
+Risk-only & 0 & 40 & 0.0 & 0.0 & 0.9 & 100.0 \\
+Risk-only & 2 & 40 & 0.0 & 0.0 & 0.9 & 100.0 \\
+Risk-only & 1 & 40 & 0.0 & 0.0 & 0.9 & 100.0 \\
+No-action guard & 1 & 40 & 0.0 & 100.0 & 21.1 & 57.5 \\
+No-action guard & 2 & 40 & 2.5 & 100.0 & 21.0 & 60.0 \\
+No-action guard & 0 & 40 & 0.0 & 100.0 & 23.1 & 50.0 \\
+RSS/TTC filter & 0 & 40 & 52.5 & 47.5 & 76.0 & 5.0 \\
+RSS/TTC filter & 1 & 40 & 50.0 & 45.0 & 79.1 & 2.5 \\
+RSS/TTC filter & 2 & 40 & 57.5 & 40.0 & 81.8 & 0.0 \\
+PPO-Lagrangian & 2 & 40 & 0.0 & 100.0 & 25.5 & 47.5 \\
+PPO-Lagrangian & 0 & 40 & 0.0 & 100.0 & 20.1 & 57.5 \\
+PPO-Lagrangian & 1 & 40 & 0.0 & 100.0 & 20.8 & 60.0 \\
+Guard & 1 & 40 & 60.0 & 15.0 & 87.0 & 0.0 \\
+Guard & 0 & 40 & 57.5 & 30.0 & 85.5 & 0.0 \\
+Guard & 2 & 40 & 60.0 & 17.5 & 86.7 & 0.0 \\
+Shield & 1 & 40 & 65.0 & 15.0 & 87.2 & 2.5 \\
+Shield & 0 & 40 & 52.5 & 32.5 & 82.0 & 0.0 \\
+Shield & 2 & 40 & 70.0 & 10.0 & 87.9 & 0.0 \\
+Gated-risk & 2 & 40 & 65.0 & 17.5 & 88.2 & 0.0 \\
+Gated-risk & 1 & 40 & 60.0 & 17.5 & 86.3 & 0.0 \\
+Gated-risk & 0 & 40 & 60.0 & 20.0 & 86.1 & 2.5 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. Values are percentages from 40 diagnostic episodes per seed.
+\end{tablenotes}
+\end{table}

@@ -1,0 +1,13 @@
+density method success cost route
+d02 Shield 0.480 0.360 0.778
+d02 Retuned 0.453 0.380 0.753
+d02 Gated 0.447 0.367 0.766
+d02 Guard 0.413 0.407 0.733
+d02 Full 0.380 0.400 0.744
+d02 Risk 0.000 0.000 0.009
+d025 Guard 0.267 0.487 0.658
+d025 Gated 0.220 0.527 0.628
+d025 Full 0.207 0.587 0.587
+d025 Shield 0.193 0.587 0.609
+d025 Retuned 0.173 0.687 0.571
+d025 Risk 0.000 0.000 0.009

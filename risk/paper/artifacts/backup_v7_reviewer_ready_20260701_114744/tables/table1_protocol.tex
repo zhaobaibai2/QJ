@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Evaluation protocol. Success, cost, collision, and off-road are reported as percentages; route completion is reported as a 0--1 mean.}
+\label{tab:protocol}
+\scriptsize
+\setlength{\tabcolsep}{4.8pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+Evaluation block & Scientific question & Density & Scope & Reported quantities \\
+\midrule
+Primary held-out comparison & Does runtime intervention improve the progress--safety trade-off? & 0.15 & Guard/shield modes plus mechanism contrasts & success/cost/route/collision/off-road \\
+Density sweep & Does performance remain stable as normal traffic density increases? & 0.00/0.08/0.15 & Competitive variants & success/cost/route \\
+Mechanism ablation & Which component changes the failure mode around Ours-Guard? & 0.15 & Reward-term and guard removals & absolute values and deltas \\
+External-seed and stress evaluation & Are the findings robust under extra seeds and harder densities? & 0.15/0.20/0.25 & Competitive variants & Wilson CI and stress metrics \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

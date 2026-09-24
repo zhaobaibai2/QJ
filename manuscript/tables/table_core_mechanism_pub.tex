@@ -1,0 +1,24 @@
+
+\begin{table}[t]
+\centering
+\caption{Artifact-aware evaluation at density 0.15. Cost-only evaluation incorrectly favors the stationary Risk-only baseline, whereas runtime-intervention variants preserve route progress while reducing cost.}
+\label{tab_core_mechanism}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Method & Success & Cost & Route & Low-prog. & Stop & TTC-danger & Int./100 steps \\
+\midrule
+PPO backbone & 0.0 & 100.0 & 20.7 & 57.5 & 0.1 & 60.4 & 0.0 \\
+Risk-only & 0.0 & 0.0 & 0.9 & 100.0 & 100.0 & 0.0 & 0.0 \\
+No-action guard & 0.8 & 100.0 & 21.7 & 55.8 & 0.2 & 48.7 & 0.0 \\
+Guard & 59.2 & 20.8 & 86.4 & 0.0 & 2.4 & 11.8 & 69.6 \\
+Shield & 62.5 & 19.2 & 85.7 & 0.8 & 2.8 & 11.4 & 70.8 \\
+Gated-risk & 61.7 & 18.3 & 86.9 & 0.8 & 3.5 & 11.4 & 67.9 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Values are percentages except Int./100 steps. Higher success and route are preferred; lower cost, low-progress, stop, and TTC-danger are preferred. Full seed scatter and loop timings are in Appendix Tables.
+\end{tablenotes}
+\end{table}

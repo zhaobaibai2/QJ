@@ -1,0 +1,106 @@
+"""Experiment configuration and paper variants."""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass, field
+from typing import Any
+
+
+@dataclass(frozen=True)
+class RewardWeights:
+    base_scale: float = 0.5
+    ttc: float = 2.0
+    lane: float = 0.5
+    smooth: float = 0.02
+    accel: float = 0.01
+    cost: float = 20.0
+    overspeed: float = 2.0
+    target_speed_kmh: float = 20.0
+    progress: float = 30.0
+    idle_penalty: float = 0.15
+    min_speed_kmh: float = 2.0
+    success_bonus: float = 40.0
+    crash_penalty: float = 80.0
+    out_of_road_penalty: float = 80.0
+    ttc_threshold: float = 5.0
+
+
+@dataclass(frozen=True)
+class CurriculumStage:
+    name: str
+    traffic_density: float
+    map_blocks: int | str
+    accident_prob: float
+    horizon: int = 1000
+
+
+DEFAULT_STAGES = (
+    CurriculumStage("warmup", traffic_density=0.00, map_blocks="S", accident_prob=0.0, horizon=600),
+    CurriculumStage("easy", traffic_density=0.03, map_blocks=3, accident_prob=0.0, horizon=800),
+    CurriculumStage("medium", traffic_density=0.08, map_blocks=5, accident_prob=0.0, horizon=1000),
+    CurriculumStage("hard", traffic_density=0.15, map_blocks=7, accident_prob=0.02, horizon=1000),
+)
+
+
+@dataclass
+class ExperimentConfig:
+    variant: str = "proposed"
+    algo: str = "ppo"
+    seed: int = 0
+    train_scenarios: int = 200
+    test_scenarios: int = 100
+    train_start_seed: int = 0
+    test_start_seed: int = 10000
+    horizon: int = 1000
+    timesteps: int = 1_000_000
+    risk_reward: bool = True
+    curriculum: bool = True
+    fixed_traffic_density: float = 0.10
+    fixed_map_blocks: int | str = 5
+    reward_weights: RewardWeights = field(default_factory=RewardWeights)
+    stages: tuple[CurriculumStage, ...] = DEFAULT_STAGES
+    curriculum_window: int = 30
+    stage0_route_completion: float = 0.60
+    stage0_cost: float = 0.25
+    stage1_success: float = 0.30
+    stage1_route_completion: float = 0.75
+    stage1_cost: float = 0.35
+    stage2_success: float = 0.50
+    stage2_cost: float = 0.40
+    demote_success: float = 0.05
+    demote_route_completion: float = 0.30
+    demote_cost: float = 0.80
+    demote_grace_episodes: int = 60
+    allow_demote: bool = False
+    eval_episodes: int = 50
+    eval_freq: int = 20_000
+    policy_layers: tuple[int, ...] = (256, 256)
+    n_envs: int = 1
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def get_variant_config(variant: str, algo: str, seed: int, timesteps: int | None = None) -> ExperimentConfig:
+    flags = {
+        "baseline": (False, False),
+        "risk": (True, False),
+        "curriculum": (False, True),
+        "proposed": (True, True),
+        "proposed_wo_ttc": (True, True),
+        "proposed_wo_lane": (True, True),
+        "proposed_wo_smooth": (True, True),
+    }
+    if variant not in flags:
+        raise ValueError(f"Unknown variant {variant!r}; use one of {sorted(flags)}.")
+    risk_reward, curriculum = flags[variant]
+    config = ExperimentConfig(variant=variant, algo=algo.lower(), seed=seed, risk_reward=risk_reward, curriculum=curriculum)
+    if variant == "proposed_wo_ttc":
+        config.reward_weights = RewardWeights(ttc=0.0)
+    elif variant == "proposed_wo_lane":
+        config.reward_weights = RewardWeights(lane=0.0)
+    elif variant == "proposed_wo_smooth":
+        config.reward_weights = RewardWeights(smooth=0.0, accel=0.0)
+    if timesteps is not None:
+        config.timesteps = timesteps
+    return config

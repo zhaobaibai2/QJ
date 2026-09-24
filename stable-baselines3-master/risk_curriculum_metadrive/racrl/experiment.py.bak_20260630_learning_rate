@@ -1,0 +1,207 @@
+"""Model creation, training and deterministic evaluation."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Iterable
+
+import numpy as np
+import pandas as pd
+import torch
+from stable_baselines3 import PPO, SAC
+from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback
+
+from .bootstrap import assert_metadrive_version, resolve_device
+from .callbacks import PaperMetricsCallback
+from .config import ExperimentConfig
+from .envs import build_env, build_vec_env
+
+
+def _evaluation_row(
+    config: ExperimentConfig,
+    density: float,
+    episode: int,
+    map_seed: int,
+    shaped_reward: float,
+    final_info: dict,
+    eval_n_envs: int,
+) -> dict:
+    return {
+        "variant": config.variant,
+        "algo": config.algo,
+        "seed": config.seed,
+        "map_seed": map_seed,
+        "map_config": config.stages[-1].map_blocks,
+        "density": density,
+        "episode": episode,
+        "eval_n_envs": eval_n_envs,
+        "reward": final_info.get("episode_base_reward", np.nan),
+        "shaped_reward": shaped_reward,
+        "success": final_info.get("is_success", 0.0),
+        "route_completion": final_info.get("episode_route_completion", np.nan),
+        "collision": final_info.get("episode_collision", 0.0),
+        "crash_vehicle": final_info.get("episode_crash_vehicle", 0.0),
+        "crash_object": final_info.get("episode_crash_object", 0.0),
+        "out_of_road": final_info.get("episode_out_of_road", 0.0),
+        "cost": final_info.get("episode_cost", 0.0),
+        "episode_length": final_info.get("episode_length", np.nan),
+        "mean_speed_kmh": final_info.get("episode_mean_speed", np.nan),
+        "mean_lane_deviation": final_info.get("episode_mean_lane_deviation", np.nan),
+        "max_lane_deviation": final_info.get("episode_max_lane_deviation", np.nan),
+        "steering_variation": final_info.get("episode_steering_variation", np.nan),
+        "accel_variation": final_info.get("episode_accel_variation", np.nan),
+        "jerk": final_info.get("episode_jerk", np.nan),
+        "ttc_risk": final_info.get("episode_ttc_risk", np.nan),
+        "min_ttc": final_info.get("episode_min_ttc", np.nan),
+        "shield_intervention": final_info.get("shield_intervention", 0.0),
+        "shield_soft": final_info.get("shield_soft", 0.0),
+        "shield_hard": final_info.get("shield_hard", 0.0),
+        "overspeed_guard": final_info.get("overspeed_guard", 0.0),
+        "shield_intervention_rate": final_info.get("shield_intervention_rate", 0.0),
+        "shield_soft_rate": final_info.get("shield_soft_rate", 0.0),
+        "shield_hard_rate": final_info.get("shield_hard_rate", 0.0),
+        "overspeed_guard_rate": final_info.get("overspeed_guard_rate", 0.0),
+    }
+
+
+def create_model(config: ExperimentConfig, env, run_dir: Path, device: str):
+    policy_kwargs = {"net_arch": list(config.policy_layers), "activation_fn": torch.nn.Tanh}
+    common = dict(
+        policy="MlpPolicy",
+        env=env,
+        learning_rate=3e-4,
+        gamma=0.99,
+        seed=config.seed,
+        verbose=1,
+        tensorboard_log=str(run_dir / "tensorboard"),
+        policy_kwargs=policy_kwargs,
+        device=device,
+    )
+    if config.algo == "ppo":
+        return PPO(
+            n_steps=1024,
+            batch_size=256,
+            n_epochs=10,
+            gae_lambda=0.95,
+            clip_range=0.2,
+            ent_coef=config.ent_coef,
+            **common,
+        )
+    if config.algo == "sac":
+        return SAC(buffer_size=200_000, learning_starts=2_000, batch_size=256, train_freq=1, gradient_steps=1, **common)
+    raise ValueError(f"Unsupported algorithm: {config.algo}")
+
+
+def train(config: ExperimentConfig, run_dir: Path, device: str, load_model_path: Path | None = None) -> Path:
+    assert_metadrive_version()
+    resolve_device(device)
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "model").mkdir(exist_ok=True)
+    (run_dir / "config.json").write_text(json.dumps(config.as_dict(), indent=2, ensure_ascii=False), encoding="utf-8")
+    env = build_vec_env(config, run_dir / "monitor", training=True)
+    if load_model_path is None:
+        model = create_model(config, env, run_dir, device)
+    else:
+        algorithm = PPO if config.algo == "ppo" else SAC
+        model = algorithm.load(str(load_model_path), env=env, device=device, tensorboard_log=str(run_dir / "tensorboard"))
+        model.verbose = 1
+    metrics = PaperMetricsCallback(
+        curriculum=config.curriculum,
+        num_stages=len(config.stages),
+        window=config.curriculum_window,
+        stage0_route_completion=config.stage0_route_completion,
+        stage0_cost=config.stage0_cost,
+        stage1_success=config.stage1_success,
+        stage1_route_completion=config.stage1_route_completion,
+        stage1_cost=config.stage1_cost,
+        stage2_success=config.stage2_success,
+        stage2_cost=config.stage2_cost,
+        demote_success=config.demote_success,
+        demote_route_completion=config.demote_route_completion,
+        demote_cost=config.demote_cost,
+        demote_grace_episodes=config.demote_grace_episodes,
+        allow_demote=config.allow_demote,
+    )
+    checkpoint_freq = max((config.timesteps // 4) // max(config.n_envs, 1), 1)
+    checkpoints = CheckpointCallback(save_freq=checkpoint_freq, save_path=str(run_dir / "model"), name_prefix="checkpoint")
+    try:
+        model.learn(
+            total_timesteps=config.timesteps,
+            callback=CallbackList([metrics, checkpoints]),
+            tb_log_name=f"{config.variant}_{config.algo}_s{config.seed}",
+            progress_bar=False,
+            reset_num_timesteps=load_model_path is None,
+        )
+        final_path = run_dir / "model" / "final_model"
+        model.save(str(final_path))
+        return final_path.with_suffix(".zip")
+    finally:
+        env.close()
+
+
+def evaluate(
+    config: ExperimentConfig,
+    model_path: Path,
+    output_csv: Path,
+    device: str,
+    densities: Iterable[float] = (0.00, 0.08, 0.15),
+    episodes: int | None = None,
+    n_envs: int = 1,
+) -> pd.DataFrame:
+    resolve_device(device)
+    algorithm = PPO if config.algo == "ppo" else SAC
+    rows: list[dict] = []
+    n_episodes = episodes or config.eval_episodes
+    eval_n_envs = max(int(n_envs), 1)
+    for density in densities:
+        eval_config = config
+        eval_config.n_envs = eval_n_envs
+        env = (
+            build_vec_env(
+                eval_config,
+                output_csv.parent / "monitor" / f"{config.variant}_{config.algo}_s{config.seed}_d{density:g}",
+                training=False,
+                density=density,
+            )
+            if eval_n_envs > 1
+            else build_env(config, output_file=None, training=False, density=density)
+        )
+        model = algorithm.load(str(model_path), env=env, device=device)
+        try:
+            if eval_n_envs == 1:
+                for episode in range(n_episodes):
+                    obs, _ = env.reset(seed=config.test_start_seed + episode)
+                    done = False
+                    shaped_reward = 0.0
+                    final_info = {}
+                    while not done:
+                        action, _ = model.predict(obs, deterministic=True)
+                        obs, reward, terminated, truncated, info = env.step(action)
+                        shaped_reward += float(reward)
+                        done = bool(terminated or truncated)
+                        if done:
+                            final_info = info
+                    rows.append(_evaluation_row(config, density, episode, config.test_start_seed + episode, shaped_reward, final_info, eval_n_envs))
+            else:
+                obs = env.reset()
+                shaped_rewards = np.zeros(eval_n_envs, dtype=float)
+                completed = 0
+                while completed < n_episodes:
+                    actions, _ = model.predict(obs, deterministic=True)
+                    obs, rewards, dones, infos = env.step(actions)
+                    shaped_rewards += np.asarray(rewards, dtype=float)
+                    for env_idx, done in enumerate(dones):
+                        if not done or completed >= n_episodes:
+                            continue
+                        final_info = infos[env_idx]
+                        map_seed = config.test_start_seed + env_idx * config.test_scenarios + completed // eval_n_envs
+                        rows.append(_evaluation_row(config, density, completed, map_seed, float(shaped_rewards[env_idx]), final_info, eval_n_envs))
+                        shaped_rewards[env_idx] = 0.0
+                        completed += 1
+        finally:
+            env.close()
+    frame = pd.DataFrame(rows)
+    output_csv.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_csv(output_csv, index=False)
+    return frame

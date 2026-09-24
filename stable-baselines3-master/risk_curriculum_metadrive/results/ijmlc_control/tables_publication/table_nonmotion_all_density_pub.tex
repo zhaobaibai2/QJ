@@ -1,0 +1,86 @@
+\begin{table}[!htbp]
+\centering
+\caption{Non-motion artifact diagnostics across all tested traffic densities, part I: progress-safety outcomes.}
+\label{tab_nonmotion_all_density}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Progress-safety outcomes}\par
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Density & Method & Ep & Success & Cost & Route \\
+\midrule
+0.08 & PPO backbone & 120 & 0.0 & 100.0 & 25.8 \\
+0.08 & Risk-only & 120 & 0.0 & 0.0 & 0.9 \\
+0.08 & No-action guard & 120 & 2.5 & 97.5 & 28.7 \\
+0.08 & Guard & 120 & 85.0 & 5.0 & 96.8 \\
+0.08 & Shield & 120 & 83.3 & 6.7 & 96.5 \\
+0.08 & Gated-risk & 120 & 85.0 & 4.2 & 96.9 \\
+0.15 & PPO backbone & 120 & 0.0 & 100.0 & 20.7 \\
+0.15 & Risk-only & 120 & 0.0 & 0.0 & 0.9 \\
+0.15 & No-action guard & 120 & 0.8 & 100.0 & 21.7 \\
+0.15 & Guard & 120 & 59.2 & 20.8 & 86.4 \\
+0.15 & Shield & 120 & 62.5 & 19.2 & 85.7 \\
+0.15 & Gated-risk & 120 & 61.7 & 18.3 & 86.9 \\
+0.20 & PPO backbone & 120 & 0.0 & 100.0 & 18.9 \\
+0.20 & Risk-only & 120 & 0.0 & 0.0 & 0.9 \\
+0.20 & No-action guard & 120 & 0.0 & 100.0 & 20.3 \\
+0.20 & Guard & 120 & 52.5 & 26.7 & 77.5 \\
+0.20 & Shield & 120 & 47.5 & 33.3 & 76.4 \\
+0.20 & Gated-risk & 120 & 39.2 & 32.5 & 75.4 \\
+0.25 & PPO backbone & 120 & 0.0 & 100.0 & 17.3 \\
+0.25 & Risk-only & 120 & 0.0 & 0.0 & 0.9 \\
+0.25 & No-action guard & 120 & 0.0 & 100.0 & 16.8 \\
+0.25 & Guard & 120 & 30.0 & 43.3 & 64.1 \\
+0.25 & Shield & 120 & 25.0 & 50.0 & 64.6 \\
+0.25 & Gated-risk & 120 & 18.3 & 52.5 & 61.3 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. This appendix table shows why low cost alone is not sufficient evidence of safe driving.
+\end{tablenotes}
+\end{table}
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Non-motion artifact diagnostics across all tested traffic densities, part II: motion diagnostics.}
+\label{tab_nonmotion_motion}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Motion and artifact diagnostics}\par
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Density & Method & Mean speed & Median speed & Stop & Low-prog. & TTC-danger (\%) \\
+\midrule
+0.08 & PPO backbone & 44.5 & 49.8 & 0.1 & 42.5 & 55.5 \\
+0.08 & Risk-only & 0.0 & 0.0 & 100.0 & 100.0 & 0.0 \\
+0.08 & No-action guard & 39.5 & 44.0 & 0.1 & 43.3 & 40.4 \\
+0.08 & Guard & 18.0 & 18.4 & 0.5 & 0.0 & 13.8 \\
+0.08 & Shield & 18.0 & 18.4 & 0.5 & 0.0 & 10.3 \\
+0.08 & Gated-risk & 17.9 & 18.4 & 0.6 & 0.0 & 13.4 \\
+0.15 & PPO backbone & 41.1 & 46.0 & 0.1 & 57.5 & 60.4 \\
+0.15 & Risk-only & 0.0 & 0.0 & 100.0 & 100.0 & 0.0 \\
+0.15 & No-action guard & 36.8 & 40.9 & 0.2 & 55.8 & 48.7 \\
+0.15 & Guard & 15.8 & 17.2 & 2.4 & 0.0 & 11.8 \\
+0.15 & Shield & 15.9 & 17.2 & 2.8 & 0.8 & 11.4 \\
+0.15 & Gated-risk & 15.3 & 17.0 & 3.5 & 0.8 & 11.4 \\
+0.20 & PPO backbone & 38.6 & 42.6 & 0.2 & 67.5 & 60.1 \\
+0.20 & Risk-only & 0.0 & 0.0 & 100.0 & 100.0 & 0.0 \\
+0.20 & No-action guard & 34.8 & 38.4 & 0.2 & 66.7 & 50.5 \\
+0.20 & Guard & 13.7 & 14.7 & 5.3 & 2.5 & 8.2 \\
+0.20 & Shield & 13.6 & 14.9 & 5.1 & 0.0 & 8.2 \\
+0.20 & Gated-risk & 13.5 & 14.7 & 5.2 & 2.5 & 7.2 \\
+0.25 & PPO backbone & 37.3 & 41.5 & 0.2 & 74.2 & 56.7 \\
+0.25 & Risk-only & 0.0 & 0.0 & 100.0 & 100.0 & 0.0 \\
+0.25 & No-action guard & 33.9 & 37.6 & 0.2 & 73.3 & 57.7 \\
+0.25 & Guard & 11.7 & 12.3 & 8.0 & 4.2 & 7.4 \\
+0.25 & Shield & 11.8 & 12.8 & 8.2 & 5.0 & 8.3 \\
+0.25 & Gated-risk & 11.3 & 11.9 & 8.4 & 4.2 & 9.0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. This continuation reports speed, stop ratio, low-progress rate, and TTC danger for the same method-density cells as Table~\ref{tab_nonmotion_all_density}.
+\end{tablenotes}
+\end{table}

@@ -1,0 +1,1800 @@
+#!/usr/bin/env python3
+"""Build publication-grade IJMLC tables, figures, and manuscript wiring."""
+
+from __future__ import annotations
+
+import json
+import math
+import re
+import shutil
+from datetime import datetime
+from pathlib import Path
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib import gridspec
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+
+ROOT = Path(__file__).resolve().parents[3]
+CONTROL = ROOT / "results" / "ijmlc_control"
+DATA = CONTROL / "manuscript"
+FIG_DIR = CONTROL / "figures_publication"
+TAB_DIR = CONTROL / "tables_publication"
+PKG = CONTROL / "manuscript_ijmlc_20260701"
+
+METHOD_ORDER = [
+    "PPO",
+    "Risk-only",
+    "No-action guard",
+    "RSS/TTC filter",
+    "RCPO-Lagrangian",
+    "Guard",
+    "Shield",
+    "Gated-risk",
+]
+
+RUNTIME_METHODS = ["PPO", "Guard", "Shield", "Gated-risk"]
+PROPOSED_METHODS = ["Guard", "Shield", "Gated-risk"]
+
+COLORS = {
+    "PPO": "#4E5D7A",
+    "Risk-only": "#9AA9C8",
+    "No-action guard": "#B7B2C9",
+    "RSS/TTC filter": "#6C8AA4",
+    "RCPO-Lagrangian": "#887A90",
+    "Guard": "#D3765D",
+    "Shield": "#C65764",
+    "Gated-risk": "#9E2F3D",
+}
+
+MARKERS = {
+    "PPO": "o",
+    "Risk-only": "X",
+    "No-action guard": "s",
+    "RSS/TTC filter": "D",
+    "RCPO-Lagrangian": "P",
+    "Guard": "^",
+    "Shield": "v",
+    "Gated-risk": "*",
+}
+
+
+def configure_matplotlib() -> None:
+    mpl.rcParams.update(
+        {
+            "font.family": "sans-serif",
+            "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+            "svg.fonttype": "none",
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "font.size": 8.0,
+            "axes.titlesize": 8.2,
+            "axes.labelsize": 7.8,
+            "axes.linewidth": 0.75,
+            "xtick.labelsize": 7.0,
+            "ytick.labelsize": 7.0,
+            "legend.fontsize": 7.0,
+            "figure.dpi": 150,
+            "savefig.dpi": 600,
+            "savefig.bbox": "tight",
+            "savefig.pad_inches": 0.03,
+        }
+    )
+
+
+def load_tables() -> dict[str, pd.DataFrame]:
+    names = [
+        "table3_core_d015_main_diagnostics",
+        "table4_external_baselines_d015",
+        "table6_density_stress_summary",
+        "table7_runtime_overhead",
+        "table_supp_ci_d015",
+        "table_supp_non_motion_artifact",
+        "table_supp_runtime_by_seed",
+        "table_supp_seed_scatter_d015",
+        "table_supp_sensitivity",
+    ]
+    return {name: pd.read_csv(DATA / f"{name}.csv") for name in names}
+
+
+def method_sort_key(method: str) -> int:
+    try:
+        return METHOD_ORDER.index(method)
+    except ValueError:
+        return len(METHOD_ORDER)
+
+
+def ordered(df: pd.DataFrame, density_col: str | None = None) -> pd.DataFrame:
+    out = df.copy()
+    out["_method_order"] = out["method"].map(method_sort_key)
+    sort_cols = []
+    if density_col and density_col in out.columns:
+        sort_cols.append(density_col)
+    sort_cols.append("_method_order")
+    out = out.sort_values(sort_cols).drop(columns=["_method_order"])
+    return out
+
+
+def pct(x: float) -> str:
+    return f"{x:.1f}"
+
+
+def val(x: float, digits: int = 2) -> str:
+    if pd.isna(x):
+        return "--"
+    return f"{x:.{digits}f}"
+
+
+def latex_escape(text: object) -> str:
+    s = str(text)
+    return (
+        s.replace("\\", r"\textbackslash{}")
+        .replace("&", r"\&")
+        .replace("%", r"\%")
+        .replace("_", r"\_")
+        .replace("#", r"\#")
+    )
+
+
+def display_method(method: object) -> str:
+    name = str(method)
+    if name == "PPO":
+        return "PPO backbone"
+    if name == "RCPO-Lagrangian":
+        return "PPO-Lagrangian"
+    return name
+
+
+def polish_table_text(text: str) -> str:
+    replacements = {
+        "RCPO-Lagrangian": "PPO-Lagrangian",
+        r"Succ. $\uparrow$": "Success",
+        r"Success $\uparrow$ [95\%]": r"Success [95\%]",
+        r"Cost $\downarrow$": "Cost",
+        r"Cost $\downarrow$ [95\%]": r"Cost [95\%]",
+        r"Route $\uparrow$": "Route",
+        r"Route $\uparrow$ [95\%]": r"Route [95\%]",
+        r"Coll. $\downarrow$": "Collision",
+        r"Collision $\downarrow$ [95\%]": r"Collision [95\%]",
+        r"Out $\downarrow$": "Out-road",
+        r"Out-road $\downarrow$ [95\%]": r"Out-road [95\%]",
+        r"Low $\downarrow$": "Low-prog.",
+        r"Low-progress $\downarrow$ [95\%]": r"Low-progress [95\%]",
+        r"Stop $\downarrow$": "Stop",
+        r"Stop $\downarrow$ [95\%]": r"Stop [95\%]",
+        r"TTC $\downarrow$": r"TTC-danger (\%)",
+        r"TTC $\downarrow$ [95\%]": r"TTC-danger [95\%]",
+        r"Loop p95 $\downarrow$": "Loop p95 (ms)",
+        r"Loop p95 $\downarrow$ [95\%]": r"Loop p95 [95\%]",
+        r"Policy mean $\downarrow$": "Policy mean (ms)",
+        r"Policy p95 $\downarrow$": "Policy p95 (ms)",
+        r"Loop mean $\downarrow$": "Loop mean (ms)",
+        r"Action mean $\downarrow$": "Action mean (ms)",
+        r"Action p95 $\downarrow$": "Action p95 (ms)",
+        r"$\Delta$ policy": r"$\Delta$ policy (ms)",
+        r"$\Delta$ loop p95": r"$\Delta$ loop p95 (ms)",
+        "Int./100": "Int./100 steps",
+        "Arrows indicate the desired interpretation direction. ": "Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. ",
+        "Arrows indicate lower latency is preferred. ": "Direction: lower latency is preferred. ",
+        "Arrows indicate lower wall-clock timing is preferred. ": "Direction: lower wall-clock timing is preferred. ",
+        "PPO cost": "PPO backbone cost",
+        "PPO route": "PPO backbone route",
+        "relative to PPO": "relative to PPO backbone",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    text = text.replace("Int./100 steps steps", "Int./100 steps")
+    text = re.sub(r"(?<![A-Za-z/-])PPO(?![-A-Za-z])", "PPO backbone", text)
+    text = text.replace("PPO backbone-Lagrangian", "PPO-Lagrangian")
+    text = text.replace("PPO backbone backbone", "PPO backbone")
+    return text
+
+
+def write_table(path: Path, body: str) -> None:
+    path.write_text(body.strip() + "\n", encoding="utf-8")
+
+
+def tabular(rows: list[list[str]], spec: str, header: list[str]) -> str:
+    lines = [rf"\begin{{tabular}}{{{spec}}}", r"\toprule"]
+    lines.append(" & ".join(header) + r" \\")
+    lines.append(r"\midrule")
+    for row in rows:
+        lines.append(" & ".join(row) + r" \\")
+    lines.append(r"\bottomrule")
+    lines.append(r"\end{tabular}")
+    return "\n".join(lines)
+
+
+def longtable_block(
+    rows: list[list[str]],
+    spec: str,
+    header: list[str],
+    caption: str,
+    label: str,
+    note: str,
+    font: str = r"\scriptsize",
+) -> str:
+    header_line = " & ".join(header) + r" \\"
+    lines = [
+        rf"{{{font}",
+        r"\setlength{\tabcolsep}{2.0pt}",
+        r"\renewcommand{\arraystretch}{1.04}",
+        rf"\begin{{longtable}}{{{spec}}}",
+        rf"\caption{{{caption}}}\label{{{label}}}\\",
+        r"\toprule",
+        header_line,
+        r"\midrule",
+        r"\endfirsthead",
+        rf"\caption[]{{{caption} (continued).}}\\",
+        r"\toprule",
+        header_line,
+        r"\midrule",
+        r"\endhead",
+        r"\bottomrule",
+        rf"\multicolumn{{{len(header)}}}{{@{{}}p{{0.98\textwidth}}@{{}}}}{{\footnotesize {note}}}\\",
+        r"\endlastfoot",
+    ]
+    for row in rows:
+        lines.append(" & ".join(row) + r" \\")
+    lines += [r"\end{longtable}", "}"]
+    return "\n".join(lines)
+
+
+def select_cols(rows: list[list[str]], idxs: list[int]) -> list[list[str]]:
+    return [[row[i] for i in idxs] for row in rows]
+
+
+def portrait_table(label: str, caption: str, note: str, tab: str, font: str = r"\scriptsize", placement: str = "!htbp") -> str:
+    return rf"""
+\begin{{table}}[{placement}]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{3.0pt}}
+\renewcommand{{\arraystretch}}{{1.08}}
+{tab}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{table}}
+"""
+
+
+def stacked_table(label: str, caption: str, note: str, parts: list[tuple[str, str]], font: str = r"\scriptsize", placement: str = "!htbp") -> str:
+    chunks = []
+    for idx, (title, tab) in enumerate(parts):
+        if idx:
+            chunks.append(r"\vspace{3pt}")
+        chunks.append(rf"\textit{{{title}}}\par")
+        chunks.append(tab)
+    body = "\n".join(chunks)
+    return rf"""
+\begin{{table}}[{placement}]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{3.2pt}}
+\renewcommand{{\arraystretch}}{{1.08}}
+{body}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{table}}
+"""
+
+
+def part_table(label: str, caption: str, note: str, title: str, tab: str, font: str = r"\scriptsize") -> str:
+    return rf"""
+\begin{{table}}[!htbp]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{3.2pt}}
+\renewcommand{{\arraystretch}}{{1.04}}
+\textit{{{title}}}\par
+{tab}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{table}}
+"""
+
+
+def regular_table(label: str, caption: str, note: str, tab: str, font: str = r"\scriptsize") -> str:
+    return rf"""
+\begin{{table}}[t]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{3.5pt}}
+\renewcommand{{\arraystretch}}{{1.08}}
+{tab}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{table}}
+"""
+
+
+def sideways_table(label: str, caption: str, note: str, tab: str, font: str = r"\tiny") -> str:
+    return rf"""
+\begin{{sidewaystable}}[!htbp]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{3.0pt}}
+\renewcommand{{\arraystretch}}{{1.04}}
+{tab}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{sidewaystable}}
+"""
+
+
+def fitted_table(label: str, caption: str, note: str, tab: str, font: str = r"\tiny") -> str:
+    return rf"""
+\begin{{table}}[!htbp]
+\centering
+\caption{{{caption}}}
+\label{{{label}}}
+{font}
+\setlength{{\tabcolsep}}{{1.6pt}}
+\renewcommand{{\arraystretch}}{{1.02}}
+{tab}
+\begin{{tablenotes}}
+\item {note}
+\end{{tablenotes}}
+\end{{table}}
+"""
+
+
+def interval_pct(row: pd.Series, base: str, lo: str, hi: str) -> str:
+    return f"{row[base]:.1f} [{row[lo]:.1f}, {row[hi]:.1f}]"
+
+
+def interval_fraction_pct(row: pd.Series, base: str, lo: str, hi: str) -> str:
+    return f"{100 * row[base]:.1f} [{100 * row[lo]:.1f}, {100 * row[hi]:.1f}]"
+
+
+def interval_plain(row: pd.Series, base: str, lo: str, hi: str, digits: int = 2) -> str:
+    return f"{row[base]:.{digits}f} [{row[lo]:.{digits}f}, {row[hi]:.{digits}f}]"
+
+
+def write_publication_tables(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    TAB_DIR.mkdir(parents=True, exist_ok=True)
+    written: list[Path] = []
+
+    matrix_rows = [
+        ["P1", "Core and artifact diagnostics", "PPO, Risk-only, No-action guard, Guard, Shield, Gated-risk", "4 densities; 24 aggregate cells; raw and per-seed CSVs"],
+        ["P2", "External baselines", "PPO, RSS/TTC filter, PPO-Lagrangian, Guard, Shield, Gated-risk", "density 0.15; 720 diagnostic episodes represented in aggregate rows"],
+        ["P4", "Density stress", "PPO plus runtime variants and artifact controls", "densities 0.08, 0.15, 0.20, 0.25"],
+        ["P5", "Sensitivity", "Guard, Shield, Gated-risk", "target-speed sweep and TTC-threshold sweep; 21 aggregate cells"],
+        ["CI/seed", "Uncertainty and reproducibility", "all formal density-0.15 methods", "Wilson intervals, bootstrap intervals, seed scatter, runtime by seed"],
+    ]
+    tab = tabular(
+        [[latex_escape(c) for c in row] for row in matrix_rows],
+        r"@{}>{\raggedright\arraybackslash}p{0.10\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}@{}",
+        ["Block", "Purpose", "Methods", "Evidence coverage"],
+    )
+    path = TAB_DIR / "table_experiment_matrix_pub.tex"
+    write_table(
+        path,
+        regular_table(
+            "tab_experiment_matrix",
+            "Experiment matrix and evidence coverage.",
+            "The manuscript reports aggregate tables, while raw episode-level CSVs remain in the evidence package.",
+            tab,
+        ),
+    )
+    written.append(path)
+
+    manifest_rows = [
+        [
+            "Core diagnostics",
+            "Non-motion artifact, core mechanism, density-0.15 headline table",
+            "Fig.~\\ref{fig_core_evidence}; Table~\\ref{tab_core_mechanism}",
+            "Episode CSVs and table-ready aggregates",
+        ],
+        [
+            "External baselines",
+            "Comparator evidence against runtime filter and training-time penalty",
+            "Fig.~\\ref{fig_external}; Table~\\ref{tab_external_baseline}",
+            "Baseline diagnostic CSVs",
+        ],
+        [
+            "Density stress",
+            "Operating-envelope evidence across densities 0.08, 0.15, 0.20, 0.25",
+            "Fig.~\\ref{fig_density}; Table~\\ref{tab_density_summary}; App.~\\ref{app_density}",
+            "All-density aggregate and episode CSVs",
+        ],
+        [
+            "Sensitivity",
+            "Independent diagnostic rerun for TTC threshold and target-speed trends",
+            "Fig.~\\ref{fig_ttc_sensitivity}; App.~\\ref{app_sensitivity_runtime}",
+            "Sensitivity aggregate and episode CSVs",
+        ],
+        [
+            "Runtime",
+            "Python simulation-loop timing and intervention-frequency evidence",
+            "Fig.~\\ref{fig_runtime_overhead}; App.~\\ref{app_sensitivity_runtime}",
+            "Runtime aggregate and per-seed CSVs",
+        ],
+        [
+            "Uncertainty and seed scatter",
+            "Episode-level intervals and seed variation at density 0.15",
+            "App. B",
+            "Wilson/bootstrap and seed-scatter CSVs",
+        ],
+    ]
+    tab = tabular(
+        [[c if "\\ref" in c else latex_escape(c) for c in row] for row in manifest_rows],
+        r"@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.26\textwidth}@{}",
+        ["Evidence block", "Supports", "Main location", "Supplementary artifacts"],
+    )
+    path = TAB_DIR / "table_manifest_pub.tex"
+    write_table(
+        path,
+        portrait_table(
+            "tab_data_manifest",
+            "Evidence map and supplementary artifacts.",
+            "The printed appendix groups the evidence package by claim rather than listing every generated file. Full raw and table-ready CSV files remain in the submission package.",
+            tab,
+            font=r"\footnotesize",
+        ),
+    )
+    written.append(path)
+
+    core = ordered(tables["table3_core_d015_main_diagnostics"])
+    rows = []
+    for _, r in core.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                str(int(r["train_seeds"])),
+                pct(r["success_pct"]),
+                pct(r["success_seed_std_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["cost_seed_std_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["route_seed_std_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["stop_ratio_pct"]),
+                pct(r["mean_speed_kmh"]),
+                pct(r["ttc_dangerous_pct"]),
+                pct(r["interventions_per_100_steps"]),
+                val(r["control_loop_p95_ms"], 2),
+            ]
+        )
+    core_headers = [
+        "Method",
+        "Ep",
+        "Seeds",
+        r"Succ. $\uparrow$",
+        "Succ. SD",
+        r"Cost $\downarrow$",
+        "Cost SD",
+        r"Route $\uparrow$",
+        "Route SD",
+        r"Low $\downarrow$",
+        r"Stop $\downarrow$",
+        "Speed",
+        r"TTC $\downarrow$",
+        "Int./100",
+        r"Loop p95 $\downarrow$",
+    ]
+    tab_perf = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5, 6, 7, 8]),
+        r"@{}lrrrrrrrr@{}",
+        [core_headers[i] for i in [0, 1, 2, 3, 4, 5, 6, 7, 8]],
+    )
+    tab_diag = tabular(
+        select_cols(rows, [0, 9, 10, 11, 12, 13, 14]),
+        r"@{}lrrrrrr@{}",
+        [core_headers[i] for i in [0, 9, 10, 11, 12, 13, 14]],
+    )
+    path = TAB_DIR / "table_core_full_pub.tex"
+    write_table(
+        path,
+        stacked_table(
+            "tab_core",
+            "Full core diagnostics at traffic density 0.15.",
+            "Arrows indicate the desired interpretation direction. Percent columns are percentage points; speed is km/h; TTC is the fraction of dangerous-TTC steps in percent; Loop p95 is ms.",
+            [("Performance outcomes and seed variation", tab_perf), ("Artifact and runtime diagnostics", tab_diag)],
+        ),
+    )
+    written.append(path)
+
+    ext = ordered(tables["table4_external_baselines_d015"])
+    rows = []
+    for _, r in ext.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                str(int(r["train_seeds"])),
+                pct(r["success_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["collision_pct"]),
+                pct(r["out_of_road_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["stop_ratio_pct"]),
+                pct(r["mean_speed_kmh"]),
+                pct(r["ttc_dangerous_pct"]),
+                pct(r["interventions_per_100_steps"]),
+                val(r["control_loop_p95_ms"], 2),
+            ]
+        )
+    ext_headers = [
+        "Method",
+        "Ep",
+        "Seeds",
+        r"Succ. $\uparrow$",
+        r"Cost $\downarrow$",
+        r"Route $\uparrow$",
+        r"Coll. $\downarrow$",
+        r"Out $\downarrow$",
+        r"Low $\downarrow$",
+        r"Stop $\downarrow$",
+        "Speed",
+        r"TTC $\downarrow$",
+        "Int./100",
+        r"Loop p95 $\downarrow$",
+    ]
+    tab_perf = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5, 6, 7]),
+        r"@{}lrrrrrrr@{}",
+        [ext_headers[i] for i in [0, 1, 2, 3, 4, 5, 6, 7]],
+    )
+    tab_diag = tabular(
+        select_cols(rows, [0, 8, 9, 10, 11, 12, 13]),
+        r"@{}lrrrrrr@{}",
+        [ext_headers[i] for i in [0, 8, 9, 10, 11, 12, 13]],
+    )
+    path = TAB_DIR / "table_external_full_pub.tex"
+    write_table(
+        path,
+        stacked_table(
+            "tab_external",
+            "External baseline comparison with complete diagnostic columns at density 0.15.",
+            "Arrows indicate the desired interpretation direction. The same episode-level diagnostic protocol is used for all rows.",
+            [("Outcome and event metrics", tab_perf), ("Artifact and runtime diagnostics", tab_diag)],
+        ),
+    )
+    written.append(path)
+
+    density = ordered(tables["table6_density_stress_summary"], "density")
+    rows = []
+    for _, r in density.iterrows():
+        rows.append(
+            [
+                f"{r['density']:.2f}",
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                pct(r["success_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["collision_pct"]),
+                pct(r["out_of_road_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["mean_speed_kmh"]),
+                pct(r["ttc_dangerous_pct"]),
+                pct(r["interventions_per_100_steps"]),
+            ]
+        )
+    den_headers = [
+        "Density",
+        "Method",
+        "Ep",
+        r"Succ. $\uparrow$",
+        r"Cost $\downarrow$",
+        r"Route $\uparrow$",
+        r"Coll. $\downarrow$",
+        r"Out $\downarrow$",
+        r"Low $\downarrow$",
+        "Speed",
+        r"TTC $\downarrow$",
+        "Int./100",
+    ]
+    tab_perf = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5]),
+        r"@{}llrrrr@{}",
+        [den_headers[i] for i in [0, 1, 2, 3, 4, 5]],
+    )
+    tab_diag = tabular(
+        select_cols(rows, [0, 1, 6, 7, 8, 9, 10, 11]),
+        r"@{}llrrrrrr@{}",
+        [den_headers[i] for i in [0, 1, 6, 7, 8, 9, 10, 11]],
+    )
+    path = TAB_DIR / "table_density_full_pub.tex"
+    write_table(
+        path,
+        part_table(
+            "tab_density",
+            "Full traffic-density stress table, part I: progress-safety outcomes.",
+            "Arrows indicate the desired interpretation direction. Each method-density row aggregates 120 diagnostic episodes. Artifact controls are kept rather than hidden.",
+            "Progress-safety outcomes",
+            tab_perf,
+            font=r"\tiny",
+        )
+        + "\n"
+        + part_table(
+            "tab_density_diagnostics",
+            "Full traffic-density stress table, part II: event, motion, and intervention diagnostics.",
+            "Arrows indicate the desired interpretation direction. This continuation reports the event, motion, and intervention columns for the same method-density cells as Table~\\ref{tab_density}.",
+            "Event, motion, and intervention diagnostics",
+            tab_diag,
+            font=r"\tiny",
+        ),
+    )
+    written.append(path)
+
+    runtime = ordered(tables["table7_runtime_overhead"], "density")
+    rows = []
+    for _, r in runtime.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                f"{r['density']:.2f}",
+                str(int(r["episodes"])),
+                val(r["policy_inference_ms_mean"], 2),
+                val(r["policy_inference_ms_p95"], 2),
+                val(r["control_loop_wall_ms_mean"], 2),
+                val(r["control_loop_wall_ms_p95"], 2),
+                pct(r["intervention_rate_per_100_steps"]),
+                pct(r["intervention_rate_per_km"]),
+                val(r["delta_policy_mean_vs_ppo_ms"], 2),
+                val(r["delta_control_p95_vs_ppo_ms"], 2),
+            ]
+        )
+    rt_headers = [
+        "Method",
+        "Density",
+        "Ep",
+        r"Policy mean $\downarrow$",
+        r"Policy p95 $\downarrow$",
+        r"Loop mean $\downarrow$",
+        r"Loop p95 $\downarrow$",
+        "Int./100",
+        "Int./km",
+        r"$\Delta$ policy",
+        r"$\Delta$ loop p95",
+    ]
+    tab_time = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5, 6]),
+        r"@{}llrrrrr@{}",
+        [rt_headers[i] for i in [0, 1, 2, 3, 4, 5, 6]],
+    )
+    tab_delta = tabular(
+        select_cols(rows, [0, 1, 7, 8, 9, 10]),
+        r"@{}llrrrr@{}",
+        [rt_headers[i] for i in [0, 1, 7, 8, 9, 10]],
+    )
+    path = TAB_DIR / "table_runtime_full_pub.tex"
+    write_table(
+        path,
+        part_table(
+            "tab_runtime",
+            "Full runtime-overhead diagnostics, part I: policy and control-loop latency.",
+            "Arrows indicate lower wall-clock timing is preferred. Times are milliseconds measured in the Python simulation loop.",
+            "Policy and loop latency",
+            tab_time,
+            font=r"\tiny",
+        )
+        + "\n"
+        + part_table(
+            "tab_runtime_delta",
+            "Full runtime-overhead diagnostics, part II: intervention rates and PPO-relative deltas.",
+            "Deltas are relative to PPO at the same density.",
+            "Intervention rate and PPO-relative deltas",
+            tab_delta,
+            font=r"\tiny",
+        ),
+    )
+    written.append(path)
+
+    ci = ordered(tables["table_supp_ci_d015"])
+    def ci_short(row: pd.Series, base: str, lo: str, hi: str) -> str:
+        return f"{row[base]:.1f} ({row[lo]:.1f}--{row[hi]:.1f})"
+
+    rows = []
+    event_rows = []
+    for _, r in ci.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                ci_short(r, "success_pct", "success_wilson95_lo_pct", "success_wilson95_hi_pct"),
+                ci_short(r, "cost_pct", "cost_wilson95_lo_pct", "cost_wilson95_hi_pct"),
+                ci_short(r, "low_progress_pct", "low_progress_wilson95_lo_pct", "low_progress_wilson95_hi_pct"),
+            ]
+        )
+        event_rows.append(
+            [
+                latex_escape(r["method"]),
+                ci_short(r, "collision_pct", "collision_wilson95_lo_pct", "collision_wilson95_hi_pct"),
+                ci_short(r, "out_of_road_pct", "out_of_road_wilson95_lo_pct", "out_of_road_wilson95_hi_pct"),
+            ]
+        )
+    ci_bin_headers = [
+        "Method",
+        "Ep",
+        r"Success",
+        r"Cost",
+        r"Low-progress",
+    ]
+    tab_ci_binary = tabular(
+        rows,
+        r"@{}lrrrr@{}",
+        ci_bin_headers,
+    )
+    tab_ci_events = tabular(
+        event_rows,
+        r"@{}lrr@{}",
+        ["Method", "Collision", "Out-road"],
+    )
+    path = TAB_DIR / "table_ci_binary_pub.tex"
+    write_table(
+        path,
+        stacked_table(
+            "tab_ci_binary",
+            "Episode-level uncertainty for binary outcomes at density 0.15.",
+            "Entries report point estimate with Wilson 95\\% interval in parentheses, in percentage points.",
+            [("Task and artifact outcomes", tab_ci_binary), ("Event outcomes", tab_ci_events)],
+            font=r"\scriptsize",
+        ),
+    )
+    written.append(path)
+
+    rows = []
+    for _, r in ci.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                interval_fraction_pct(r, "route_completion", "route_completion_boot95_lo", "route_completion_boot95_hi"),
+                interval_plain(r, "mean_speed_kmh", "mean_speed_kmh_boot95_lo", "mean_speed_kmh_boot95_hi", 1),
+                interval_fraction_pct(r, "stop_ratio", "stop_ratio_boot95_lo", "stop_ratio_boot95_hi"),
+                interval_fraction_pct(r, "ttc_dangerous_fraction", "ttc_dangerous_fraction_boot95_lo", "ttc_dangerous_fraction_boot95_hi"),
+                interval_plain(r, "intervention_rate_per_100_steps", "intervention_rate_per_100_steps_boot95_lo", "intervention_rate_per_100_steps_boot95_hi", 1),
+                interval_plain(r, "control_loop_wall_ms_p95", "control_loop_wall_ms_p95_boot95_lo", "control_loop_wall_ms_p95_boot95_hi", 2),
+            ]
+        )
+    ci_cont_headers = [
+        "Method",
+        r"Route $\uparrow$ [95\%]",
+        r"Speed [95\%]",
+        r"Stop $\downarrow$ [95\%]",
+        r"TTC $\downarrow$ [95\%]",
+        r"Int./100 [95\%]",
+        r"Loop p95 $\downarrow$ [95\%]",
+    ]
+    tab_motion = tabular(
+        select_cols(rows, [0, 1, 2, 3]),
+        r"@{}lrrr@{}",
+        [ci_cont_headers[i] for i in [0, 1, 2, 3]],
+    )
+    tab_runtime = tabular(
+        select_cols(rows, [0, 4, 5, 6]),
+        r"@{}lrrr@{}",
+        [ci_cont_headers[i] for i in [0, 4, 5, 6]],
+    )
+    path = TAB_DIR / "table_ci_continuous_pub.tex"
+    write_table(
+        path,
+        stacked_table(
+            "tab_ci_continuous",
+            "Bootstrap intervals for continuous and rate diagnostics at density 0.15.",
+            "Arrows indicate the desired interpretation direction. Route, stop, and TTC are percentages; speed is km/h; runtime is ms.",
+            [("Motion and progress intervals", tab_motion), ("TTC, intervention, and loop-time intervals", tab_runtime)],
+        ),
+    )
+    written.append(path)
+
+    non_motion = ordered(tables["table_supp_non_motion_artifact"], "density")
+    rows = []
+    for _, r in non_motion.iterrows():
+        rows.append(
+            [
+                f"{r['density']:.2f}",
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                pct(r["success_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["mean_speed_kmh"]),
+                pct(r["median_speed_kmh"]),
+                pct(r["stop_ratio_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["ttc_dangerous_fraction_pct"]),
+            ]
+        )
+    nm_headers = [
+        "Density",
+        "Method",
+        "Ep",
+        r"Succ. $\uparrow$",
+        r"Cost $\downarrow$",
+        r"Route $\uparrow$",
+        "Mean speed",
+        "Median speed",
+        r"Stop $\downarrow$",
+        r"Low $\downarrow$",
+        r"TTC $\downarrow$",
+    ]
+    tab_perf = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5]),
+        r"@{}llrrrr@{}",
+        [nm_headers[i] for i in [0, 1, 2, 3, 4, 5]],
+    )
+    tab_motion = tabular(
+        select_cols(rows, [0, 1, 6, 7, 8, 9, 10]),
+        r"@{}llrrrrr@{}",
+        [nm_headers[i] for i in [0, 1, 6, 7, 8, 9, 10]],
+    )
+    path = TAB_DIR / "table_nonmotion_all_density_pub.tex"
+    write_table(
+        path,
+        part_table(
+            "tab_nonmotion_all_density",
+            "Non-motion artifact diagnostics across all tested traffic densities, part I: progress-safety outcomes.",
+            "Arrows indicate the desired interpretation direction. This appendix table shows why low cost alone is not sufficient evidence of safe driving.",
+            "Progress-safety outcomes",
+            tab_perf,
+        )
+        + "\n"
+        + part_table(
+            "tab_nonmotion_motion",
+            "Non-motion artifact diagnostics across all tested traffic densities, part II: motion diagnostics.",
+            "Arrows indicate the desired interpretation direction. This continuation reports speed, stop ratio, low-progress rate, and TTC danger for the same method-density cells as Table~\\ref{tab_nonmotion_all_density}.",
+            "Motion and artifact diagnostics",
+            tab_motion,
+        ),
+    )
+    written.append(path)
+
+    seed = ordered(tables["table_supp_seed_scatter_d015"])
+    rows = []
+    for _, r in seed.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                str(int(r["train_seed"])),
+                str(int(r["episodes"])),
+                pct(100 * r["success"]),
+                pct(100 * r["cost"]),
+                pct(100 * r["route_completion"]),
+                pct(100 * r["low_progress"]),
+            ]
+        )
+    tab = tabular(
+        rows,
+        r"@{}lrrrrrr@{}",
+        ["Method", "Seed", "Ep", r"Succ. $\uparrow$", r"Cost $\downarrow$", r"Route $\uparrow$", r"Low $\downarrow$"],
+    )
+    path = TAB_DIR / "table_seed_scatter_pub.tex"
+    write_table(
+        path,
+        portrait_table(
+            "tab_seed_scatter",
+            "Per-seed scatter at density 0.15.",
+            "Arrows indicate the desired interpretation direction. Values are percentages from 40 diagnostic episodes per seed.",
+            tab,
+            font=r"\footnotesize",
+        ),
+    )
+    written.append(path)
+
+    sens = ordered(tables["table_supp_sensitivity"])
+    axis_names = {"target_speed_kmh": "target speed", "ttc_threshold": "TTC threshold"}
+    rows = []
+    for _, r in sens.iterrows():
+        rows.append(
+            [
+                latex_escape(axis_names.get(r["sensitivity_axis"], r["sensitivity_axis"])),
+                pct(float(r["sensitivity_value"])),
+                latex_escape(r["method"]),
+                str(int(r["episodes"])),
+                str(int(r["train_seeds"])),
+                pct(r["success_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["stop_ratio_pct"]),
+                pct(r["ttc_dangerous_fraction_pct"]),
+                pct(r["intervention_rate_per_100_steps"]),
+                val(r["control_loop_wall_ms_p95"], 2),
+            ]
+        )
+    sens_headers = [
+        "Axis",
+        "Value",
+        "Method",
+        "Ep",
+        "Seeds",
+        r"Succ. $\uparrow$",
+        r"Cost $\downarrow$",
+        r"Route $\uparrow$",
+        r"Low $\downarrow$",
+        r"Stop $\downarrow$",
+        r"TTC $\downarrow$",
+        "Int./100",
+        r"Loop p95 $\downarrow$",
+    ]
+    tab_perf = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5, 6, 7]),
+        r"@{}llrrrrrr@{}",
+        [sens_headers[i] for i in [0, 1, 2, 3, 4, 5, 6, 7]],
+    )
+    tab_diag = tabular(
+        select_cols(rows, [0, 1, 2, 8, 9, 10, 11, 12]),
+        r"@{}lllrrrrr@{}",
+        [sens_headers[i] for i in [0, 1, 2, 8, 9, 10, 11, 12]],
+    )
+    path = TAB_DIR / "table_sensitivity_full_pub.tex"
+    write_table(
+        path,
+        stacked_table(
+            "tab_sensitivity",
+            "Full parameter-sensitivity sweep at density 0.15.",
+            "Arrows indicate the desired interpretation direction. The sweep covers target speed and TTC threshold for the three runtime variants.",
+            [("Outcome metrics", tab_perf), ("Artifact, intervention, and runtime diagnostics", tab_diag)],
+            font=r"\tiny",
+        ),
+    )
+    written.append(path)
+
+    runtime_seed = ordered(tables["table_supp_runtime_by_seed"], "density")
+    rows = []
+    keep = runtime_seed[runtime_seed["method"].isin(RUNTIME_METHODS)]
+    for _, r in keep.iterrows():
+        rows.append(
+            [
+                latex_escape(r["method"]),
+                f"{r['density']:.2f}",
+                str(int(r["train_seed"])),
+                str(int(r["episodes"])),
+                val(r["policy_inference_ms_mean"], 2),
+                val(r["policy_inference_ms_p95"], 2),
+                val(r["control_loop_wall_ms_mean"], 2),
+                val(r["control_loop_wall_ms_p95"], 2),
+                val(r["total_action_latency_ms_mean"], 2),
+                val(r["total_action_latency_ms_p95"], 2),
+            ]
+        )
+    rt_seed_headers = [
+        "Method",
+        "Density",
+        "Seed",
+        "Ep",
+        r"Policy mean $\downarrow$",
+        r"Policy p95 $\downarrow$",
+        r"Loop mean $\downarrow$",
+        r"Loop p95 $\downarrow$",
+        r"Action mean $\downarrow$",
+        r"Action p95 $\downarrow$",
+    ]
+    tab_loop = tabular(
+        select_cols(rows, [0, 1, 2, 3, 4, 5, 6, 7]),
+        r"@{}llrrrrrr@{}",
+        [rt_seed_headers[i] for i in [0, 1, 2, 3, 4, 5, 6, 7]],
+    )
+    tab_action = tabular(
+        select_cols(rows, [0, 1, 2, 8, 9]),
+        r"@{}lllrr@{}",
+        [rt_seed_headers[i] for i in [0, 1, 2, 8, 9]],
+    )
+    path = TAB_DIR / "table_runtime_by_seed_pub.tex"
+    write_table(
+        path,
+        part_table(
+            "tab_runtime_by_seed",
+            "Per-seed runtime diagnostics, part I: policy and loop timing.",
+            "Arrows indicate lower latency is preferred. Times are milliseconds. Artifact-only controls remain in the CSV package and are omitted here to keep the printed appendix readable.",
+            "Policy and loop timing",
+            tab_loop,
+            font=r"\tiny",
+        )
+        + "\n"
+        + part_table(
+            "tab_runtime_by_seed_action",
+            "Per-seed runtime diagnostics, part II: total action latency.",
+            "Arrows indicate lower latency is preferred. This continuation reports total action-latency summaries for the same rows as Table~\\ref{tab_runtime_by_seed}.",
+            "Total action latency",
+            tab_action,
+            font=r"\tiny",
+        ),
+    )
+    written.append(path)
+
+    seed = ordered(tables["table_supp_seed_scatter_d015"])
+    rows = []
+    for method, group in seed.groupby("method", sort=False):
+        success = 100 * group["success"].astype(float)
+        cost = 100 * group["cost"].astype(float)
+        route = 100 * group["route_completion"].astype(float)
+        rows.append(
+            [
+                latex_escape(method),
+                pct(success.mean()),
+                f"{success.min():.1f}--{success.max():.1f}",
+                pct(cost.mean()),
+                f"{cost.min():.1f}--{cost.max():.1f}",
+                pct(route.mean()),
+                f"{route.min():.1f}--{route.max():.1f}",
+            ]
+        )
+    tab = tabular(
+        rows,
+        r"@{}lrrrrrr@{}",
+        ["Method", "S mean", "S range", "C mean", "C range", "R mean", "R range"],
+    )
+    path = TAB_DIR / "table_seed_range_pub.tex"
+    write_table(
+        path,
+        portrait_table(
+            "tab_seed_range",
+            "Seed-level variation summary at density 0.15.",
+            "S, C, and R denote success, cost, and route completion in percent. Each method has three independently trained seeds and 40 diagnostic episodes per seed; the full per-seed scatter remains in the supplementary CSV package. Wider Shield ranges motivate the family-level interpretation rather than a strict ranking among runtime variants.",
+            tab,
+            font=r"\scriptsize",
+        ),
+    )
+    written.append(path)
+
+    density = ordered(tables["table6_density_stress_summary"], "density")
+    non_motion = tables["table_supp_non_motion_artifact"][["density", "method", "stop_ratio_pct"]]
+    density = density.merge(non_motion, on=["density", "method"], how="left")
+    density = density[density["method"].isin(["PPO", "Guard", "Shield", "Gated-risk"])].copy()
+    rows = []
+    for _, r in density.iterrows():
+        rows.append(
+            [
+                f"{r['density']:.2f}",
+                latex_escape(r["method"]),
+                pct(r["success_pct"]),
+                pct(r["cost_pct"]),
+                pct(r["route_completion_pct"]),
+                pct(r["collision_pct"]),
+                pct(r["out_of_road_pct"]),
+                pct(r["low_progress_pct"]),
+                pct(r["stop_ratio_pct"]),
+                pct(r["ttc_dangerous_pct"]),
+                pct(r["interventions_per_100_steps"]),
+            ]
+        )
+    path = TAB_DIR / "table_density_operating_envelope_pub.tex"
+    note = (
+        "Values are percentages except Int., which denotes interventions per 100 steps. "
+        "Dens., Succ., Coll., Low, and TTC denote density, success, collision, low-progress, and TTC-danger. "
+        "Artifact-control density rows remain in the supplementary CSV package; the printed operating-envelope table focuses on the PPO backbone and runtime deployment variants."
+    )
+    write_table(
+        path,
+        longtable_block(
+            rows,
+            r"@{}llrrrrrrrrr@{}",
+            ["Dens.", "Method", "Succ.", "Cost", "Route", "Coll.", "Out", "Low", "Stop", "TTC", "Int."],
+            "Full density diagnostics across the tested operating envelope.",
+            "tab_full_density",
+            note,
+        ),
+    )
+    written.append(path)
+
+    sens = ordered(tables["table_supp_sensitivity"])
+
+    def setting_cell(row: pd.Series, metric: str) -> str:
+        axis = "TTC" if row["sensitivity_axis"] == "ttc_threshold" else "speed"
+        value = float(row["sensitivity_value"])
+        value_text = str(int(value)) if value.is_integer() else f"{value:.1f}"
+        return f"{axis}={value_text}: {row[metric]:.1f}"
+
+    rows = []
+    for method in PROPOSED_METHODS:
+        group = sens[sens["method"] == method]
+        best_success = group.loc[group["success_pct"].idxmax()]
+        lowest_cost = group.loc[group["cost_pct"].idxmin()]
+        highest_route = group.loc[group["route_completion_pct"].idxmax()]
+        rows.append(
+            [
+                latex_escape(method),
+                setting_cell(best_success, "success_pct"),
+                setting_cell(lowest_cost, "cost_pct"),
+                setting_cell(highest_route, "route_completion_pct"),
+                "Success, cost, and route optima are not identical.",
+            ]
+        )
+    tab = tabular(
+        rows,
+        r"@{}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}@{}",
+        ["Variant", "Best success", "Lowest cost", "Highest route", "Interpretation"],
+    )
+    path = TAB_DIR / "table_sensitivity_summary_pub.tex"
+    write_table(
+        path,
+        portrait_table(
+            "tab_sensitivity_summary",
+            "Compact sensitivity summary at density 0.15.",
+            "The full TTC-threshold and target-speed sweeps remain in the supplementary CSV package. This table reports only the settings that optimize the three headline outcomes within the sweep.",
+            tab,
+            font=r"\footnotesize",
+        ),
+    )
+    written.append(path)
+
+    runtime = ordered(tables["table7_runtime_overhead"], "density")
+    runtime = runtime[runtime["method"].isin(RUNTIME_METHODS)]
+    rows = []
+    for _, r in runtime.iterrows():
+        rows.append(
+            [
+                f"{r['density']:.2f}",
+                latex_escape(r["method"]),
+                val(r["policy_inference_ms_p95"], 2),
+                val(r["control_loop_wall_ms_p95"], 2),
+                pct(r["intervention_rate_per_100_steps"]),
+            ]
+        )
+    tab = tabular(
+        rows,
+        r"@{}llrrr@{}",
+        ["Density", "Method", "Policy p95 (ms)", "Loop p95 (ms)", "Int./100"],
+    )
+    path = TAB_DIR / "table_runtime_summary_pub.tex"
+    write_table(
+        path,
+        portrait_table(
+            "tab_runtime_summary",
+            "Runtime summary across densities.",
+            "Only PPO backbone and the three runtime variants are printed. Mean timing and per-seed runtime rows remain in the supplementary CSV package.",
+            tab,
+            font=r"\scriptsize",
+        ),
+    )
+    written.append(path)
+
+    for table_path in written:
+        polished = polish_table_text(table_path.read_text(encoding="utf-8"))
+        table_path.write_text(polished, encoding="utf-8")
+
+    return written
+
+
+def clean_axis(ax: plt.Axes, grid: bool = False) -> None:
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.tick_params(width=0.7, length=3)
+    if grid:
+        ax.grid(axis="y", color="#D7DADF", linewidth=0.45, alpha=0.65)
+        ax.set_axisbelow(True)
+
+
+def panel_label(ax: plt.Axes, label: str) -> None:
+    ax.text(
+        -0.15,
+        1.08,
+        label,
+        transform=ax.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=9.0,
+        fontweight="bold",
+    )
+
+
+def save_figure(fig: plt.Figure, name: str) -> list[Path]:
+    FIG_DIR.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for ext, dpi in [("pdf", 600), ("svg", 600), ("tiff", 600), ("png", 300)]:
+        out = FIG_DIR / f"{name}.{ext}"
+        fig.savefig(out, dpi=dpi, facecolor="white")
+        paths.append(out)
+    plt.close(fig)
+    return paths
+
+
+def draw_architecture() -> list[Path]:
+    fig = plt.figure(figsize=(7.2, 3.6))
+    ax = fig.add_subplot(111)
+    ax.set_axis_off()
+    boxes = {
+        "policy": (0.05, 0.58, 0.18, 0.18, "Learned PPO\npolicy", "#E9EEF6"),
+        "monitor": (0.33, 0.58, 0.19, 0.18, "Runtime\nmonitor", "#F2E9EA"),
+        "controller": (0.62, 0.58, 0.22, 0.18, "Guard / Shield /\nGated-risk", "#F7D7D2"),
+        "env": (0.62, 0.22, 0.22, 0.18, "MetaDrive\nclosed loop", "#E9F2EA"),
+        "metrics": (0.33, 0.22, 0.19, 0.18, "Progress-safety\nmetrics", "#ECE9F2"),
+        "obs": (0.05, 0.22, 0.18, 0.18, "Observation\nstate", "#EDF1F1"),
+    }
+    for key, (x, y, w, h, txt, color) in boxes.items():
+        patch = FancyBboxPatch(
+            (x, y),
+            w,
+            h,
+            boxstyle="round,pad=0.018,rounding_size=0.025",
+            linewidth=0.9,
+            edgecolor="#30323A",
+            facecolor=color,
+        )
+        ax.add_patch(patch)
+        ax.text(x + w / 2, y + h / 2, txt, ha="center", va="center", fontsize=8.2)
+
+    def arrow(a: str, b: str, text: str = "", yoff: float = 0.0) -> None:
+        xa, ya, wa, ha, *_ = boxes[a]
+        xb, yb, wb, hb, *_ = boxes[b]
+        start = (xa + wa, ya + ha / 2 + yoff)
+        end = (xb, yb + hb / 2 + yoff)
+        if xa > xb:
+            start = (xa, ya + ha / 2 + yoff)
+            end = (xb + wb, yb + hb / 2 + yoff)
+        arr = FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=10, linewidth=0.9, color="#33363F")
+        ax.add_patch(arr)
+        if text:
+            ax.text((start[0] + end[0]) / 2, (start[1] + end[1]) / 2 + 0.035, text, ha="center", va="bottom", fontsize=7.1, color="#33363F")
+
+    arrow("policy", "monitor", "proposed action")
+    arrow("monitor", "controller", "TTC, speed, progress")
+    arr = FancyArrowPatch((0.73, 0.58), (0.73, 0.40), arrowstyle="-|>", mutation_scale=10, linewidth=0.9, color="#33363F")
+    ax.add_patch(arr)
+    ax.text(0.75, 0.49, "bounded action", ha="left", va="center", fontsize=7.1)
+    arrow("metrics", "obs", "feedback", yoff=0.0)
+    arrow("obs", "policy", "next state", yoff=0.0)
+    arr = FancyArrowPatch((0.62, 0.31), (0.52, 0.31), arrowstyle="-|>", mutation_scale=10, linewidth=0.9, color="#33363F")
+    ax.add_patch(arr)
+    ax.text(0.57, 0.35, "episode traces", ha="center", va="bottom", fontsize=7.1)
+    arr = FancyArrowPatch((0.52, 0.31), (0.33, 0.31), arrowstyle="-|>", mutation_scale=10, linewidth=0.9, color="#33363F")
+    ax.add_patch(arr)
+    ax.text(0.11, 0.87, "Cybernetic runtime feedback loop", ha="left", va="center", fontsize=10.5, fontweight="bold")
+    ax.text(0.11, 0.82, "intervention is measured, bounded, and logged before simulator execution", ha="left", va="center", fontsize=7.6, color="#555963")
+    return save_figure(fig, "fig1_cybernetic_runtime_loop")
+
+
+def draw_core_diagnosis(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    core = ordered(tables["table3_core_d015_main_diagnostics"])
+    methods = core["method"].tolist()
+    x = np.arange(len(methods))
+    fig = plt.figure(figsize=(7.2, 5.6))
+    gs = gridspec.GridSpec(2, 2, figure=fig, wspace=0.36, hspace=0.48)
+
+    ax = fig.add_subplot(gs[0, 0])
+    width = 0.36
+    ax.bar(x - width / 2, core["cost_pct"], width, color=[COLORS[m] for m in methods], alpha=0.86, label="Cost")
+    ax.bar(x + width / 2, core["route_completion_pct"], width, color="#E7E7E7", edgecolor=[COLORS[m] for m in methods], linewidth=1.0, label="Route")
+    ax.set_ylim(0, 105)
+    ax.set_ylabel("Percent")
+    ax.set_xticks(x)
+    ax.set_xticklabels(methods, rotation=35, ha="right")
+    ax.legend(frameon=False, ncol=2, loc="upper right")
+    clean_axis(ax, grid=True)
+    panel_label(ax, "a")
+    ax.set_title("Cost is not enough: route completion separates artifacts")
+
+    ax = fig.add_subplot(gs[0, 1])
+    ax.scatter(
+        core["cost_pct"],
+        core["route_completion_pct"],
+        s=np.clip(core["success_pct"] + 8, 20, 95),
+        c=[COLORS[m] for m in methods],
+        marker="o",
+        edgecolor="#20232A",
+        linewidth=0.45,
+    )
+    offsets = {
+        "PPO": (5, -11),
+        "Risk-only": (5, 7),
+        "No-action guard": (-54, 8),
+        "Guard": (5, 8),
+        "Shield": (5, -9),
+        "Gated-risk": (5, 18),
+    }
+    for _, r in core.iterrows():
+        dx, dy = offsets.get(r["method"], (4, 3))
+        ax.annotate(
+            r["method"],
+            (r["cost_pct"], r["route_completion_pct"]),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            fontsize=6.4,
+            arrowprops=dict(arrowstyle="-", color="#9EA4AE", lw=0.45) if abs(dx) > 15 or abs(dy) > 12 else None,
+        )
+    ax.set_xlabel("Cost (%)")
+    ax.set_ylabel("Route completion (%)")
+    ax.set_xlim(-4, 105)
+    ax.set_ylim(-4, 100)
+    clean_axis(ax, grid=True)
+    panel_label(ax, "b")
+    ax.set_title("Progress-safety frontier")
+
+    ax = fig.add_subplot(gs[1, 0])
+    bars = ax.barh(np.arange(len(methods)), core["low_progress_pct"], color=[COLORS[m] for m in methods], alpha=0.90)
+    ax.set_yticks(np.arange(len(methods)))
+    ax.set_yticklabels(methods)
+    ax.set_xlim(0, 105)
+    ax.set_xlabel("Low-progress episodes (%)")
+    for b, v in zip(bars, core["low_progress_pct"]):
+        ax.text(v + 1.5, b.get_y() + b.get_height() / 2, f"{v:.1f}", va="center", fontsize=6.5)
+    clean_axis(ax, grid=True)
+    panel_label(ax, "c")
+    ax.set_title("Stationary behavior is exposed explicitly")
+
+    ax = fig.add_subplot(gs[1, 1])
+    ax.plot(x, core["ttc_dangerous_pct"], color="#596174", linewidth=1.3, marker="o", label="TTC danger")
+    ax2 = ax.twinx()
+    ax2.plot(x, core["interventions_per_100_steps"], color="#B33B45", linewidth=1.3, marker="s", label="Intervention")
+    ax.set_xticks(x)
+    ax.set_xticklabels(methods, rotation=35, ha="right")
+    ax.set_ylabel("TTC danger (%)")
+    ax2.set_ylabel("Interventions / 100 steps")
+    ax.set_ylim(0, 70)
+    ax2.set_ylim(0, 80)
+    clean_axis(ax, grid=True)
+    ax2.spines["top"].set_visible(False)
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines + lines2, labels + labels2, frameon=False, loc="upper right")
+    panel_label(ax, "d")
+    ax.set_title("Runtime variants trade TTC risk for measured intervention")
+    return save_figure(fig, "fig2_core_diagnosis")
+
+
+def draw_external(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    ext = ordered(tables["table4_external_baselines_d015"])
+    methods = ext["method"].tolist()
+    method_labels = [display_method(m) for m in methods]
+    y = np.arange(len(methods))
+    fig, axes = plt.subplots(1, 3, figsize=(7.2, 3.1), sharey=True)
+    metrics = [
+        ("success_pct", "Success (%)", 100),
+        ("cost_pct", "Cost (%)", 100),
+        ("route_completion_pct", "Route completion (%)", 100),
+    ]
+    for ax, (col, title, xmax) in zip(axes, metrics):
+        vals = ext[col].to_numpy()
+        ax.hlines(y, 0, vals, color="#CFD4DC", linewidth=1.2)
+        ax.scatter(vals, y, s=38, color=[COLORS[m] for m in methods], edgecolor="#20232A", linewidth=0.45, zorder=3)
+        for yy, vv in zip(y, vals):
+            ax.text(vv + 2, yy, f"{vv:.1f}", va="center", fontsize=6.6)
+        ax.set_xlim(0, xmax + 12)
+        ax.set_xlabel(title)
+        clean_axis(ax, grid=True)
+    axes[0].set_yticks(y)
+    axes[0].set_yticklabels(method_labels)
+    axes[0].invert_yaxis()
+    axes[0].set_title("External comparison")
+    axes[1].set_title("PPO-Lagrangian baseline")
+    axes[2].set_title("Runtime variants keep progress")
+    for idx, ax in enumerate(axes):
+        panel_label(ax, chr(ord("a") + idx))
+    return save_figure(fig, "fig3_external_baselines")
+
+
+def draw_density(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    density = ordered(tables["table6_density_stress_summary"], "density")
+    methods = ["PPO", "Guard", "Shield", "Gated-risk"]
+    metrics = [
+        ("success_pct", "Success (%)", (0, 100)),
+        ("cost_pct", "Cost (%)", (0, 105)),
+        ("route_completion_pct", "Route completion (%)", (0, 105)),
+        ("ttc_dangerous_pct", "TTC danger (%)", (0, 70)),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(7.2, 4.8), sharex=True)
+    for ax, (col, title, ylim) in zip(axes.ravel(), metrics):
+        for m in methods:
+            df = density[density["method"] == m].sort_values("density")
+            ax.plot(
+                df["density"],
+                df[col],
+                marker=MARKERS[m],
+                linewidth=1.3,
+                markersize=4.2,
+                color=COLORS[m],
+                label=m,
+            )
+        ax.set_title(title)
+        ax.set_ylim(*ylim)
+        clean_axis(ax, grid=True)
+    for ax in axes[1, :]:
+        ax.set_xlabel("Traffic density")
+    density_ticks = [0.08, 0.15, 0.20, 0.25]
+    for ax in axes.ravel():
+        ax.set_xticks(density_ticks)
+        ax.set_xticklabels([f"{v:.2f}" for v in density_ticks])
+    axes[0, 0].set_ylabel("Percent")
+    axes[1, 0].set_ylabel("Percent")
+    axes[0, 1].legend(frameon=False, ncol=2, loc="upper right")
+    for idx, ax in enumerate(axes.ravel()):
+        panel_label(ax, chr(ord("a") + idx))
+    return save_figure(fig, "fig4_density_stress")
+
+
+def draw_sensitivity(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    sens = tables["table_supp_sensitivity"].copy()
+    metric_specs = [
+        ("success_pct", "Success", "Blues"),
+        ("cost_pct", "Cost", "Oranges"),
+        ("route_completion_pct", "Route", "Purples"),
+    ]
+    axes_order = [("ttc_threshold", "TTC threshold"), ("target_speed_kmh", "Target speed")]
+    fig, axes = plt.subplots(2, 3, figsize=(7.2, 4.8))
+    for row_idx, (axis_name, axis_title) in enumerate(axes_order):
+        sub = sens[sens["sensitivity_axis"] == axis_name].copy()
+        values = sorted(sub["sensitivity_value"].unique())
+        methods = PROPOSED_METHODS
+        for col_idx, (metric, title, cmap) in enumerate(metric_specs):
+            ax = axes[row_idx, col_idx]
+            mat = np.full((len(methods), len(values)), np.nan)
+            for i, m in enumerate(methods):
+                for j, v in enumerate(values):
+                    row = sub[(sub["method"] == m) & (sub["sensitivity_value"] == v)]
+                    if not row.empty:
+                        mat[i, j] = row.iloc[0][metric]
+            vmin, vmax = np.nanmin(mat), np.nanmax(mat)
+            im = ax.imshow(mat, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax)
+            ax.set_xticks(np.arange(len(values)))
+            ax.set_xticklabels([f"{v:g}" for v in values])
+            ax.set_yticks(np.arange(len(methods)))
+            ax.set_yticklabels(methods if col_idx == 0 else [])
+            ax.set_xlabel(axis_title)
+            if row_idx == 0:
+                ax.set_title(f"{title} (%)")
+            for i in range(mat.shape[0]):
+                for j in range(mat.shape[1]):
+                    norm = 0.0 if vmax == vmin else (mat[i, j] - vmin) / (vmax - vmin)
+                    txt_color = "white" if norm > 0.68 else "#20232A"
+                    ax.text(j, i, f"{mat[i, j]:.1f}", ha="center", va="center", fontsize=6.2, color=txt_color)
+            for spine in ax.spines.values():
+                spine.set_linewidth(0.45)
+                spine.set_color("#AEB4BD")
+            cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02)
+            cbar.ax.tick_params(labelsize=6.2, length=2)
+            panel_label(ax, chr(ord("a") + row_idx * 3 + col_idx))
+    return save_figure(fig, "fig5_parameter_sensitivity")
+
+
+def draw_runtime(tables: dict[str, pd.DataFrame]) -> list[Path]:
+    runtime = ordered(tables["table7_runtime_overhead"], "density")
+    methods = RUNTIME_METHODS
+    density_ticks = [0.08, 0.15, 0.20, 0.25]
+    fig, axes = plt.subplots(1, 3, figsize=(7.2, 2.8))
+    specs = [
+        ("policy_inference_ms_p95", "Policy inference p95 (ms)"),
+        ("control_loop_wall_ms_p95", "Control-loop p95 (ms)"),
+        ("intervention_rate_per_100_steps", "Interventions / 100 steps"),
+    ]
+    for ax, (col, title) in zip(axes, specs):
+        for m in methods:
+            df = runtime[runtime["method"] == m].sort_values("density")
+            ax.plot(df["density"], df[col], marker=MARKERS[m], color=COLORS[m], linewidth=1.3, markersize=4.2, label=m)
+        ax.set_title(title)
+        ax.set_xlabel("Traffic density")
+        ax.set_xticks(density_ticks)
+        ax.set_xticklabels([f"{v:.2f}" for v in density_ticks])
+        clean_axis(ax, grid=True)
+    fig.legend(frameon=False, ncol=4, loc="upper center", bbox_to_anchor=(0.5, 1.05))
+    for idx, ax in enumerate(axes):
+        panel_label(ax, chr(ord("a") + idx))
+    return save_figure(fig, "fig6_runtime_overhead")
+
+
+def copy_assets(paths: list[Path], table_paths: list[Path]) -> None:
+    PKG.mkdir(parents=True, exist_ok=True)
+    for p in paths:
+        shutil.copy2(p, PKG / p.name)
+    for p in table_paths:
+        shutil.copy2(p, PKG / p.name)
+
+
+def write_main_tex() -> Path:
+    main_tex = r"""% Revised publication-table/figure manuscript source.
+% Springer Nature template package: December 2024 version, sn-jnl.cls.
+\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{xcolor}
+
+\raggedbottom
+
+\begin{document}
+
+\title[GuardShield-Runtime]{GuardShield-Runtime: Cybernetic Runtime Action Intervention for Progress-Preserving Safe Reinforcement Learning in Dense Traffic}
+
+\author*[1]{\fnm{Anonymous} \sur{Author}}\email{anonymous@example.com}
+\affil*[1]{\orgdiv{Department}, \orgname{Institution}, \orgaddress{\city{City}, \country{Country}}}
+
+\abstract{Safe reinforcement learning for dense traffic must regulate a closed loop between a learned policy, nearby vehicles, and runtime constraints. A common failure is to reduce collisions by suppressing motion, which improves cost metrics while destroying route progress. We study this failure mode through GuardShield-Runtime, a cybernetic runtime intervention framework that observes time-to-collision, speed, lane deviation, and progress signals, then feeds back bounded action-side interventions before environment execution. The framework separates three roles: a Guard that modifies monitor-flagged longitudinal commands, a Shield-only variant that isolates execution-side intervention without risk reward, and a Gated-risk variant that applies continuous risk shaping only when movement or route progress indicates an active control state. Across MetaDrive closed-loop simulations with four traffic densities, three training seeds, and complete diagnostic tables for core, external-baseline, density, sensitivity, confidence-interval, seed-scatter, and runtime experiments, the risk-only variant attains zero cost by stopping almost completely, whereas Guard, Shield, and Gated-risk preserve route progress at density 0.15. External comparisons show that a TTC/RSS-style filter improves over PPO but retains higher cost than the proposed runtime variants under the same diagnostic protocol, while the tested PPO-Lagrangian implementation does not recover a progress-preserving low-cost behavior under this protocol. The evidence supports a bounded simulator-level conclusion: runtime feedback intervention improves progress-safety diagnostics without implying formal or real-world safety guarantees.}
+
+\keywords{safe reinforcement learning, cybernetic feedback, runtime intervention, autonomous driving simulation, MetaDrive, traffic density stress testing}
+
+\maketitle
+
+\section{Introduction}\label{sec_introduction}
+
+Dense traffic control is a feedback problem. A learning agent acts, surrounding vehicles react through the simulator dynamics, the observation changes, and the next action is selected under uncertain local risk. This loop is aligned with the cybernetic view of system-environment interaction control \citep{wiener1948cybernetics}, and it is also where standard reinforcement learning policies can fail. In autonomous-driving simulation, a policy can make high-progress but unsafe decisions, while an aggressively risk-penalized policy can learn a low-motion behavior that avoids measured cost without completing the route. Both outcomes are weak evidence for deployable safe control.
+
+Safe reinforcement learning has developed constrained optimization, risk-sensitive objectives, and shielding mechanisms \citep{garcia2015safe,achiam2017constrained,alshiekh2018shielding}. These approaches are useful, but the journal-level question addressed here is narrower: in a dense traffic simulator, can a learned policy be regulated by a measurable runtime feedback mechanism that reduces collision-oriented cost without merely stopping the vehicle? This question requires diagnostics that distinguish safety from immobility, compare against external baselines, and expose sensitivity to traffic density and intervention thresholds.
+
+We therefore recast the prior short-paper GuardShield idea as \emph{GuardShield-Runtime}, a cybernetic runtime action intervention framework. The controller observes local risk indicators, intervenes before action execution when the feedback state is unsafe, and reports the resulting trade-off among success, cost, route completion, collision, out-of-road rate, stop ratio, low-progress episodes, time-to-collision danger, intervention frequency, and control-loop wall time. The contribution is empirical and mechanism-level rather than formal: we do not claim certified safety, real-world safety, or a complete autonomous-driving stack.
+
+The paper makes four contributions. First, it defines a runtime feedback architecture for progress-preserving safe reinforcement learning in dense traffic, with Guard, Shield-only, and Gated-risk variants. Second, it introduces diagnostic controls that expose non-motion artifacts and unsafe ablations. Third, it evaluates external training-time and runtime baselines, including PPO-Lagrangian and a TTC/RSS-style filter. Fourth, it provides density-stress, sensitivity, confidence-interval, seed-scatter, and runtime-overhead evidence in complete publication tables rather than relying on abbreviated headline metrics.
+
+\section{Related Work}\label{sec_related_work}
+
+\subsection{Safe reinforcement learning}\label{sec_safe_rl}
+Constrained and risk-aware reinforcement learning methods seek to optimize reward while respecting safety costs or constraints. Constrained Policy Optimization and related Lagrangian methods formalize this trade-off during policy learning \citep{achiam2017constrained,tessler2018reward}. Benchmarking studies show, however, that safe-RL results can be sensitive to reward scales, cost definitions, and exploration protocols \citep{ray2019benchmarking}. Our PPO-Lagrangian baseline is used in this spirit: it tests whether training-time cost penalties alone recover progress-preserving low-cost behavior under the same environment family and seed protocol. In this implementation and diagnostic setting, they do not.
+
+\subsection{Runtime shielding and vehicle safety rules}\label{sec_runtime_shielding}
+Runtime shielding modifies or blocks selected actions when a monitored safety condition is violated \citep{alshiekh2018shielding}. In autonomous driving, rule-based safety models such as RSS-style reasoning provide interpretable distance or time-to-collision triggers \citep{shalev2017rss}, while control barrier functions offer a related control-theoretic language for safety filtering \citep{ames2019control}. GuardShield-Runtime is closest to this runtime family, but the present implementation is deliberately modest: it uses observable TTC and speed feedback as an intervention heuristic, not a proof-producing barrier certificate.
+
+\subsection{Closed-loop driving simulation and artifact-aware evaluation}\label{sec_sim_eval}
+MetaDrive provides compositional driving scenarios for generalizable reinforcement learning evaluation \citep{li2022metadrive}. Closed-loop simulation is valuable because the agent's actions affect future observations, but this also creates evaluation artifacts. A method that remains stationary may avoid collisions while failing the driving task. For that reason, our protocol reports stop ratio, low-progress rate, route completion, intervention frequency, and TTC danger alongside success and cost.
+
+\section{GuardShield-Runtime Framework}\label{sec_method}
+
+\subsection{Problem setting}\label{sec_problem_setting}
+We consider a continuous-action driving policy trained with PPO \citep{schulman2017ppo} in MetaDrive. At time step $t$, the policy proposes an action $a_t=(\delta_t,u_t)$, where $\delta_t$ controls steering and $u_t$ controls acceleration or braking. The environment returns route progress, collision or off-road cost, vehicle speed, lane deviation, and local traffic observations. The runtime controller has access only to signals that are available through the closed-loop simulator wrapper: speed, lane deviation, route progress, and a forward TTC estimate from perceived nearby vehicles.
+
+\subsection{Feedback controller}\label{sec_feedback_controller}
+The runtime controller computes a TTC risk indicator and applies a bounded braking intervention before the action is executed. If the pre-action TTC is below a hard threshold, the acceleration command is capped at hard braking. If the TTC is below a soft threshold, the command is capped at moderate braking. A speed guard additionally suppresses acceleration or applies mild braking when the ego speed exceeds the target-speed band. These interventions are counted as shield events and are reported per 100 control steps and per kilometer.
+
+The variants used in the study separate mechanism components. \textbf{Risk-only} uses risk reward without action intervention and is included to test the non-motion artifact. \textbf{No-action guard} disables the action guard while retaining the risk-oriented objective, testing whether reward shaping alone can recover safety. \textbf{Guard} applies the action-side intervention without continuous risk reward. \textbf{Shield} isolates execution-side intervention as a non-risk-reward control. \textbf{Gated-risk} combines action intervention with risk reward that is active only when the agent is moving or making route progress and a risk condition is present. This gate is intended to reduce stationary exploitation of continuous risk penalties.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig1_cybernetic_runtime_loop.pdf}
+\caption{GuardShield-Runtime as a closed feedback loop. The learned policy proposes an action, the runtime monitor estimates TTC, speed, and progress risk, and the controller applies a bounded action-side intervention before environment execution.}
+\label{fig_architecture}
+\end{figure}
+
+\section{Experimental Protocol}\label{sec_experimental_protocol}
+
+\subsection{Research questions}\label{sec_research_questions}
+The experiments are organized around five questions. RQ1 asks whether low cost is genuine safe driving or a non-motion artifact. RQ2 asks whether action-side runtime intervention restores progress-safety relative to reward-only and no-action controls. RQ3 asks whether the result remains competitive against external baselines. RQ4 asks how the trade-off changes under traffic density and parameter sensitivity. RQ5 asks whether the runtime feedback loop adds prohibitive wall-clock overhead in simulation.
+
+\input{table_experiment_matrix_pub.tex}
+
+\subsection{Training, evaluation, and supervision}\label{sec_training_eval_supervision}
+Training and ordinary evaluation use 16 parallel environments when a policy is trained or evaluated through the standard configuration path. The IJMLC diagnostic evaluations are parallelized by per-seed diagnostic shards so that episode-level TTC, speed, stop ratio, intervention, and latency statistics can be logged without losing traceability. This preserves the 16-environment training protocol while adding reviewer-facing diagnostics.
+
+Raw episode CSVs, aggregate tables, table-ready CSVs, plotting scripts, and source figures are retained in the supplementary package. Appendix Table~\ref{tab_data_manifest} groups the evidence files used by the revised manuscript.
+
+\section{Results}\label{sec_results}
+
+\subsection{RQ1 and RQ2: Non-motion artifacts and runtime mechanism}\label{sec_rq12}
+The risk-only variant obtains zero cost at density 0.15, but this is not safe driving. It completes only 0.9\% of the route, has a 100.0\% stop ratio, and produces 100.0\% low-progress episodes. In contrast, the runtime intervention variants keep route completion above 85\% while reducing cost to roughly 18--21\%. Figure~\ref{fig_core_diagnosis} presents the artifact, frontier, low-progress, and intervention/TTC views in one composite figure. Table~\ref{tab_core} gives the complete numerical diagnostic table rather than a shortened version.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig2_core_diagnosis.pdf}
+\caption{Core diagnosis at traffic density 0.15. (a) Cost and route completion expose the non-motion artifact. (b) The progress-safety frontier separates reward-only stopping from runtime intervention. (c) Low-progress episodes reveal stationary behavior. (d) Runtime variants trade TTC-dangerous operation for measured intervention frequency.}
+\label{fig_core_diagnosis}
+\end{figure}
+
+\input{table_core_full_pub.tex}
+
+The mechanism-level interpretation is direct. PPO drives quickly but does not complete successful episodes under the dense diagnostic criterion and has 100\% cost. Risk-only has no cost but almost no route progress. No-action guard remains unsafe, with 100\% cost and 21.7\% route completion. Guard, Shield, and Gated-risk move to a different region: 59.2--62.5\% success, 18.3--20.8\% cost, and 85.7--86.9\% route completion at density 0.15. This supports the claim that action/execution-side runtime intervention, not risk reward alone, is the active ingredient.
+
+\subsection{RQ3: External baselines}\label{sec_rq3}
+Figure~\ref{fig_external} and Table~\ref{tab_external} compare the proposed variants with two external baselines. The PPO-Lagrangian baseline was trained with 16 environments and one million timesteps per seed, but it retains 0\% success and 100\% cost at density 0.15. The TTC/RSS-style filter improves PPO to 53.3\% success and 44.2\% cost, demonstrating that a classical runtime filter is a meaningful comparator. Guard, Shield, and Gated-risk retain lower cost and stronger progress-safety trade-offs in this protocol, with costs between 18.3\% and 20.8\% and route completion around 86\%.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig3_external_baselines.pdf}
+\caption{External baseline comparison at density 0.15. The TTC/RSS-style runtime filter improves over PPO, while the tested PPO-Lagrangian row remains a protocol-specific constrained-baseline outcome; proposed runtime variants retain stronger progress-safety trade-offs.}
+\label{fig_external}
+\end{figure}
+
+\input{table_external_full_pub.tex}
+
+\subsection{RQ4: Density stress and sensitivity}\label{sec_rq4}
+The density stress test shows that all runtime variants degrade as traffic becomes denser, which is expected and should not be hidden. At density 0.08, Guard and Gated-risk reach 85.0\% success with about 4--5\% cost. At density 0.25, Guard remains the strongest of the three runtime variants in success, but cost rises to 43.3\%. This result supports a bounded claim: runtime intervention improves the progress-safety trade-off in the tested simulator, but it does not remove the fundamental difficulty of dense traffic.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig4_density_stress.pdf}
+\caption{Traffic-density stress test. Runtime variants preserve progress-safety better than PPO, but performance degrades under the highest tested density.}
+\label{fig_density}
+\end{figure}
+
+\input{table_density_full_pub.tex}
+
+Parameter sensitivity is summarized in Fig.~\ref{fig_sensitivity} and Appendix Table~\ref{tab_sensitivity}. The TTC threshold sweep shows that more conservative intervention can improve cost in some ranges but may alter intervention frequency and progress. The target-speed sweep shows the expected progress-safety coupling: higher target speed can improve route completion in some settings but increases cost or TTC risk in others. These sweeps are used as robustness diagnostics, not as proof of global optimality.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig5_parameter_sensitivity.pdf}
+\caption{Parameter-sensitivity sweep at density 0.15. Heatmaps report success, cost, and route completion for TTC-threshold and target-speed sweeps over Guard, Shield, and Gated-risk variants.}
+\label{fig_sensitivity}
+\end{figure}
+
+\subsection{RQ5: Runtime overhead}\label{sec_rq5}
+The wall-clock metrics in Fig.~\ref{fig_runtime_overhead} and Table~\ref{tab_runtime} are simulation control-loop measurements rather than isolated hardware deployment timings. At density 0.15, PPO has a control-loop p95 of 16.93 ms, while Guard, Shield, and Gated-risk are 13.31 ms, 12.68 ms, and 12.40 ms, respectively. These values indicate that the Python-level runtime checks did not create an obvious simulation bottleneck in the tested setup. They do not establish real-time guarantees for a vehicle platform.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig6_runtime_overhead.pdf}
+\caption{Runtime overhead across densities. Reported values are closed-loop simulation wall-clock measurements; the figure separates policy inference, full control-loop p95 latency, and intervention frequency.}
+\label{fig_runtime_overhead}
+\end{figure}
+
+\input{table_runtime_full_pub.tex}
+
+\section{Discussion}\label{sec_discussion}
+
+The evidence supports a mechanism-level conclusion. In this simulator and protocol, reward-side risk penalties alone are insufficient because they can create stationary or low-progress behavior. Runtime feedback intervention changes the closed loop by constraining monitor-flagged longitudinal commands at execution time, and this produces a better progress-safety trade-off than PPO, risk-only reward shaping, no-action controls, and the tested external baselines.
+
+The strongest result is not that Gated-risk is universally dominant. Its cost is the lowest at density 0.15, but Guard can be more robust at the highest density. A more accurate interpretation is that GuardShield-Runtime defines a family of feedback interventions, and the appropriate variant depends on whether the application prioritizes success, cost, route completion, or conservativeness under density stress.
+
+There are several limitations. First, all results are from MetaDrive simulation; they do not imply real-world safety. Second, the TTC/RSS filter and Guard use heuristic thresholds rather than formal reachability or control-barrier certification. Third, the PPO-Lagrangian baseline is an in-code implementation because the remote environment did not include an external safe-RL library. Fourth, the current seed count is three for formal tables; additional seed-3 and seed-4 retraining is reserved for reviewer-demand extension rather than included in the present evidence package. Finally, runtime overhead is measured in a Python simulation loop, not on embedded automotive hardware.
+
+\section{Conclusion}\label{sec_conclusion}
+
+GuardShield-Runtime reframes safe reinforcement learning for dense traffic as a cybernetic runtime feedback problem. The resulting evidence package shows that runtime action/execution intervention can reduce collision-oriented cost while preserving route progress, whereas risk-only reward shaping can produce a non-motion artifact. The method is best viewed as a practical simulator-level feedback intervention and diagnostic protocol. Future work should connect the runtime monitor to formal safety filters, expand policy and scenario diversity, and evaluate real-time behavior in a hardware-in-the-loop or vehicle-grade control stack before making deployment claims.
+
+\backmatter
+
+\bmhead{Supplementary information}
+The supplementary package includes anonymized episode-level results, aggregate tables, plotting scripts, table-generation scripts, and configuration files required to reproduce the reported figures and tables.
+
+\bmhead{Acknowledgements}
+To be completed by the author team.
+
+\section*{Declarations}
+
+\bmhead{Funding}
+Funding information has not yet been specified by the author team.
+
+\bmhead{Competing interests}
+The authors declare no competing interests. This statement should be confirmed by the author team before submission.
+
+\bmhead{Ethics approval and consent to participate}
+Not applicable. The study uses closed-loop driving simulation and does not involve human participants, human tissue, or animals.
+
+\bmhead{Consent for publication}
+Not applicable.
+
+\bmhead{Data availability}
+The anonymized supplementary package contains the episode-level results, aggregate tables, plotting scripts, and configuration files needed to reproduce the reported figures and tables.
+
+\bmhead{Code availability}
+The anonymized supplementary package contains the training, evaluation, diagnostic, table-generation, and figure-generation code used for the reported simulator study.
+
+\bmhead{Author contribution}
+Author contributions should be completed after the final author list is fixed.
+
+\begin{appendices}
+\renewcommand{\theHtable}{appendix.\arabic{table}}
+\renewcommand{\theHfigure}{appendix.\arabic{figure}}
+
+\section{Evidence manifest}\label{app_manifest}
+\input{table_manifest_pub.tex}
+
+\section{Uncertainty and seed scatter}\label{app_ci}
+Tables~\ref{tab_ci_binary} and \ref{tab_ci_continuous} report Wilson intervals for binary outcomes and bootstrap intervals for continuous or rate diagnostics at density 0.15. Table~\ref{tab_seed_scatter} reports the seed-level scatter behind the main aggregate table.
+
+\input{table_ci_binary_pub.tex}
+\input{table_ci_continuous_pub.tex}
+\input{table_seed_scatter_pub.tex}
+
+\section{Artifact, sensitivity, and runtime details}\label{app_details}
+Table~\ref{tab_nonmotion_all_density} reports the non-motion artifact diagnostics across all tested densities. Table~\ref{tab_sensitivity} gives the full sensitivity sweep. Table~\ref{tab_runtime_by_seed} reports per-seed runtime diagnostics for PPO and the runtime variants.
+
+\input{table_nonmotion_all_density_pub.tex}
+\input{table_sensitivity_full_pub.tex}
+\input{table_runtime_by_seed_pub.tex}
+
+\end{appendices}
+
+\bibliography{references}
+
+\end{document}
+"""
+    out = PKG / "main.tex"
+    out.write_text(main_tex, encoding="utf-8")
+    return out
+
+
+def write_report(figure_paths: list[Path], table_paths: list[Path]) -> Path:
+    report = CONTROL / "FIGURE_TABLE_REVISION_REPORT.md"
+    lines = [
+        "# IJMLC publication table and figure revision",
+        "",
+        f"- Generated at: {datetime.now().isoformat(timespec='seconds')}",
+        f"- Script: `{CONTROL / 'scripts' / 'build_publication_tables_figures.py'}`",
+        f"- Figure directory: `{FIG_DIR}`",
+        f"- Table directory: `{TAB_DIR}`",
+        f"- Manuscript directory: `{PKG}`",
+        "",
+        "## Figure contract",
+        "",
+        "- Conclusion: runtime feedback is not a non-motion shortcut; it preserves progress-safety better than reward-only and external baseline controls under the tested MetaDrive protocol.",
+        "- Evidence logic: architecture -> core artifact/frontier -> external baselines -> density stress -> sensitivity -> runtime overhead.",
+        "- Export policy: every figure is exported as PDF, SVG, TIFF, and PNG; PDF is used in the LaTeX manuscript.",
+        "",
+        "## Generated figures",
+        "",
+    ]
+    for p in sorted(figure_paths):
+        lines.append(f"- `{p.relative_to(ROOT)}`")
+    lines += ["", "## Generated tables", ""]
+    for p in sorted(table_paths):
+        lines.append(f"- `{p.relative_to(ROOT)}`")
+    lines += [
+        "",
+        "## Manuscript changes",
+        "",
+        "- Replaced raw appendix dumps with compact evidence-map, uncertainty, density-envelope, sensitivity, and runtime summaries.",
+        "- Consolidated old fragmented figures into six consistent publication-style figures.",
+        "- Full per-seed, bootstrap, sensitivity, and runtime diagnostics remain available as supplementary CSV artifacts rather than printed PDF tables.",
+    ]
+    report.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return report
+
+
+def update_manifest(figure_paths: list[Path], table_paths: list[Path], report: Path) -> None:
+    manifest_path = CONTROL / "manuscript_manifest.json"
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    else:
+        manifest = {}
+    manifest["publication_revision"] = {
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "figures_publication": [str(p.relative_to(ROOT)) for p in sorted(figure_paths)],
+        "tables_publication": [str(p.relative_to(ROOT)) for p in sorted(table_paths)],
+        "report": str(report.relative_to(ROOT)),
+        "manuscript": str((PKG / "main.tex").relative_to(ROOT)),
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def append_status(report: Path) -> None:
+    for name in ["P6_IJMLC_MANUSCRIPT_BUILD_REPORT.md", "IJMLC_FINAL_EVIDENCE_MANIFEST.md", "05_CURRENT_STATUS.md"]:
+        path = CONTROL / name
+        if path.exists():
+            with path.open("a", encoding="utf-8") as f:
+                f.write(
+                    "\n\n## Publication table/figure revision\n\n"
+                    f"- Revised report: `{report.relative_to(ROOT)}`\n"
+                    f"- New figure directory: `{FIG_DIR.relative_to(ROOT)}`\n"
+                    f"- New table directory: `{TAB_DIR.relative_to(ROOT)}`\n"
+                    "- Main manuscript now uses compact reviewer-facing appendix tables and redesigned publication figures.\n"
+                )
+
+
+def main() -> None:
+    configure_matplotlib()
+    tables = load_tables()
+    table_paths = write_publication_tables(tables)
+    figure_paths = []
+    figure_paths += draw_architecture()
+    figure_paths += draw_core_diagnosis(tables)
+    figure_paths += draw_external(tables)
+    figure_paths += draw_density(tables)
+    figure_paths += draw_sensitivity(tables)
+    figure_paths += draw_runtime(tables)
+    copy_assets(figure_paths, table_paths)
+    write_main_tex()
+    report = write_report(figure_paths, table_paths)
+    update_manifest(figure_paths, table_paths, report)
+    append_status(report)
+    print(f"Generated {len(figure_paths)} figure assets and {len(table_paths)} tables.")
+    print(f"Report: {report}")
+    print(f"Manuscript: {PKG / 'main.tex'}")
+
+
+if __name__ == "__main__":
+    main()

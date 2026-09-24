@@ -1,0 +1,38 @@
+\begin{table}[!htbp]
+\centering
+\caption{Full core diagnostics at traffic density 0.15.}
+\label{tab_core}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.08}
+\textit{Performance outcomes and seed variation}\par
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Method & Ep & Seeds & Success & Succ. SD & Cost & Cost SD & Route & Route SD \\
+\midrule
+PPO backbone & 120 & 3 & 0.0 & 0.0 & 100.0 & 0.0 & 20.7 & 0.8 \\
+Risk-only & 120 & 3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.9 & 0.0 \\
+No-action guard & 120 & 3 & 0.8 & 1.4 & 100.0 & 0.0 & 21.7 & 1.2 \\
+Guard & 120 & 3 & 59.2 & 1.4 & 20.8 & 8.0 & 86.4 & 0.8 \\
+Shield & 120 & 3 & 62.5 & 9.0 & 19.2 & 11.8 & 85.7 & 3.2 \\
+Gated-risk & 120 & 3 & 61.7 & 2.9 & 18.3 & 1.4 & 86.9 & 1.2 \\
+\bottomrule
+\end{tabular}
+\vspace{3pt}
+\textit{Artifact and runtime diagnostics}\par
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Method & Low-prog. & Stop & Speed & TTC-danger (\%) & Int./100 steps & Loop p95 (ms) \\
+\midrule
+PPO backbone & 57.5 & 0.1 & 41.1 & 60.4 & 0.0 & 16.93 \\
+Risk-only & 100.0 & 100.0 & 0.0 & 0.0 & 0.0 & 6.15 \\
+No-action guard & 55.8 & 0.2 & 36.8 & 48.7 & 0.0 & 7.59 \\
+Guard & 0.0 & 2.4 & 15.8 & 11.8 & 69.6 & 13.31 \\
+Shield & 0.8 & 2.8 & 15.9 & 11.4 & 70.8 & 12.68 \\
+Gated-risk & 0.8 & 3.5 & 15.3 & 11.4 & 67.9 & 12.40 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: higher success and route are preferred; lower cost, collision, out-road, low-progress, stop, TTC-danger, and latency are preferred. Percent columns are percentage points; speed is km/h; TTC is the fraction of dangerous-TTC steps in percent; Loop p95 is ms.
+\end{tablenotes}
+\end{table}

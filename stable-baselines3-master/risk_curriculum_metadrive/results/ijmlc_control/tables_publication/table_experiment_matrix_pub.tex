@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{Experiment matrix and evidence coverage.}
+\label{tab_experiment_matrix}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.10\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}@{}}
+\toprule
+Block & Purpose & Methods & Evidence coverage \\
+\midrule
+P1 & Core and artifact diagnostics & PPO backbone, Risk-only, No-action guard, Guard, Shield, Gated-risk & 4 densities; 24 aggregate cells; raw and per-seed CSVs \\
+P2 & External baselines & PPO backbone, RSS/TTC filter, PPO-Lagrangian, Guard, Shield, Gated-risk & density 0.15; 720 diagnostic episodes represented in aggregate rows \\
+P4 & Density stress & PPO backbone plus runtime variants and artifact controls & densities 0.08, 0.15, 0.20, 0.25 \\
+P5 & Sensitivity & Guard, Shield, Gated-risk & target-speed sweep and TTC-threshold sweep; 21 aggregate cells \\
+CI/seed & Uncertainty and reproducibility & all formal density-0.15 methods & Wilson intervals, bootstrap intervals, seed scatter, runtime by seed \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item The manuscript reports aggregate tables, while raw episode-level CSVs remain in the evidence package.
+\end{tablenotes}
+\end{table}

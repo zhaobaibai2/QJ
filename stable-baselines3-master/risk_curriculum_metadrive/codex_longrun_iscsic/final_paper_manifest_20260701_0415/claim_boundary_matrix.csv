@@ -1,0 +1,6 @@
+claim,strength,evidence,boundary
+Action guard/shield is the dominant stabilizing mechanism,strong,guard_only and shield_only lead formal d0.15 and stress rankings,Do not frame the result as risk-reward dominance.
+Risk-only is insufficient,strong,risk-only reaches near-zero cost only by route stagnation,Zero cost is not safety when progress collapses.
+Gated risk is a viable refinement,moderate/addendum,proposed_gated_risk restores progress versus risk-only and remains competitive,Not statistically superior to guard_only/shield_only.
+TTC/lane/smooth rewards refine behavior,moderate,"wo_ttc/wo_lane/wo_smooth ablations shift success, cost, and route","Treat as refinement evidence, not the primary mechanism."
+Baseline and curriculum-only fail held-out safety,strong,baseline/curriculum formal d0.15 success is 0 with cost near 1,Use as failed lower-bound comparators.

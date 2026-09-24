@@ -1,0 +1,17 @@
+\begin{table}[!htbp]
+\centering
+\caption{Clean same-checkpoint runtime-intervention ablation at traffic density 0.15. All rows evaluate the same three frozen PPO-backbone checkpoints under the same 120-episode diagnostic protocol; only the runtime operator is changed.}
+\label{tab_clean_runtime_ablation}
+\scriptsize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+\toprule
+Method & Succ. & Cost & Route & Coll. & Out & Stop & Low & TTC & Int./100 \\
+\midrule
+PPO backbone & 0.0 & 100.0 & 21.8 & 59.2 & 40.8 & 0.2 & 51.7 & 58.2 & 0.0 \\
+PPO + TTC & 29.2 & 65.0 & 56.3 & 28.3 & 36.7 & 2.9 & 25.8 & 10.5 & 11.4 \\
+PPO + Speed & 34.2 & 65.0 & 66.2 & 61.7 & 3.3 & 0.7 & 9.2 & 32.7 & 82.8 \\
+PPO + Both & 59.2 & 20.8 & 85.3 & 18.3 & 2.5 & 3.1 & 1.7 & 13.0 & 67.8 \\
+\bottomrule
+\end{tabular}
+\end{table}

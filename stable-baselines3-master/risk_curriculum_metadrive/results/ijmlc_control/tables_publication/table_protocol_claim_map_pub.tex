@@ -1,0 +1,23 @@
+
+\begin{table}[t]
+\centering
+\caption{Evaluation protocol mapped to manuscript claims.}
+\label{tab_protocol_claim_map}
+\footnotesize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.11\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}@{}}
+\toprule
+Claim & Question & Experiment block & Primary evidence \\
+\midrule
+Claim 1 & Cost-only safe RL can create non-motion artifacts & P1 artifact controls & Risk-only, stop ratio, low progress, route completion \\
+Claim 2 & Execution-side feedback is the active ingredient & P1 mechanism ablation & No-action guard versus Guard/Shield/Gated-risk \\
+Claim 3 & Runtime feedback improves over external baselines & P2 external comparison & RSS/TTC filter and PPO-Lagrangian \\
+Claim 4 & The benefit has an operating envelope & P4 density stress & densities 0.08, 0.15, 0.20, 0.25 \\
+Claim 5 & The loop is measurable and not a hidden bottleneck & runtime diagnostics & policy inference p95, control-loop p95, intervention rate \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item The protocol is organized by claim rather than by file name, so readers can see which evidence supports each conclusion.
+\end{tablenotes}
+\end{table}

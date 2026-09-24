@@ -1,0 +1,23 @@
+
+\begin{table}[t]
+\centering
+\caption{Code-level distinction among runtime variants.}
+\label{tab_runtime_variant_components}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
+\toprule
+Component & Guard & Shield & Gated-risk \\
+\midrule
+Training context & Curriculum PPO & No-curriculum PPO & Curriculum PPO \\
+Execution operator & TTC hard/soft cap + speed guard & Same TTC hard/soft cap + speed guard & Same TTC hard/soft cap + speed guard \\
+Risk reward & No & No & Motion-gated risk reward \\
+Motion/risk gate & No reward gate & No reward gate & $v_t\geq3$ km/h or $\Delta p_t>10^{-4}$; risk if TTC-risk $\geq0.01$ or lane deviation $\geq0.25$ \\
+Intended role & Runtime action regularizer & Pure execution-shield baseline & Anti-stationary risk shaping plus runtime feedback \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Guard and Shield intentionally share the same execution-side operator; they are separated to isolate the effect of curriculum/training context from the effect of runtime action intervention. Gated-risk adds a motion/risk-gated training reward on top of the same execution operator.
+\end{tablenotes}
+\end{table}

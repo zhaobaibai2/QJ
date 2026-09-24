@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-07-01T19:29:37.156954",
+  "output_dir": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript_ijmlc_20260701",
+  "main_tex": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript_ijmlc_20260701/main.tex",
+  "references": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript_ijmlc_20260701/references.bib",
+  "figures_copied": [
+    "fig1_runtime_architecture.pdf",
+    "fig2_non_motion_artifact.pdf",
+    "fig3_progress_safety_frontier.pdf",
+    "fig4_mechanism_ablation.pdf",
+    "fig5_density_stress.pdf",
+    "fig6_intervention_ttc_speed.pdf",
+    "fig7_runtime_overhead.pdf",
+    "fig7_sensitivity_target_speed_kmh.pdf",
+    "fig7_sensitivity_ttc_threshold.pdf"
+  ],
+  "tables_source_dir": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript",
+  "springer_template": "sn-jnl.cls, December 2024 package downloaded from Springer Nature author support",
+  "status": "compile_success_references_verified",
+  "pdf": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript_ijmlc_20260701/main.pdf",
+  "pdf_exists": true,
+  "pdf_bytes": 402370,
+  "pdf_pages": 13,
+  "abstract_words": 217,
+  "latexmk_return_code": 0,
+  "latex_log_clean_checks": [
+    "no undefined citations/refs matched grep",
+    "no Overfull matched grep",
+    "no duplicate ignored matched grep"
+  ],
+  "citation_verification": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/manuscript_ijmlc_20260701/citation_verification_report.md"
+}

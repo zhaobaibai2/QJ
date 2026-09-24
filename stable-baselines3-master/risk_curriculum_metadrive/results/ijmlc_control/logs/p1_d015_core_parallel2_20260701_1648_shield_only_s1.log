@@ -1,0 +1,35 @@
+[1/1] start label=shield_only seed=1
+Wrapping the env in a DummyVecEnv.
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+Wrapping the env in a DummyVecEnv.
+/home/aaa/data/qj/stable-baselines3-master/stable_baselines3/common/on_policy_algorithm.py:150: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CNN policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+  warnings.warn(
+[1/1] done label=shield_only seed=1 new_rows=40 total_rows=40 elapsed_sec=400.4
+{
+  "run_id": "p1_d015_core_parallel2_20260701_1648_shield_only_s1",
+  "created_at": "2026-07-01T16:46:07",
+  "manifest": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/06_EXISTING_MODEL_MANIFEST.csv",
+  "labels": [
+    "shield_only"
+  ],
+  "seeds": [
+    1
+  ],
+  "densities": [
+    0.15
+  ],
+  "test_start_seeds": [
+    10000,
+    20000
+  ],
+  "episodes_per_start": 20,
+  "selected_models": 1,
+  "episode_rows": 40,
+  "episode_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/raw_csv/p1_d015_core_parallel2_20260701_1648_shield_only_s1_episodes.csv",
+  "summary_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/summary_tables/p1_d015_core_parallel2_20260701_1648_shield_only_s1_summary.csv",
+  "elapsed_sec": 400.4122865200043,
+  "status": "done",
+  "claim_supported": "IJMLC non-motion artifact, progress-safety frontier, runtime wall-clock diagnostics",
+  "boundary_note": "Frozen-model diagnostic evaluation; not new training or retuning evidence."
+}

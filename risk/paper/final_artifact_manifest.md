@@ -1,0 +1,174 @@
+# Final Artifact Manifest V5
+
+Generated/refreshed: 2026-07-01T10:55:00
+
+## Verification Summary
+- `paper.pdf`: 5 pages, latest compiled paper.
+- Compile diagnostics: LaTeX errors 0; undefined controls 0; undefined references 0; overfull boxes 0.
+- Table II: `Group` column removed; rows now emphasize selected modes and decisive mechanism contrasts.
+- Result tables: best values use `\best{}` and second-best values use `\second{}`.
+- Fig. 3: rebuilt as a three-panel evidence summary using existing remote LaTeX/PGFPlots workflow.
+
+## Key V5 Files
+- `paper.pdf`
+- `main.tex`
+- `tables/table2_primary_d015.tex`
+- `tables/table3_density_sweep.tex`
+- `tables/table4_ablation.tex`
+- `tables/table5_external_ci.tex`
+- `tables/table6_stress.tex`
+- `tables/table7_seed_robustness.tex`
+- `tables/table8_parameter_sensitivity.tex`
+- `figures/fig3_primary_tradeoff.pdf`
+- `artifacts/table2_fig3_revision_v5.md`
+- `artifacts/table_ranking_audit_v5.md`
+- `FINAL_STATUS_V5_20260701_1055.md`
+
+## Files
+- `FINAL_STATUS_20260701_0952.md` (1565 bytes)
+- `FINAL_STATUS_V2_20260701_1014.md` (1584 bytes)
+- `FINAL_STATUS_V3_20260701_1023.md` (1223 bytes)
+- `FINAL_STATUS_V4_20260701_1038.md` (1118 bytes)
+- `FINAL_STATUS_V5_20260701_1055.md` (1450 bytes)
+- `IEEEtran.cls` (281957 bytes)
+- `README.md` (851 bytes)
+- `artifacts/claim_register.md` (892 bytes)
+- `artifacts/data_layout_audit_v2.md` (1524 bytes)
+- `artifacts/data_table_audit.md` (640 bytes)
+- `artifacts/diagnostic_controls_table_v4.md` (1500 bytes)
+- `artifacts/evidence_bank.md` (978 bytes)
+- `artifacts/figure_asset_map.md` (993 bytes)
+- `artifacts/layout_audit_v4.md` (914 bytes)
+- `artifacts/logic_transfer_audit_v2.md` (1424 bytes)
+- `artifacts/method_selection_audit_v3.md` (1257 bytes)
+- `artifacts/method_selection_layout_audit_v3.md` (1070 bytes)
+- `artifacts/paper_quality_audit_v2.md` (799 bytes)
+- `artifacts/qj_full_file_inventory.csv` (2686050 bytes)
+- `artifacts/qj_inventory_summary.csv` (7039 bytes)
+- `artifacts/remote_skill_usage_log.md` (2373 bytes)
+- `artifacts/reviewer_self_review.md` (1127 bytes)
+- `artifacts/risk_project_file_inventory.csv` (1604891 bytes)
+- `artifacts/section_blueprints.md` (748 bytes)
+- `artifacts/source_map.md` (4018 bytes)
+- `artifacts/table2_fig3_revision_v5.md` (938 bytes)
+- `artifacts/table_data_audit_v4.md` (1410 bytes)
+- `artifacts/table_design_audit_v2.md` (1083 bytes)
+- `artifacts/table_ranking_audit_v5.md` (1683 bytes)
+- `artifacts/writing_rationale_matrix.md` (674 bytes)
+- `compile_bibtex.log` (343 bytes)
+- `compile_xelatex1.log` (13164 bytes)
+- `compile_xelatex2.log` (13083 bytes)
+- `compile_xelatex3.log` (13083 bytes)
+- `data/ablation_mechanism_nenv16.csv` (4558 bytes)
+- `data/external_seed_robustness_by_test_start.csv` (4892 bytes)
+- `data/external_seed_robustness_eval_units.csv` (11663 bytes)
+- `data/gated_risk_mechanism_addendum.csv` (3308 bytes)
+- `data/gated_risk_stress_mean.csv` (982 bytes)
+- `data/main_comparators_nenv16.csv` (6418 bytes)
+- `data/seed_level_robustness_formal.csv` (14962 bytes)
+- `data/seed_level_robustness_stress.csv` (4344 bytes)
+- `data/seed_paired_deltas_vs_guard_shield.csv` (21124 bytes)
+- `data/stress_density_020_025.csv` (3320 bytes)
+- `data/table1_formal_main_all_densities.csv` (7389 bytes)
+- `data/table1_formal_main_d015.csv` (2969 bytes)
+- `data/table2_ablation_d015.csv` (1676 bytes)
+- `data/table3_stress_ranked.csv` (2193 bytes)
+- `data/table4_external_seed_robustness.csv` (5037 bytes)
+- `data/table4_external_seed_robustness_d015_wilson95.csv` (1151 bytes)
+- `figures/fig11_behavior_d015.pdf` (44739 bytes)
+- `figures/fig12_behavior_d025.pdf` (41085 bytes)
+- `figures/fig13_representative_seed10003.pdf` (46420 bytes)
+- `figures/fig1_framework.aux` (32 bytes)
+- `figures/fig1_framework.compile.log` (11997 bytes)
+- `figures/fig1_framework.log` (22425 bytes)
+- `figures/fig1_framework.pdf` (8805 bytes)
+- `figures/fig1_framework.tex` (1985 bytes)
+- `figures/fig2_algorithm.aux` (32 bytes)
+- `figures/fig2_algorithm.compile.log` (11997 bytes)
+- `figures/fig2_algorithm.log` (22425 bytes)
+- `figures/fig2_algorithm.pdf` (6369 bytes)
+- `figures/fig2_algorithm.tex` (1633 bytes)
+- `figures/fig3_primary_tradeoff.aux` (32 bytes)
+- `figures/fig3_primary_tradeoff.compile.log` (12032 bytes)
+- `figures/fig3_primary_tradeoff.log` (21606 bytes)
+- `figures/fig3_primary_tradeoff.pdf` (18325 bytes)
+- `figures/fig3_primary_tradeoff.tex` (3103 bytes)
+- `figures/fig4_density_trend.aux` (32 bytes)
+- `figures/fig4_density_trend.compile.log` (12017 bytes)
+- `figures/fig4_density_trend.log` (21484 bytes)
+- `figures/fig4_density_trend.pdf` (13229 bytes)
+- `figures/fig4_density_trend.tex` (1737 bytes)
+- `figures/fig5_ablation_delta.aux` (32 bytes)
+- `figures/fig5_ablation_delta.compile.log` (12022 bytes)
+- `figures/fig5_ablation_delta.log` (22762 bytes)
+- `figures/fig5_ablation_delta.pdf` (8000 bytes)
+- `figures/fig5_ablation_delta.tex` (937 bytes)
+- `figures/fig6_external_ci.aux` (32 bytes)
+- `figures/fig6_external_ci.compile.log` (12007 bytes)
+- `figures/fig6_external_ci.log` (21090 bytes)
+- `figures/fig6_external_ci.pdf` (10666 bytes)
+- `figures/fig6_external_ci.tex` (993 bytes)
+- `figures/fig7_stress.aux` (32 bytes)
+- `figures/fig7_stress.compile.log` (11982 bytes)
+- `figures/fig7_stress.log` (21649 bytes)
+- `figures/fig7_stress.pdf` (10886 bytes)
+- `figures/fig7_stress.tex` (1213 bytes)
+- `figures/fig8_parameter_frontier.aux` (32 bytes)
+- `figures/fig8_parameter_frontier.compile.log` (12047 bytes)
+- `figures/fig8_parameter_frontier.log` (22686 bytes)
+- `figures/fig8_parameter_frontier.pdf` (12143 bytes)
+- `figures/fig8_parameter_frontier.tex` (1987 bytes)
+- `figures/fig9_evidence_logic.aux` (32 bytes)
+- `figures/fig9_evidence_logic.compile.log` (12022 bytes)
+- `figures/fig9_evidence_logic.log` (22758 bytes)
+- `figures/fig9_evidence_logic.pdf` (8339 bytes)
+- `figures/fig9_evidence_logic.tex` (1268 bytes)
+- `figures/preview_png/fig1_framework.png` (51337 bytes)
+- `figures/preview_png/fig2_algorithm.png` (47526 bytes)
+- `figures/preview_png/fig3_primary_tradeoff.png` (26880 bytes)
+- `figures/preview_png/fig4_density_trend.png` (28414 bytes)
+- `figures/preview_png/fig5_ablation_delta.png` (24239 bytes)
+- `figures/preview_png/fig6_external_ci.png` (22317 bytes)
+- `figures/preview_png/fig7_stress.png` (31431 bytes)
+- `figures/preview_png/fig8_parameter_frontier.png` (25081 bytes)
+- `figures/preview_png/fig9_evidence_logic.png` (35767 bytes)
+- `final_artifact_manifest.md` (7095 bytes)
+- `main.aux` (8813 bytes)
+- `main.bbl` (2346 bytes)
+- `main.blg` (1398 bytes)
+- `main.log` (25859 bytes)
+- `main.out` (2193 bytes)
+- `main.pdf` (117436 bytes)
+- `main.tex` (12403 bytes)
+- `paper.pdf` (117436 bytes)
+- `references.bib` (2102 bytes)
+- `tables/table1_protocol.tex` (1362 bytes)
+- `tables/table2_primary_d015.tex` (1661 bytes)
+- `tables/table3_density_sweep.tex` (1634 bytes)
+- `tables/table4_ablation.tex` (1463 bytes)
+- `tables/table5_external_ci.tex` (1313 bytes)
+- `tables/table6_stress.tex` (983 bytes)
+- `tables/table7_seed_robustness.tex` (1118 bytes)
+- `tables/table8_parameter_sensitivity.tex` (1250 bytes)
+
+## V6 strict submission rewrite (20260701_1130)
+- `/home/aaa/data/qj/risk/paper/paper.pdf` (5 pages, 131407 bytes)
+- `/home/aaa/data/qj/risk/paper/main.tex`
+- `/home/aaa/data/qj/risk/paper/figures/fig1_framework.tex` and `.pdf`
+- `/home/aaa/data/qj/risk/paper/figures/fig3_primary_tradeoff.tex` and `.pdf`
+- `/home/aaa/data/qj/risk/paper/FINAL_STATUS_V6_STRICT_20260701_1130.md`
+
+## V7 reviewer-ready rewrite (20260701_115434)
+- `/home/aaa/data/qj/risk/paper/paper.pdf` (7 pages, 135367 bytes)
+- `/home/aaa/data/qj/risk/paper/main.tex`
+- `/home/aaa/data/qj/risk/paper/references.bib` (22 entries)
+- `/home/aaa/data/qj/risk/paper/figures/fig1_framework.tex`
+- `/home/aaa/data/qj/risk/paper/figures/fig3_primary_tradeoff.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table1_protocol.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table2_primary_d015.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table3_density_sweep.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table4_ablation.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table5_external_ci.tex`
+- `/home/aaa/data/qj/risk/paper/tables/table6_stress.tex`
+- `/home/aaa/data/qj/risk/paper/FINAL_STATUS_V7_REVIEWER_READY_20260701_115434.md`
+- `/home/aaa/data/qj/risk/paper/artifacts/reviewer_ready_rewrite_audit_v7_20260701_115434.md`

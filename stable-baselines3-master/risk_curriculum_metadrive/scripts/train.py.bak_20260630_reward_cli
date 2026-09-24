@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+"""Train one algorithm/variant/seed run on GPU."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from racrl.config import get_variant_config  # noqa: E402
+from racrl.experiment import train  # noqa: E402
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--variant",
+        choices=[
+            "baseline",
+            "risk",
+            "curriculum",
+            "proposed",
+            "proposed_wo_ttc",
+            "proposed_wo_lane",
+            "proposed_wo_smooth",
+            "reward_only",
+            "guard_only",
+            "no_action_guard",
+            "shield_only",
+        ],
+        required=True,
+    )
+    parser.add_argument("--algo", choices=["ppo", "sac"], default="ppo")
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--timesteps", type=int, default=1_000_000)
+    parser.add_argument("--device", default="cuda")
+    parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs" / "runs")
+    parser.add_argument("--horizon", type=int, default=None)
+    parser.add_argument("--n-envs", type=int, default=int(os.environ.get("N_ENVS", "10")))
+    parser.add_argument("--ent-coef", type=float, default=None)
+    parser.add_argument("--learning-rate", type=float, default=None)
+    parser.add_argument("--stage2-success", type=float, default=None)
+    parser.add_argument("--stage2-cost", type=float, default=None)
+    parser.add_argument("--stage1-success", type=float, default=None)
+    parser.add_argument("--stage1-route-completion", type=float, default=None)
+    parser.add_argument("--stage1-cost", type=float, default=None)
+    parser.add_argument("--demote-success", type=float, default=None)
+    parser.add_argument("--demote-route-completion", type=float, default=None)
+    parser.add_argument("--demote-cost", type=float, default=None)
+    parser.add_argument("--demote-grace-episodes", type=int, default=None)
+    parser.add_argument("--no-demote", action="store_true")
+    parser.add_argument("--load-model", type=Path, default=None)
+    args = parser.parse_args()
+    config = get_variant_config(args.variant, args.algo, args.seed, args.timesteps)
+    if args.horizon is not None:
+        config.horizon = args.horizon
+    config.n_envs = max(args.n_envs, 1)
+    if args.ent_coef is not None:
+        config.ent_coef = args.ent_coef
+    if args.learning_rate is not None:
+        config.learning_rate = args.learning_rate
+    if args.stage2_success is not None:
+        config.stage2_success = args.stage2_success
+    if args.stage2_cost is not None:
+        config.stage2_cost = args.stage2_cost
+    if args.stage1_success is not None:
+        config.stage1_success = args.stage1_success
+    if args.stage1_route_completion is not None:
+        config.stage1_route_completion = args.stage1_route_completion
+    if args.stage1_cost is not None:
+        config.stage1_cost = args.stage1_cost
+    if args.demote_success is not None:
+        config.demote_success = args.demote_success
+    if args.demote_route_completion is not None:
+        config.demote_route_completion = args.demote_route_completion
+    if args.demote_cost is not None:
+        config.demote_cost = args.demote_cost
+    if args.demote_grace_episodes is not None:
+        config.demote_grace_episodes = args.demote_grace_episodes
+    if args.no_demote:
+        config.allow_demote = False
+    run_dir = args.output_dir / f"{args.variant}_{args.algo}_s{args.seed}"
+    path = train(config, run_dir, args.device, load_model_path=args.load_model)
+    print(f"saved_model={path}")
+
+
+if __name__ == "__main__":
+    main()

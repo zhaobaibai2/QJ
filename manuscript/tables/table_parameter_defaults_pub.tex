@@ -1,0 +1,29 @@
+\begin{table}[!htbp]
+\centering
+\caption{Compact default settings for training, intervention, and diagnostics.}
+\label{tab_parameter_defaults}
+\footnotesize
+\setlength{\tabcolsep}{4.0pt}
+\renewcommand{\arraystretch}{1.10}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Category & Key settings \\
+\midrule
+Training protocol &
+1500-step horizon; 16 parallel SB3 environments; seeds 0/1/2; PPO MlpPolicy with Tanh [256, 256]. \\
+PPO optimizer &
+Learning rate $3\times10^{-4}$, $\gamma=0.99$, GAE $\lambda=0.95$, clip 0.2, 1024 rollout steps, batch 256, 10 epochs. \\
+TTC intervention &
+Base TTC threshold 12.0 s; hard/soft thresholds 7.2/12.0 s; hard/soft acceleration caps $u_{\mathrm{hard}}=-1.0$ and $u_{\mathrm{soft}}=-0.6$. \\
+Speed and motion gates &
+Target speed 18 km/h; speed guard caps acceleration at $0.0$ above target speed and at $-0.35$ above target speed + 5 km/h; Gated-risk motion gate uses $v_{\min}=3.0$ km/h and $p_{\min}=10^{-4}$. \\
+Diagnostic thresholds &
+Stop threshold $v_t<1.0$ km/h; low-progress threshold route completion $<0.20$; TTC-danger threshold 5.0 s; TTC closing-speed gate $\epsilon=10^{-3}$. \\
+External comparators &
+PPO-Lagrangian uses cost limit 0.25, $\lambda_0=20$, Lagrange lr 5, max 200, and window 20; RSS/TTC uses soft/hard TTC 6.0/3.5 s and target speed 20 km/h. \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}
+\item Detailed run provenance is reported in Table~\ref{tab_result_block_provenance}; sensitivity rows are independent diagnostic reruns and should not be numerically matched to the core rows.
+\end{tablenotes}
+\end{table}

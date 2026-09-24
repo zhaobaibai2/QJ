@@ -1,0 +1,186 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{url}
+\graphicspath{{../outputs/paper/figures/}{../outputs/ablation/figures/}}
+\newcommand{\safeinclude}[1]{\IfFileExists{#1}{\includegraphics[width=\linewidth]{#1}}{\fbox{\parbox{0.9\linewidth}{实验运行后自动生成 \detokenize{#1}}}}}
+
+\title{面向 MetaDrive 自动驾驶决策控制的风险感知课程强化学习方法}
+\author{\IEEEauthorblockN{作者姓名}
+\IEEEauthorblockA{单位名称\\电子邮箱}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+复杂随机交通环境中的自动驾驶策略需要同时满足通行效率、安全性与未见道路泛化能力。
+针对标准强化学习策略在训练道路上过拟合、且通常只有在碰撞发生后才接收显著安全反馈的问题，
+本文提出一种轻量级风险感知课程强化学习方法。该方法以近端策略优化（PPO）为基础，在
+MetaDrive 0.4.3 中利用前向碰撞时间、车道横向偏离、转向和加速度变化、仿真器安全代价以及终止事件构造密集风险奖励；
+同时依据滑动窗口内的路线完成度、成功率和安全代价，自适应调整交通密度、随机道路长度及静态事故概率。
+实验在 200 个程序化生成训练道路和互不重叠的 100 个未见测试道路上进行，比较 PPO、PPO 加风险奖励、
+PPO 加课程策略和完整方法，并在三种交通密度下报告成功率、路线完成度、碰撞率、越界率、安全代价及控制平滑性。
+本文代码采用 PyTorch GPU 训练，并记录完整 TensorBoard 和逐回合 CSV 指标，以支持重复实验与消融分析。
+\end{abstract}
+
+\begin{IEEEkeywords}
+自动驾驶，强化学习，安全控制，课程学习，MetaDrive，PPO
+\end{IEEEkeywords}
+
+\section{引言}
+自动驾驶决策控制需要在道路拓扑、交通参与者行为和风险水平持续变化的情况下产生连续控制动作。
+深度强化学习能够从交互中优化驾驶策略，但探索过程的碰撞风险以及有限训练地图导致的泛化下降，
+限制了其在安全关键场景中的可信评价。MetaDrive 提供程序化道路生成、交通随机化和安全事件记录能力，
+适于研究未见场景中的强化学习驾驶策略~\cite{li2022metadrive}。
+
+本文关注不改变策略网络主体、但能够系统改善安全学习信号与场景覆盖的问题。主要贡献如下：
+\begin{enumerate}
+\item 提出一种风险感知密集奖励，将 TTC 预碰撞风险、车道偏离、控制平滑性和 MetaDrive 安全代价纳入统一优化目标；
+\item 设计基于安全表现的自适应课程策略，根据最近回合的路线完成度、成功率与代价动态改变随机道路和交通难度；
+\item 建立包含基线、模块消融、未见地图测试和交通密度鲁棒性分析的可复现实验流水线，并以 TensorBoard 记录控制及安全指标。
+\end{enumerate}
+
+\section{相关工作}
+\subsection{强化学习自动驾驶控制}
+PPO 通过裁剪代理目标限制策略更新幅度，具有实现稳定和易于复现的特点~\cite{schulman2017ppo}。
+SAC 以最大熵目标提升连续动作探索能力~\cite{haarnoja2018sac}。本文采用 PPO 作为主算法，并保留
+SAC 对比实现，以区分奖励和课程策略带来的改善与特定算法选择的影响。
+
+\subsection{安全与泛化}
+仅依据终止碰撞惩罚的训练信号难以学习提前规避危险的行为。本文将碰撞时间风险作为碰撞前反馈，
+并通过安全代价报告最终事件风险。MetaDrive 的程序化生成机制允许严格分离训练种子与测试种子，
+本文据此评价策略在未见道路下的性能。
+
+\section{方法}
+\subsection{问题定义}
+将驾驶控制建模为马尔可夫决策过程 $\langle\mathcal{S},\mathcal{A},P,R,\gamma\rangle$。
+状态为 MetaDrive 默认的导航、车辆运动和激光雷达观测，动作为连续转向与油门/制动
+$a_t=[\delta_t,u_t]$，折扣因子为 $\gamma=0.99$。
+
+\subsection{风险感知奖励}
+在模拟器原始行驶奖励 $r_t^{base}$ 上加入风险代价和终止事件项：
+\begin{equation}
+r_t = \alpha r_t^{base} - w_T c_t^{TTC} - w_L c_t^{lane}
+      - w_S c_t^{steer} - w_A c_t^{acc} - w_C c_t^{event}
+      + w_P \Delta q_t - c_t^{idle} + b_t .
+\end{equation}
+对于同车道前向目标，计算
+\begin{equation}
+\mathrm{TTC}_t = \frac{d_t}{\max(v_t^{ego}-v_t^{front},\epsilon)},\quad
+c_t^{TTC}=\max\left(0,\frac{\tau-\mathrm{TTC}_t}{\tau}\right),
+\end{equation}
+其中阈值 $\tau=5$ s。$c_t^{lane}$ 为车辆相对当前车道半宽归一化横向偏离的平方；
+$c_t^{steer}=|\delta_t-\delta_{t-1}|$；$c_t^{acc}=|u_t-u_{t-1}|$；
+$c_t^{event}$ 直接使用环境返回的碰撞或越界安全代价。终止项 $b_t$ 在到达终点时加奖励，
+在撞车、撞物或驶出道路时加额外惩罚。为避免策略收敛到安全但静止的保守解，
+本文额外加入路线完成度增量 $\Delta q_t$ 奖励，并在车速低于 2 km/h 时施加小幅停滞惩罚。
+同时，当车速超过 20 km/h 时加入二次超速惩罚，以减少弯道越界和高密度交通碰撞。
+默认权重为
+$\alpha=0.5,(w_T,w_L,w_S,w_A,w_C)=(2.0,0.5,0.02,0.01,20.0)$，
+路线进度权重为 30，超速权重为 2.0，单步停滞惩罚为 0.15，终点奖励为 40，撞车和越界惩罚均为 80。
+该设置显著提高安全事件对优势估计的影响，同时保留足够的到达终点激励。
+
+\subsection{自适应课程策略}
+课程包含 warm-up、easy、medium 和 hard 四个阶段。warm-up 使用固定直道 ``S''，随后道路块数分别为 $3,5,7$，
+交通密度分别为 $0.00,0.03,0.10,0.22$；困难阶段额外加入 $0.02$ 的静态事故概率。
+每经过最近 30 个完整回合，计算路线完成度 $\bar{q}$、成功率 $\bar{s}$ 和平均安全代价 $\bar{c}$。
+从 warm-up 到 easy，当 $\bar{q}\geq0.60$ 且 $\bar{c}\leq0.25$ 时提升难度；
+从 easy 到 medium，当 $\bar{s}\geq0.30$ 或 $\bar{q}\geq0.75$，且 $\bar{c}\leq0.35$ 时提升；
+从 medium 到 hard，当 $\bar{s}\geq0.50$ 且 $\bar{c}\leq0.40$ 时提升。
+本文采用单调课程以避免长训练中的难度回退破坏最终策略分布；达到某一阶段后不再降低难度。
+测试阶段固定使用未见道路种子，不执行课程更新。
+
+\section{实验设计}
+\subsection{设置}
+训练环境为 MetaDrive 0.4.3，策略网络为两个 256 单元的全连接隐藏层，优化器和算法实现来自
+Stable-Baselines3 的 PyTorch 后端。主实验为每种方法 1,000,000 环境步、3 个独立随机种子；
+训练集包含 200 个道路种子，标准测试集为不重叠的 100 个未见五块随机道路种子，单回合上限为 1000 步。
+七块道路和静态事故概率用于额外 OOD 压力测试，不作为主表默认设置。
+训练和推理均在 NVIDIA GPU 上运行策略网络。为避免策略通过高速冲刺获取短期路线奖励，
+本文在风险奖励变体中加入速度动作守护：车速超过目标速度时不再允许正油门，超过目标速度 5 km/h 以上时施加保守制动。
+为使早期连续控制学习不因接触车道标线而立即截断，
+环境设置为仅在真正驶出道路时触发越界终止，同时车道偏离仍通过密集代价参与训练和指标统计。
+
+\subsection{对比方法与指标}
+比较四组 PPO 方法：基础 PPO、PPO+Risk、PPO+Curriculum 和完整 Proposed。
+附加实验可运行 SAC 基线及相同变体。评价指标包括成功率、碰撞率、越界率、平均 episode cost、
+路线完成度、累计奖励、平均速度、车道偏离、最小 TTC 与平均转向变化量。
+所有安全、控制与训练损失指标同步写入 TensorBoard。
+
+\section{结果与分析}
+\subsection{未见地图主结果}
+图~\ref{fig:main} 汇总三种测试交通密度下的成功率、路线完成度和越界率；表~\ref{tab:main}
+给出最高交通密度测试结果。表格和图片由评估 CSV 自动生成，以避免手工转录误差。
+\begin{figure}[t]
+  \centering
+  \safeinclude{main_unseen_metrics.pdf}
+  \caption{未见地图下不同交通密度的成功率、路线完成度和越界率比较。}
+  \label{fig:main}
+\end{figure}
+\begin{table}[t]
+\centering
+\caption{高交通密度未见地图上的性能比较}
+\label{tab:main}
+\resizebox{\linewidth}{!}{\IfFileExists{generated_results.tex}{\input{generated_results.tex}}{实验运行后自动生成表格。}}
+\end{table}
+
+\subsection{鲁棒性与控制质量}
+图~\ref{fig:robust} 比较随着交通密度提高的 episode cost、TTC 风险和转向变化。
+风险奖励预期降低碰撞前近距跟驰以及控制振荡；课程策略预期改善高密度道路上的成功率。
+\begin{figure}[t]
+  \centering
+  \safeinclude{robustness_control.pdf}
+  \caption{不同交通密度下的安全代价、TTC 风险与控制平滑性。}
+  \label{fig:robust}
+\end{figure}
+
+\subsection{训练过程}
+图~\ref{fig:training} 给出训练期间从 TensorBoard 标量平滑得到的成功率、路线完成度、
+安全代价和塑形奖励，用于判断课程切换前后的学习稳定性和模块收敛趋势。
+\begin{figure}[t]
+  \centering
+  \safeinclude{training_curves.pdf}
+  \caption{训练过程中的成功率、路线完成度、安全代价和塑形奖励。}
+  \label{fig:training}
+\end{figure}
+
+图~\ref{fig:stage} 展示课程阶段随训练步数的变化，用于检查自适应课程是否过早进入困难场景或长期停留在低难度场景。
+\begin{figure}[t]
+  \centering
+  \safeinclude{curriculum_stage.pdf}
+  \caption{自适应课程阶段随训练过程的变化。}
+  \label{fig:stage}
+\end{figure}
+
+\subsection{消融实验}
+通过去除风险奖励（`curriculum' 变体）以及去除课程机制（`risk' 变体）评价各模块独立贡献。
+进一步运行去除 TTC、车道偏离和控制平滑项的 Proposed 消融，分析各风险项对成功率、
+碰撞率和控制平滑性的影响。
+\begin{figure}[t]
+  \centering
+  \IfFileExists{../outputs/ablation/figures/ablation_metrics.pdf}{\includegraphics[width=\linewidth]{ablation_metrics.pdf}}{\fbox{\parbox{0.9\linewidth}{消融实验运行后自动生成 ablation\_metrics.pdf}}}
+  \caption{完整方法与风险项消融对比。}
+  \label{fig:ablation}
+\end{figure}
+
+\subsection{定性轨迹可视化}
+图~\ref{fig:trajectory} 在固定未见地图和高交通密度下比较基础 PPO 与完整方法的车辆轨迹及车道偏离。
+该图由已训练模型重新 rollout 生成，用于直观展示风险奖励与课程策略是否减少越界和大幅横向偏移。
+\begin{figure}[t]
+  \centering
+  \safeinclude{trajectory_visualization.pdf}
+  \caption{未见地图中的定性轨迹与车道偏离对比。}
+  \label{fig:trajectory}
+\end{figure}
+
+\section{局限性与结论}
+本文研究限定于程序化仿真场景，不能据此声称策略可直接部署于真实车辆；传感器噪声、
+真实参与者行为分布和仿真到真实域差异仍需后续验证。本文提出的风险感知课程 PPO
+以低工程复杂度提供了可复现的安全与泛化评价框架，可用于自动驾驶决策控制的仿真实验。
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

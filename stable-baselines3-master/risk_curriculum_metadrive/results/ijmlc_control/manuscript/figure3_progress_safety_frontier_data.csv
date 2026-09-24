@@ -1,0 +1,7 @@
+label,method,density,episodes,success,cost,route_completion,low_progress,ttc_dangerous_fraction,intervention_rate_per_100_steps,control_loop_wall_ms_p95
+baseline,PPO,0.15,120,0.0,1.0,0.20746,0.575,0.60353,0.0,16.93193
+risk_only,Risk-only,0.15,120,0.0,0.0,0.00899,1.0,0.0,0.0,6.14763
+no_action_guard,No-action guard,0.15,120,0.00833,1.0,0.21726,0.55833,0.48687,0.0,7.58948
+guard_only,Guard,0.15,120,0.59167,0.20833,0.86382,0.0,0.11818,69.64579,13.30975
+shield_only,Shield,0.15,120,0.625,0.19167,0.85687,0.00833,0.11352,70.75139,12.68089
+gated_risk,Gated-risk,0.15,120,0.61667,0.18333,0.86874,0.00833,0.11421,67.8722,12.39817

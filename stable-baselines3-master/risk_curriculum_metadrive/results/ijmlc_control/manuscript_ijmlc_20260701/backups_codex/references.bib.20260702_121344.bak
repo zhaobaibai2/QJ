@@ -1,0 +1,389 @@
+@book{wiener1948cybernetics,
+  title={Cybernetics: Or Control and Communication in the Animal and the Machine},
+  author={Wiener, Norbert},
+  publisher={MIT Press},
+  address={Cambridge, MA},
+  year={1948}
+}
+
+@article{garcia2015safe,
+  title={A comprehensive survey on safe reinforcement learning},
+  author={Garc{\'i}a, Javier and Fern{\'a}ndez, Fernando},
+  journal={Journal of Machine Learning Research},
+  volume={16},
+  number={1},
+  pages={1437--1480},
+  year={2015},
+  url={https://jmlr.org/papers/v16/garcia15a.html}
+}
+
+@inproceedings{achiam2017constrained,
+  title={Constrained Policy Optimization},
+  author={Achiam, Joshua and Held, David and Tamar, Aviv and Abbeel, Pieter},
+  booktitle={Proceedings of the 34th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={70},
+  pages={22--31},
+  publisher={PMLR},
+  address={Cambridge, MA},
+  year={2017},
+  url={https://proceedings.mlr.press/v70/achiam17a.html}
+}
+
+@article{tessler2018reward,
+  title={Reward Constrained Policy Optimization},
+  author={Tessler, Chen and Mankowitz, Daniel J. and Mannor, Shie},
+  journal={arXiv preprint arXiv:1805.11074},
+  year={2018},
+  eprint={1805.11074},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{alshiekh2018shielding,
+  title={Safe Reinforcement Learning via Shielding},
+  author={Alshiekh, Mohammed and Bloem, Roderick and Ehlers, Ruediger and K{\"o}nighofer, Bettina and Niekum, Scott and Topcu, Ufuk},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={32},
+  number={1},
+  pages={2669--2678},
+  year={2018},
+  doi={10.1609/aaai.v32i1.11797}
+}
+
+@article{ray2019benchmarking,
+  title={Benchmarking Safe Exploration in Deep Reinforcement Learning},
+  author={Ray, Alex and Achiam, Joshua and Amodei, Dario},
+  journal={arXiv preprint arXiv:1910.01708},
+  year={2019},
+  eprint={1910.01708},
+  archivePrefix={arXiv}
+}
+
+@article{shalev2017rss,
+  title={On a Formal Model of Safe and Scalable Self-driving Cars},
+  author={Shalev-Shwartz, Shai and Shammah, Shaked and Shashua, Amnon},
+  journal={arXiv preprint arXiv:1708.06374},
+  year={2017},
+  eprint={1708.06374},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{ames2019control,
+  title={Control Barrier Functions: Theory and Applications},
+  author={Ames, Aaron D. and Coogan, Samuel and Egerstedt, Magnus and Notomista, Gennaro and Sreenath, Koushil and Tabuada, Paulo},
+  booktitle={2019 18th European Control Conference},
+  pages={3420--3431},
+  year={2019},
+  doi={10.23919/ECC.2019.8796030}
+}
+
+@article{li2022metadrive,
+  title={MetaDrive: Composing Diverse Driving Scenarios for Generalizable Reinforcement Learning},
+  author={Li, Quanyi and Peng, Zhenghao and Feng, Lan and Zhang, Qihang and Xue, Zhenghai and Zhou, Bolei},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume={45},
+  pages={3461--3475},
+  year={2022},
+  doi={10.1109/TPAMI.2022.3190471}
+}
+
+@article{schulman2017ppo,
+  title={Proximal Policy Optimization Algorithms},
+  author={Schulman, John and Wolski, Filip and Dhariwal, Prafulla and Radford, Alec and Klimov, Oleg},
+  journal={arXiv preprint arXiv:1707.06347},
+  year={2017},
+  eprint={1707.06347},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{haarnoja2018soft,
+  title={Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor},
+  author={Haarnoja, Tuomas and Zhou, Aurick and Abbeel, Pieter and Levine, Sergey},
+  booktitle={Proceedings of the 35th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={80},
+  pages={1861--1870},
+  publisher={PMLR},
+  address={Cambridge, MA},
+  year={2018},
+  url={https://proceedings.mlr.press/v80/haarnoja18b.html}
+}
+
+@book{astrom2008feedback,
+  title={Feedback Systems: An Introduction for Scientists and Engineers},
+  author={{\AA}str{\"o}m, Karl J. and Murray, Richard M.},
+  publisher={Princeton University Press},
+  address={Princeton, NJ},
+  year={2008},
+  url={https://fbsbook.org/}
+}
+
+@book{sutton2018reinforcement,
+  title={Reinforcement Learning: An Introduction},
+  author={Sutton, Richard S. and Barto, Andrew G.},
+  edition={2},
+  publisher={MIT Press},
+  address={Cambridge, MA},
+  year={2018},
+  url={http://incompleteideas.net/book/the-book-2nd.html}
+}
+
+@article{amodei2016concrete,
+  title={Concrete Problems in AI Safety},
+  author={Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man{\'e}, Dan},
+  journal={arXiv preprint arXiv:1606.06565},
+  year={2016},
+  eprint={1606.06565},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{berkenkamp2017safe,
+  title={Safe Model-based Reinforcement Learning with Stability Guarantees},
+  author={Berkenkamp, Felix and Turchetta, Matteo and Schoellig, Angela P. and Krause, Andreas},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+@inproceedings{chow2018lyapunov,
+  title={A Lyapunov-based Approach to Safe Reinforcement Learning},
+  author={Chow, Yinlam and Nachum, Ofir and Duenez-Guzman, Edgar and Ghavamzadeh, Mohammad},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={31},
+  year={2018}
+}
+
+@article{dalal2018safe,
+  title={Safe Exploration in Continuous Action Spaces},
+  author={Dalal, Gal and Dvijotham, Krishnamurthy and Vecerik, Matej and Hester, Todd and Paduraru, Cosmin and Tassa, Yuval},
+  journal={arXiv preprint arXiv:1801.08757},
+  year={2018},
+  eprint={1801.08757},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{saunders2018trial,
+  title={Trial without Error: Towards Safe Reinforcement Learning via Human Intervention},
+  author={Saunders, William and Sastry, Girish and Stuhlm{\"u}ller, Andreas and Evans, Owain},
+  booktitle={Proceedings of the 17th International Conference on Autonomous Agents and MultiAgent Systems},
+  pages={2067--2069},
+  year={2018}
+}
+
+@inproceedings{fisac2019bridging,
+  title={Bridging Hamilton-Jacobi Safety Analysis and Reinforcement Learning},
+  author={Fisac, Jaime F. and Akametalu, Anayo K. and Zeilinger, Melanie N. and Kaynama, Shahab and Gillula, Jeremy and Tomlin, Claire J.},
+  booktitle={2019 International Conference on Robotics and Automation},
+  pages={8550--8556},
+  year={2019},
+  doi={10.1109/ICRA.2019.8794107}
+}
+
+@article{paden2016survey,
+  title={A Survey of Motion Planning and Control Techniques for Self-driving Urban Vehicles},
+  author={Paden, Brian and {\v{C}}{\'a}p, Michal and Yong, Sze Zheng and Yershov, Dmitry and Frazzoli, Emilio},
+  journal={IEEE Transactions on Intelligent Vehicles},
+  volume={1},
+  number={1},
+  pages={33--55},
+  year={2016},
+  doi={10.1109/TIV.2016.2578706}
+}
+
+@article{kuutti2021survey,
+  title={A Survey of Deep Learning Applications to Autonomous Vehicle Control},
+  author={Kuutti, Sampo and Bowden, Richard and Jin, Yaochu and Barber, Phil and Fallah, Saber},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={22},
+  number={2},
+  pages={712--733},
+  year={2021},
+  doi={10.1109/TITS.2019.2962338}
+}
+
+@inproceedings{dosovitskiy2017carla,
+  title={CARLA: An Open Urban Driving Simulator},
+  author={Dosovitskiy, Alexey and Ros, German and Codevilla, Felipe and Lopez, Antonio and Koltun, Vladlen},
+  booktitle={Proceedings of the 1st Annual Conference on Robot Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={78},
+  pages={1--16},
+  publisher={PMLR},
+  address={Cambridge, MA},
+  year={2017}
+}
+
+@inproceedings{kendall2019learning,
+  title={Learning to Drive in a Day},
+  author={Kendall, Alex and Hawke, Jeffrey and Janz, David and Mazur, Przemyslaw and Reda, Daniele and Allen, John-Mark and Lam, Vinh-Dieu and Bewley, Alex and Shah, Amar},
+  booktitle={2019 International Conference on Robotics and Automation},
+  pages={8248--8254},
+  year={2019},
+  doi={10.1109/ICRA.2019.8793742}
+}
+
+@article{kiran2021deep,
+  title={Deep Reinforcement Learning for Autonomous Driving: A Survey},
+  author={Kiran, B. Ravi and Sobh, Ibrahim and Talpaert, Victor and Mannion, Patrick and Al Sallab, Ahmad A. and Yogamani, Senthil and P{\'e}rez, Patrick},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={23},
+  number={6},
+  pages={4909--4926},
+  year={2021},
+  doi={10.1109/TITS.2021.3054625}
+}
+
+@article{mnih2015human,
+  title={Human-level Control through Deep Reinforcement Learning},
+  author={Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Rusu, Andrei A. and Veness, Joel and Bellemare, Marc G. and Graves, Alex and Riedmiller, Martin and Fidjeland, Andreas K. and Ostrovski, Georg and others},
+  journal={Nature},
+  volume={518},
+  number={7540},
+  pages={529--533},
+  year={2015},
+  doi={10.1038/nature14236}
+}
+
+@inproceedings{fujimoto2018addressing,
+  title={Addressing Function Approximation Error in Actor-Critic Methods},
+  author={Fujimoto, Scott and van Hoof, Herke and Meger, David},
+  booktitle={Proceedings of the 35th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={80},
+  pages={1587--1596},
+  publisher={PMLR},
+  address={Cambridge, MA},
+  year={2018}
+}
+
+@inproceedings{henderson2018deep,
+  title={Deep Reinforcement Learning That Matters},
+  author={Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle and Precup, Doina and Meger, David},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={32},
+  number={1},
+  year={2018}
+}
+
+@book{altman1999constrained,
+  title={Constrained Markov Decision Processes},
+  author={Altman, Eitan},
+  publisher={CRC Press},
+  address={Boca Raton, FL},
+  year={1999}
+}
+
+@inproceedings{schulman2015trust,
+  title={Trust Region Policy Optimization},
+  author={Schulman, John and Levine, Sergey and Abbeel, Pieter and Jordan, Michael and Moritz, Philipp},
+  booktitle={Proceedings of the 32nd International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={37},
+  pages={1889--1897},
+  publisher={PMLR},
+  address={Cambridge, MA},
+  year={2015}
+}
+
+@article{lillicrap2015continuous,
+  title={Continuous Control with Deep Reinforcement Learning},
+  author={Lillicrap, Timothy P. and Hunt, Jonathan J. and Pritzel, Alexander and Heess, Nicolas and Erez, Tom and Tassa, Yuval and Silver, David and Wierstra, Daan},
+  journal={arXiv preprint arXiv:1509.02971},
+  year={2015},
+  eprint={1509.02971},
+  archivePrefix={arXiv}
+}
+
+@article{leike2017ai,
+  title={AI Safety Gridworlds},
+  author={Leike, Jan and Martic, Miljan and Krakovna, Victoria and Ortega, Pedro A. and Everitt, Tom and Lefrancq, Andrew and Orseau, Laurent and Legg, Shane},
+  journal={arXiv preprint arXiv:1711.09883},
+  year={2017},
+  eprint={1711.09883},
+  archivePrefix={arXiv}
+}
+
+@inproceedings{todorov2012mujoco,
+  title={MuJoCo: A Physics Engine for Model-based Control},
+  author={Todorov, Emanuel and Erez, Tom and Tassa, Yuval},
+  booktitle={2012 IEEE/RSJ International Conference on Intelligent Robots and Systems},
+  pages={5026--5033},
+  year={2012},
+  doi={10.1109/IROS.2012.6386109}
+}
+
+@article{sallab2017deep,
+  title={Deep Reinforcement Learning Framework for Autonomous Driving},
+  author={Sallab, Ahmad El and Abdou, Mohammed and Perot, Etienne and Yogamani, Senthil},
+  journal={Electronic Imaging},
+  volume={2017},
+  number={19},
+  pages={70--76},
+  year={2017},
+  doi={10.2352/ISSN.2470-1173.2017.19.AVM-023}
+}
+
+@article{grigorescu2020survey,
+  title={A Survey of Deep Learning Techniques for Autonomous Driving},
+  author={Grigorescu, Sorin and Trasnea, Bogdan and Cocias, Tiberiu and Macesanu, Gigel},
+  journal={Journal of Field Robotics},
+  volume={37},
+  number={3},
+  pages={362--386},
+  year={2020},
+  doi={10.1002/rob.21918}
+}
+
+@article{koopman2017autonomous,
+  title={Autonomous Vehicle Safety: An Interdisciplinary Challenge},
+  author={Koopman, Philip and Wagner, Michael},
+  journal={IEEE Intelligent Transportation Systems Magazine},
+  volume={9},
+  number={1},
+  pages={90--96},
+  year={2017},
+  doi={10.1109/MITS.2016.2583491}
+}
+
+@inproceedings{seto1998simplex,
+  title={The Simplex Architecture for Safe Online Control System Upgrades},
+  author={Seto, Danbing and Krogh, Bruce and Sha, Lui and Chutinan, Alongkrit},
+  booktitle={Proceedings of the 1998 American Control Conference},
+  volume={6},
+  pages={3504--3508},
+  year={1998},
+  doi={10.1109/ACC.1998.703255}
+}
+
+@inproceedings{xu2022safebench,
+  title={SafeBench: A Benchmarking Platform for Safety Evaluation of Autonomous Vehicles},
+  author={Xu, Chejian and Ding, Wenhao and Lyu, Weijie and Liu, Zuxin and Wang, Shuai and He, Yihan and Hu, Hanjiang and Zhao, Ding and Li, Bo},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={25667--25682},
+  year={2022}
+}
+
+@inproceedings{ji2023safetygymnasium,
+  title={Safety-Gymnasium: A Unified Safe Reinforcement Learning Benchmark},
+  author={Ji, Jiaming and Zhang, Borong and Zhou, Jiayi and Pan, Xuehai and Huang, Weidong and Sun, Ruiyang and Geng, Yiran and Zhong, Yifan and Dai, Juntao and Yang, Yaodong},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={36},
+  year={2023}
+}
+
+@inproceedings{pan2022reward,
+  title={The Effects of Reward Misspecification: Mapping and Mitigating Misaligned Models},
+  author={Pan, Alexander and Bhatia, Kush and Steinhardt, Jacob},
+  booktitle={International Conference on Learning Representations},
+  year={2022}
+}
+
+@inproceedings{skalse2022defining,
+  title={Defining and Characterizing Reward Hacking},
+  author={Skalse, Joar and Howe, Nikolaus H. R. and Krasheninnikov, Dmitrii and Krueger, David},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={9460--9471},
+  year={2022}
+}

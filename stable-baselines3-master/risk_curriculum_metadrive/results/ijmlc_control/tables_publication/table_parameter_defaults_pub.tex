@@ -1,0 +1,36 @@
+
+\begin{table}[!htbp]
+\centering
+\caption{Default training, intervention, and diagnostic parameters.}
+\label{tab_parameter_defaults}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}@{}}
+\toprule
+Parameter & Value & Used for \\
+\midrule
+Episode horizon & 1500 simulator steps & evaluation \\
+Training vectorization & 16 parallel SB3 environments & training \\
+PPO policy network & MlpPolicy, Tanh, [256, 256] & policy backbone \\
+PPO optimizer settings & lr $3\times10^{-4}$; $\gamma=0.99$; GAE $\lambda=0.95$; clip 0.2 & training \\
+PPO batch settings & 1024 steps; batch 256; 10 epochs & training \\
+Base TTC threshold ($\tau$) & 12.0 s & stored formal configuration \\
+Hard TTC threshold ($\tau_{\mathrm{hard}}$) & $\max(3.5,0.60\tau)=7.2$ s & hard braking region \\
+Soft TTC threshold ($\tau_{\mathrm{soft}}$) & $\max(6.0,\tau)=12.0$ s & soft acceleration cap \\
+Hard acceleration cap ($u_{\mathrm{hard}}$) & $-1.0$ & acceleration bound \\
+Soft acceleration cap ($u_{\mathrm{soft}}$) & $-0.6$ & acceleration bound \\
+Speed guard & $v_t>v^*+5$: $u_t\leq-0.35$; $v_t>v^*$: $u_t\leq0.0$ & speed guard \\
+Stop threshold & $v_t<1.0$ km/h & stop ratio \\
+Low-progress threshold & route completion $<0.20$ & non-motion flag \\
+TTC-danger threshold & 5.0 s & danger counter \\
+TTC closing-speed gate & $\epsilon=10^{-3}$ & monitor definition \\
+Gated-risk motion gate & $v_{\min}=3.0$ km/h; $p_{\min}=10^{-4}$ & risk reward gate \\
+PPO-Lagrangian update & $\lambda_0=20$; lr 5; max 200; window 20; cost limit 0.25 & constrained baseline \\
+RSS/TTC comparator & soft 6.0 s; hard 3.5 s; target 20 km/h & external runtime filter \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item The table separates TTC thresholds from executed acceleration bounds. Lane deviation is used for risk gating and logging, not for direct acceleration capping. TTC-threshold sweeps in Fig.~\ref{fig_ttc_sensitivity} are independent reruns and should not be numerically matched to the core rows.
+\end{tablenotes}
+\end{table}

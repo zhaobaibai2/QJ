@@ -1,0 +1,24 @@
+
+\begin{table}[!htbp]
+\centering
+\caption{Runtime signals used by the monitor and diagnostics.}
+\label{tab_runtime_signals}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}@{}}
+\toprule
+Signal & Symbol & Role \\
+\midrule
+Speed & $v_t$ & speed guard and stop-ratio diagnostic \\
+Route progress & $\Delta p_t$ & low-progress diagnostic and Gated-risk motion gate \\
+Lane deviation & $d_t^{\mathrm{lane}}$ & Gated-risk risk signal and lane diagnostic \\
+Forward TTC & $\mathrm{TTC}_t$ & hard/soft risk state and TTC-danger diagnostic \\
+Overspeed & $\rho_t^{\mathrm{speed}}$ & Gated-risk risk signal and speed-guard diagnostic \\
+Intervention event & $\mathbf{1}[a_t^{\mathrm{exec}}\ne a_t^\pi]$ & intervention burden, reported as interventions per 100 steps \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Core parameter values, action caps, speed-guard thresholds, and result-block provenance are reported in Appendix~\ref{app_manifest}.
+\end{tablenotes}
+\end{table}

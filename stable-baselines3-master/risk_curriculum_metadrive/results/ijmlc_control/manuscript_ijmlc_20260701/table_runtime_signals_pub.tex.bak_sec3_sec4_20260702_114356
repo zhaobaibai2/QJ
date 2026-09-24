@@ -1,0 +1,28 @@
+
+\begin{table}[!htbp]
+\centering
+\caption{Runtime signals and core diagnostic parameters.}
+\label{tab_runtime_signals}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
+\toprule
+Group & Item & Value or symbol & Role \\
+\midrule
+Runtime signal & Speed & $v_t$ & speed guard; stop ratio \\
+Runtime signal & Route progress & $\Delta p_t$ & low-progress and Gated-risk motion gate \\
+Runtime signal & Forward TTC & $\mathrm{TTC}_t$ & hard/soft risk state; TTC-danger \\
+Runtime signal & Intervention event & $\mathbf{1}[a_t^{exec}\ne a_t^\pi]$ & Int./100 steps \\
+Core parameter & Episode horizon & 1500 steps & evaluation limit \\
+Core parameter & Target speed & 18 km/h & runtime variants \\
+Core parameter & Core TTC threshold & 12.0 & stored formal configuration \\
+Core parameter & TTC-danger threshold & 5.0 & diagnostic danger counter \\
+Core parameter & Stop threshold & $v_t<1.0$ km/h & stop ratio \\
+Core parameter & Low-progress threshold & route $<0.20$ & non-motion artifact flag \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Detailed action caps, speed-guard thresholds, and result-block provenance are reported in Appendix~\ref{app_manifest}.
+\end{tablenotes}
+\end{table}

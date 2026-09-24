@@ -1,0 +1,330 @@
+"""MetaDrive environments with risk reward and curriculum controls."""
+
+from __future__ import annotations
+
+import math
+from collections import deque
+from pathlib import Path
+from typing import Any
+
+import gymnasium as gym
+import numpy as np
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import SubprocVecEnv
+
+from .bootstrap import assert_metadrive_version, configure_runtime
+from .config import ExperimentConfig
+
+configure_runtime()
+assert_metadrive_version()
+from metadrive.envs.metadrive_env import MetaDriveEnv  # noqa: E402
+from metadrive.constants import DEFAULT_AGENT  # noqa: E402
+from metadrive.component.map.pg_map import MapGenerateMethod  # noqa: E402
+
+
+METRIC_KEYS = (
+    "is_success",
+    "episode_cost",
+    "episode_base_reward",
+    "episode_shaped_reward",
+    "episode_collision",
+    "episode_crash_vehicle",
+    "episode_crash_object",
+    "episode_out_of_road",
+    "episode_route_completion",
+    "episode_length",
+    "episode_mean_speed",
+    "episode_mean_lane_deviation",
+    "episode_max_lane_deviation",
+    "episode_steering_variation",
+    "episode_accel_variation",
+    "episode_jerk",
+    "episode_ttc_risk",
+    "episode_min_ttc",
+    "curriculum_stage",
+)
+
+
+class CurriculumMetaDriveEnv(MetaDriveEnv):
+    """MetaDrive variant that permits changing accident probability between resets."""
+
+    def setup_engine(self) -> None:
+        super().setup_engine()
+        if "object_manager" not in self.engine.managers:
+            from metadrive.manager.object_manager import TrafficObjectManager
+
+            self.engine.register_manager("object_manager", TrafficObjectManager())
+
+
+class RiskAwareMetaDriveWrapper(gym.Wrapper):
+    """Adds measurable risk shaping while retaining MetaDrive termination logic."""
+
+    def __init__(self, env: MetaDriveEnv, config: ExperimentConfig, training: bool):
+        super().__init__(env)
+        self.exp = config
+        self.training = training
+        self.stage_index = 0 if config.curriculum and training else len(config.stages) - 1
+        self.previous_action = np.zeros(2, dtype=np.float32)
+        self.previous_accel_delta = 0.0
+        self._recent_outcomes: deque[tuple[float, float]] = deque(maxlen=config.curriculum_window)
+        self._reset_stats()
+
+    def _reset_stats(self) -> None:
+        self.steps = 0
+        self.cost_total = 0.0
+        self.base_reward_total = 0.0
+        self.shaped_reward_total = 0.0
+        self.collision = 0.0
+        self.crash_vehicle = 0.0
+        self.crash_object = 0.0
+        self.out_of_road = 0.0
+        self.route_completion = 0.0
+        self.speed_total = 0.0
+        self.lane_dev_total = 0.0
+        self.max_lane_dev = 0.0
+        self.steer_variation_total = 0.0
+        self.accel_variation_total = 0.0
+        self.jerk_total = 0.0
+        self.ttc_risk_total = 0.0
+        self.min_ttc = math.inf
+
+    def reset(self, **kwargs):
+        self._reset_stats()
+        self.previous_action = np.zeros(2, dtype=np.float32)
+        self.previous_accel_delta = 0.0
+        # SubprocVecEnv passes Gymnasium RNG seeds that can fall outside a
+        # worker's MetaDrive scenario range; valid evaluation scenario seeds stay.
+        seed = kwargs.get("seed")
+        if seed is not None:
+            start_seed = int(self.env.config["start_seed"])
+            stop_seed = start_seed + int(self.env.config["num_scenarios"])
+            if not (start_seed <= int(seed) < stop_seed):
+                kwargs.pop("seed", None)
+        return self.env.reset(**kwargs)
+
+    def set_curriculum_stage(self, index: int) -> None:
+        self.stage_index = int(np.clip(index, 0, len(self.exp.stages) - 1))
+        stage = self.exp.stages[self.stage_index]
+        self.env.config["traffic_density"] = stage.traffic_density
+        self.env.config["map"] = stage.map_blocks
+        if isinstance(stage.map_blocks, int):
+            self.env.config["map_config"]["type"] = MapGenerateMethod.BIG_BLOCK_NUM
+        else:
+            self.env.config["map_config"]["type"] = MapGenerateMethod.BIG_BLOCK_SEQUENCE
+        self.env.config["map_config"]["config"] = stage.map_blocks
+        self.env.config["accident_prob"] = stage.accident_prob
+        self.env.config["horizon"] = stage.horizon
+
+    def _lane_deviation(self) -> float:
+        vehicle = self.env.agent
+        _, lateral = vehicle.lane.local_coordinates(vehicle.position)
+        width = max(float(vehicle.navigation.get_current_lane_width()) / 2.0, 1e-6)
+        return min(abs(float(lateral)) / width, 2.0)
+
+    def _ttc_risk(self) -> tuple[float, float]:
+        """Calculate forward TTC risk from perceived nearby traffic vehicles."""
+        ego = self.env.agent
+        try:
+            detected = self.env.observations[DEFAULT_AGENT].detected_objects
+        except Exception:
+            return 0.0, math.inf
+        heading = np.asarray(ego.heading, dtype=float)
+        ego_velocity = np.asarray(ego.velocity, dtype=float)
+        min_ttc = math.inf
+        surrounding_vehicles = ego.lidar.get_surrounding_vehicles(detected)
+        for other in surrounding_vehicles:
+            if other is ego or not hasattr(other, "velocity") or not hasattr(other, "position"):
+                continue
+            displacement = np.asarray(other.position, dtype=float) - np.asarray(ego.position, dtype=float)
+            longitudinal = float(np.dot(displacement, heading))
+            lateral = abs(float(heading[0] * displacement[1] - heading[1] * displacement[0]))
+            if longitudinal <= 0.0 or lateral > float(ego.WIDTH) * 1.8:
+                continue
+            closing_speed = float(np.dot(ego_velocity - np.asarray(other.velocity, dtype=float), heading))
+            if closing_speed > 1e-3:
+                min_ttc = min(min_ttc, longitudinal / closing_speed)
+        threshold = self.exp.reward_weights.ttc_threshold
+        if min_ttc >= threshold:
+            return 0.0, min_ttc
+        return float(np.clip((threshold - min_ttc) / threshold, 0.0, 1.0)), min_ttc
+
+    def step(self, action):
+        action_arr = np.asarray(action, dtype=np.float32)
+        speed_before = float(self.env.agent.speed_km_h)
+        if self.exp.risk_reward and action_arr.shape[0] > 1:
+            guarded_action = action_arr.copy()
+            target_speed = self.exp.reward_weights.target_speed_kmh
+            if speed_before > target_speed + 5.0:
+                guarded_action[1] = min(float(guarded_action[1]), -0.35)
+            elif speed_before > target_speed:
+                guarded_action[1] = min(float(guarded_action[1]), 0.0)
+            action_arr = guarded_action
+            action = guarded_action
+        obs, base_reward, terminated, truncated, info = self.env.step(action)
+        cost = float(info.get("cost", 0.0))
+        ttc_risk, min_ttc = self._ttc_risk()
+        lane_dev = self._lane_deviation()
+        steering_var = float(abs(action_arr[0] - self.previous_action[0]))
+        accel_var = float(abs(action_arr[1] - self.previous_action[1])) if action_arr.shape[0] > 1 else 0.0
+        jerk = float(abs(accel_var - self.previous_accel_delta))
+        weights = self.exp.reward_weights
+        speed_kmh = float(self.env.agent.speed_km_h)
+        overspeed = max(speed_kmh - weights.target_speed_kmh, 0.0) / max(weights.target_speed_kmh, 1e-6)
+        current_route_completion = float(info.get("route_completion", 0.0))
+        route_progress = max(current_route_completion - self.route_completion, 0.0)
+        penalty = 0.0
+        if self.exp.risk_reward:
+            penalty = (
+                weights.ttc * ttc_risk
+                + weights.lane * (lane_dev**2)
+                + weights.smooth * steering_var
+                + weights.accel * accel_var
+                + weights.cost * cost
+                + weights.overspeed * (overspeed**2)
+            )
+        reward = float(weights.base_scale * float(base_reward) - penalty) if self.exp.risk_reward else float(base_reward)
+        if self.exp.risk_reward:
+            reward += weights.progress * route_progress
+            if speed_kmh < weights.min_speed_kmh and not (terminated or truncated):
+                reward -= weights.idle_penalty
+            if info.get("arrive_dest", False):
+                reward += weights.success_bonus
+            if info.get("crash_vehicle", False) or info.get("crash_object", False):
+                reward -= weights.crash_penalty
+            if info.get("out_of_road", False):
+                reward -= weights.out_of_road_penalty
+        self.previous_action = action_arr
+        self.previous_accel_delta = accel_var
+
+        self.steps += 1
+        self.cost_total += cost
+        self.base_reward_total += float(base_reward)
+        self.shaped_reward_total += reward
+        self.crash_vehicle = max(self.crash_vehicle, float(bool(info.get("crash_vehicle"))))
+        self.crash_object = max(self.crash_object, float(bool(info.get("crash_object"))))
+        self.collision = max(self.collision, float(bool(info.get("crash_vehicle") or info.get("crash_object"))))
+        self.out_of_road = max(self.out_of_road, float(bool(info.get("out_of_road"))))
+        self.route_completion = max(self.route_completion, current_route_completion)
+        self.speed_total += float(self.env.agent.speed_km_h)
+        self.lane_dev_total += lane_dev
+        self.max_lane_dev = max(self.max_lane_dev, lane_dev)
+        self.steer_variation_total += steering_var
+        self.accel_variation_total += accel_var
+        self.jerk_total += jerk
+        self.ttc_risk_total += ttc_risk
+        if math.isfinite(min_ttc):
+            self.min_ttc = min(self.min_ttc, min_ttc)
+        info.update(
+            base_reward=float(base_reward),
+            shaped_reward=reward,
+            risk_penalty=float(penalty),
+            ttc_risk=ttc_risk,
+            min_ttc=float(min_ttc) if math.isfinite(min_ttc) else np.nan,
+            lane_deviation=lane_dev,
+            steering_variation=steering_var,
+            accel_variation=accel_var,
+            jerk=jerk,
+            overspeed=overspeed,
+            curriculum_stage=float(self.stage_index),
+            vehicle_x=float(self.env.agent.position[0]),
+            vehicle_y=float(self.env.agent.position[1]),
+            vehicle_heading=float(self.env.agent.heading_theta),
+            vehicle_speed_kmh=speed_kmh,
+        )
+        if terminated or truncated:
+            success = float(bool(info.get("arrive_dest", False)))
+            info.update(
+                is_success=success,
+                episode_cost=self.cost_total,
+                episode_base_reward=self.base_reward_total,
+                episode_shaped_reward=self.shaped_reward_total,
+                episode_collision=self.collision,
+                episode_crash_vehicle=self.crash_vehicle,
+                episode_crash_object=self.crash_object,
+                episode_out_of_road=self.out_of_road,
+                episode_route_completion=self.route_completion,
+                episode_length=self.steps,
+                episode_mean_speed=self.speed_total / max(self.steps, 1),
+                episode_mean_lane_deviation=self.lane_dev_total / max(self.steps, 1),
+                episode_max_lane_deviation=self.max_lane_dev,
+                episode_steering_variation=self.steer_variation_total / max(self.steps, 1),
+                episode_accel_variation=self.accel_variation_total / max(self.steps, 1),
+                episode_jerk=self.jerk_total / max(self.steps, 1),
+                episode_ttc_risk=self.ttc_risk_total / max(self.steps, 1),
+                episode_min_ttc=self.min_ttc if math.isfinite(self.min_ttc) else np.nan,
+            )
+            self._recent_outcomes.append((success, self.cost_total))
+        return obs, reward, terminated, truncated, info
+
+
+def build_env(
+    config: ExperimentConfig,
+    output_file: Path | None = None,
+    training: bool = True,
+    density: float | None = None,
+    seed_offset: int = 0,
+) -> Monitor:
+    if training and config.curriculum:
+        initial = config.stages[0]
+        map_blocks, traffic_density, accident_prob = initial.map_blocks, initial.traffic_density, initial.accident_prob
+        horizon = initial.horizon
+    else:
+        map_blocks = config.fixed_map_blocks
+        traffic_density = config.fixed_traffic_density if density is None else density
+        accident_prob = 0.0
+        horizon = config.horizon
+    env_config: dict[str, Any] = {
+        "use_render": False,
+        "start_seed": (config.train_start_seed if training else config.test_start_seed) + seed_offset,
+        "num_scenarios": config.train_scenarios if training else config.test_scenarios,
+        "map": map_blocks,
+        "store_map": False,
+        "traffic_density": traffic_density,
+        "accident_prob": accident_prob,
+        "random_traffic": True,
+        "random_lane_width": True,
+        "random_lane_num": True,
+        "horizon": horizon,
+        "use_lateral_reward": True,
+        "speed_reward": 0.1,
+        "success_reward": 20.0,
+        "out_of_road_penalty": 10.0,
+        "crash_vehicle_penalty": 10.0,
+        "crash_object_penalty": 10.0,
+        "truncate_as_terminate": False,
+        # Crossing a lane marking is penalized densely; only actual road departure terminates.
+        "on_continuous_line_done": False,
+        "out_of_road_done": True,
+        "log_level": 50,
+        "vehicle_config": {"lidar": {"num_lasers": 120, "distance": 60, "num_others": 4}},
+    }
+    wrapped = RiskAwareMetaDriveWrapper(CurriculumMetaDriveEnv(env_config), config, training=training)
+    monitor_file = str(output_file) if output_file is not None else None
+    return Monitor(wrapped, filename=monitor_file, info_keywords=METRIC_KEYS)
+
+
+def build_vec_env(
+    config: ExperimentConfig,
+    output_dir: Path,
+    training: bool = True,
+):
+    """Build one or more training environments.
+
+    Multiple MetaDrive workers improve wall-clock throughput while keeping each
+    worker small enough to avoid disrupting concurrent CARLA evaluations.
+    """
+    n_envs = max(int(config.n_envs), 1)
+    if n_envs == 1:
+        return build_env(config, output_dir, training=training)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    def make_env(rank: int):
+        def _init():
+            monitor_file = output_dir / f"env_{rank}"
+            seed_stride = config.train_scenarios if training else config.test_scenarios
+            return build_env(config, monitor_file, training=training, seed_offset=rank * seed_stride)
+
+        return _init
+
+    return SubprocVecEnv([make_env(rank) for rank in range(n_envs)], start_method="fork")

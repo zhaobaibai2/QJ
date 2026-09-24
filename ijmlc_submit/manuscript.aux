@@ -1,0 +1,211 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\bibstyle{sn-mathphys-ay}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{wiener1948cybernetics,astrom2008feedback}
+\Newlabel{1}{1}
+\citation{altman1999constrained,garcia2015safe,achiam2017constrained,chow2018lyapunov}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.2}\protected@file@percent }
+\newlabel{sec_introduction}{{1}{2}{Introduction}{section.2}{}}
+\citation{garcia2015safe,amodei2016concrete,leike2017ai}
+\citation{altman1999constrained,achiam2017constrained,tessler2018reward}
+\citation{ji2024omnisafe}
+\citation{berkenkamp2017safe,chow2018lyapunov,dalal2018safe}
+\citation{amodei2016concrete,pan2022reward,skalse2022defining}
+\citation{alshiekh2018shielding,saunders2018trial}
+\citation{seto1998simplex}
+\citation{miller2024optimal}
+\citation{shalev2017rss}
+\citation{ames2019control,fisac2019bridging}
+\citation{wiener1948cybernetics,astrom2008feedback}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.3}\protected@file@percent }
+\newlabel{sec_related_work}{{2}{3}{Related Work}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Safe reinforcement learning and constrained policy optimization}{3}{subsection.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Runtime shielding, safety filters, and vehicle rules}{3}{subsection.5}\protected@file@percent }
+\citation{dosovitskiy2017carla,li2022metadrive}
+\citation{sallab2017deep,kendall2019learning,grigorescu2020survey,kiran2021deep,kuutti2021survey}
+\citation{koopman2017autonomous,henderson2018deep}
+\citation{ji2023safetygymnasium,xu2022safebench}
+\citation{feng2023dense,jia2024bench2drive}
+\citation{li2022metadrive}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Cybernetic feedback and system--environment interaction}{4}{subsection.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Closed-loop autonomous-driving simulation}{4}{subsection.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Positioning of this work}{4}{subsection.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}GuardShield-Runtime Framework}{5}{section.9}\protected@file@percent }
+\newlabel{sec_method}{{3}{5}{GuardShield-Runtime Framework}{section.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem setting and closed-loop interface}{5}{subsection.12}\protected@file@percent }
+\newlabel{sec_problem_signals}{{3.1}{5}{Problem setting and closed-loop interface}{subsection.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Runtime signals used by the monitor and diagnostics.}}{5}{table.16}\protected@file@percent }
+\newlabel{tab_runtime_signals}{{1}{5}{Runtime signals used by the monitor and diagnostics}{table.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Failure mode: stationary safety artifact}{5}{subsection.17}\protected@file@percent }
+\newlabel{sec_nonmotion_method}{{3.2}{5}{Failure mode: stationary safety artifact}{subsection.17}{}}
+\citation{schulman2017ppo}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Closed-loop GuardShield-Runtime architecture. The learned PPO backbone proposes an action, the runtime monitor observes TTC, speed, route, and lane signals before execution, the intervention operator bounds monitor-flagged acceleration commands, and the MetaDrive environment returns the next observation and diagnostic feedback.}}{6}{figure.11}\protected@file@percent }
+\newlabel{fig_architecture}{{1}{6}{Closed-loop GuardShield-Runtime architecture. The learned PPO backbone proposes an action, the runtime monitor observes TTC, speed, route, and lane signals before execution, the intervention operator bounds monitor-flagged acceleration commands, and the MetaDrive environment returns the next observation and diagnostic feedback}{figure.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Learning backbone and reward variants}{6}{subsection.18}\protected@file@percent }
+\newlabel{sec_learning_backbone}{{3.3}{6}{Learning backbone and reward variants}{subsection.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Runtime monitor}{7}{subsection.22}\protected@file@percent }
+\newlabel{sec_ttc_monitor}{{3.4}{7}{Runtime monitor}{subsection.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Intervention operator}{7}{subsection.24}\protected@file@percent }
+\newlabel{sec_guard_operator}{{3.5}{7}{Intervention operator}{subsection.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Diagnostic scope and relation to TTC/RSS filtering}{8}{subsection.28}\protected@file@percent }
+\newlabel{sec_not_only_ttc}{{3.6}{8}{Diagnostic scope and relation to TTC/RSS filtering}{subsection.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Variant definitions}{8}{subsection.29}\protected@file@percent }
+\newlabel{sec_variants}{{3.7}{8}{Variant definitions}{subsection.29}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Compared methods and runtime deployment variants.}}{9}{table.31}\protected@file@percent }
+\newlabel{tab_compared_methods}{{2}{9}{Compared methods and runtime deployment variants}{table.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8}Algorithmic summary}{9}{subsection.32}\protected@file@percent }
+\newlabel{sec_algorithm}{{3.8}{9}{Algorithmic summary}{subsection.32}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces GuardShield-Runtime closed-loop execution}}{10}{algorithm.33}\protected@file@percent }
+\newlabel{alg_runtime}{{1}{10}{Algorithmic summary}{algorithm.33}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Protocol}{10}{section.34}\protected@file@percent }
+\newlabel{sec_experimental_protocol}{{4}{10}{Experimental Protocol}{section.34}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Environment and task}{10}{subsection.35}\protected@file@percent }
+\newlabel{sec_environment_task}{{4.1}{10}{Environment and task}{subsection.35}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Compared methods}{10}{subsection.36}\protected@file@percent }
+\newlabel{sec_compared_methods}{{4.2}{10}{Compared methods}{subsection.36}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Training protocol and checkpoint selection}{10}{subsection.37}\protected@file@percent }
+\newlabel{sec_training_protocol}{{4.3}{10}{Training protocol and checkpoint selection}{subsection.37}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Diagnostic evaluation protocol}{11}{subsection.38}\protected@file@percent }
+\newlabel{sec_eval_protocol}{{4.4}{11}{Diagnostic evaluation protocol}{subsection.38}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Statistical reporting}{11}{subsection.39}\protected@file@percent }
+\newlabel{sec_stats_protocol}{{4.5}{11}{Statistical reporting}{subsection.39}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Supplementary artifacts}{11}{subsection.40}\protected@file@percent }
+\newlabel{sec_evidence_package}{{4.6}{11}{Supplementary artifacts}{subsection.40}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{11}{section.41}\protected@file@percent }
+\newlabel{sec_results}{{5}{11}{Results}{section.41}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Stationary safety artifact under cost-only evaluation}{11}{subsection.42}\protected@file@percent }
+\newlabel{sec_artifact}{{5.1}{11}{Stationary safety artifact under cost-only evaluation}{subsection.42}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Core artifact-aware evidence at density 0.15. (a) Cost and route completion separate stationary cost reduction from progress-preserving behavior. (b) The progress-safety frontier separates PPO backbone, Risk-only, reward-only control, and runtime intervention. (c) Low-progress rate exposes the non-motion artifact. (d) Two step-level diagnostics are reported on a common 0--100 scale: TTC-danger percentage and interventions per 100 control steps.}}{12}{figure.44}\protected@file@percent }
+\newlabel{fig_core_evidence}{{2}{12}{Core artifact-aware evidence at density 0.15. (a) Cost and route completion separate stationary cost reduction from progress-preserving behavior. (b) The progress-safety frontier separates PPO backbone, Risk-only, reward-only control, and runtime intervention. (c) Low-progress rate exposes the non-motion artifact. (d) Two step-level diagnostics are reported on a common 0--100 scale: TTC-danger percentage and interventions per 100 control steps}{figure.44}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Same-checkpoint evidence for execution-side intervention}{12}{subsection.47}\protected@file@percent }
+\newlabel{sec_mechanism}{{5.2}{12}{Same-checkpoint evidence for execution-side intervention}{subsection.47}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Artifact-aware evaluation at density 0.15. Cost-only evaluation incorrectly favors the stationary Risk-only baseline, whereas runtime-intervention variants preserve route progress while reducing cost.}}{13}{table.46}\protected@file@percent }
+\newlabel{tab_core_mechanism}{{3}{13}{Artifact-aware evaluation at density 0.15. Cost-only evaluation incorrectly favors the stationary Risk-only baseline, whereas runtime-intervention variants preserve route progress while reducing cost}{table.46}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Clean same-checkpoint runtime-intervention ablation at traffic density 0.15. All rows evaluate the same three frozen PPO-backbone checkpoints under the same 120-episode diagnostic protocol; only the runtime operator is changed.}}{13}{table.49}\protected@file@percent }
+\newlabel{tab_clean_runtime_ablation}{{4}{13}{Clean same-checkpoint runtime-intervention ablation at traffic density 0.15. All rows evaluate the same three frozen PPO-backbone checkpoints under the same 120-episode diagnostic protocol; only the runtime operator is changed}{table.49}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces External baseline comparison at density 0.15.}}{14}{table.52}\protected@file@percent }
+\newlabel{tab_external_baseline}{{5}{14}{External baseline comparison at density 0.15}{table.52}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Comparison with runtime and constrained-RL baselines}{14}{subsection.50}\protected@file@percent }
+\newlabel{sec_external}{{5.3}{14}{Comparison with runtime and constrained-RL baselines}{subsection.50}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Density stress and operating envelope}{14}{subsection.53}\protected@file@percent }
+\newlabel{sec_density}{{5.4}{14}{Density stress and operating envelope}{subsection.53}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Traffic-density stress test. Runtime variants preserve progress-safety better than the PPO backbone at the tested densities, but the highest density remains difficult.}}{15}{figure.55}\protected@file@percent }
+\newlabel{fig_density}{{3}{15}{Traffic-density stress test. Runtime variants preserve progress-safety better than the PPO backbone at the tested densities, but the highest density remains difficult}{figure.55}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Threshold sensitivity}{15}{subsection.56}\protected@file@percent }
+\newlabel{sec_sensitivity}{{5.5}{15}{Threshold sensitivity}{subsection.56}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Simulation-loop timing diagnostics}{15}{subsection.59}\protected@file@percent }
+\newlabel{sec_runtime_overhead}{{5.6}{15}{Simulation-loop timing diagnostics}{subsection.59}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces TTC-threshold sensitivity at density 0.15. Heatmaps report success, cost, and route completion for Guard, Shield, and Gated-risk. The heatmap is an independent rerun; the TTC=12 cell is a same-nominal configuration but not the stored core-evaluation row in Table\nobreakspace  {}\ref  {tab_core_mechanism}. The sweep shows threshold-dependent trade-offs rather than a single universally optimal setting.}}{16}{figure.58}\protected@file@percent }
+\newlabel{fig_ttc_sensitivity}{{4}{16}{TTC-threshold sensitivity at density 0.15. Heatmaps report success, cost, and route completion for Guard, Shield, and Gated-risk. The heatmap is an independent rerun; the TTC=12 cell is a same-nominal configuration but not the stored core-evaluation row in Table~\ref {tab_core_mechanism}. The sweep shows threshold-dependent trade-offs rather than a single universally optimal setting}{figure.58}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Simulation-loop wall-clock diagnostics, not vehicle-grade real-time certification. The panels separate policy inference p95, full control-loop p95, and intervention frequency across traffic densities.}}{16}{figure.61}\protected@file@percent }
+\newlabel{fig_runtime_overhead}{{5}{16}{Simulation-loop wall-clock diagnostics, not vehicle-grade real-time certification. The panels separate policy inference p95, full control-loop p95, and intervention frequency across traffic densities}{figure.61}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{16}{section.62}\protected@file@percent }
+\newlabel{sec_discussion}{{6}{16}{Discussion}{section.62}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Cybernetic interpretation}{16}{subsection.63}\protected@file@percent }
+\newlabel{sec_discussion_cybernetic}{{6.1}{16}{Cybernetic interpretation}{subsection.63}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Feedback-loop interpretation of GuardShield-Runtime.}}{17}{table.65}\protected@file@percent }
+\newlabel{tab_cybernetic_mapping}{{6}{17}{Feedback-loop interpretation of GuardShield-Runtime}{table.65}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}What the evidence supports}{17}{subsection.66}\protected@file@percent }
+\newlabel{sec_discussion_evidence}{{6.2}{17}{What the evidence supports}{subsection.66}{}}
+\newlabel{tab_claim_evidence}{{7}{17}{What the evidence supports}{table.67}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Intervention burden and operating envelope}{18}{subsection.68}\protected@file@percent }
+\newlabel{sec_intervention_burden}{{6.3}{18}{Intervention burden and operating envelope}{subsection.68}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Limitations and threats to validity}{18}{subsection.69}\protected@file@percent }
+\newlabel{sec_limitations}{{6.4}{18}{Limitations and threats to validity}{subsection.69}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{19}{section.70}\protected@file@percent }
+\newlabel{sec_conclusion}{{7}{19}{Conclusion}{section.70}{}}
+\@writefile{toc}{\contentsline {subparagraph}{Supplementary information}{19}{section*.71}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Funding}{19}{section*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Competing interests}{19}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Ethics approval and consent to participate}{19}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Consent for publication}{19}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Data availability}{19}{section*.77}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Code availability}{19}{section*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {subparagraph}{Author contribution}{19}{section*.79}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Reproducibility and Evidence Map}{20}{appendix.80}\protected@file@percent }
+\newlabel{app_manifest}{{A}{20}{Reproducibility and Evidence Map}{appendix.80}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A1}{\ignorespaces Evidence map and supplementary artifacts.}}{20}{table.82}\protected@file@percent }
+\newlabel{tab_data_manifest}{{A1}{20}{Evidence map and supplementary artifacts}{table.82}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A2}{\ignorespaces Compact default settings for training, intervention, and diagnostics.}}{20}{table.84}\protected@file@percent }
+\newlabel{tab_parameter_defaults}{{A2}{20}{Compact default settings for training, intervention, and diagnostics}{table.84}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A3}{\ignorespaces Baseline audit for external comparator rows.}}{21}{table.86}\protected@file@percent }
+\newlabel{tab_baseline_tuning_audit}{{A3}{21}{Baseline audit for external comparator rows}{table.86}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A4}{\ignorespaces Result-block provenance and parameter scope.}}{21}{table.88}\protected@file@percent }
+\newlabel{tab_result_block_provenance}{{A4}{21}{Result-block provenance and parameter scope}{table.88}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A5}{\ignorespaces Software and hardware environment for the reported simulator runs.}}{21}{table.90}\protected@file@percent }
+\newlabel{tab_software_hardware}{{A5}{21}{Software and hardware environment for the reported simulator runs}{table.90}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Episode-Level Intervals and Seed Variation at Density 0.15}{22}{appendix.91}\protected@file@percent }
+\newlabel{app_ci}{{B}{22}{Episode-Level Intervals and Seed Variation at Density 0.15}{appendix.91}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {B1}{\ignorespaces Episode-level uncertainty for binary outcomes at density 0.15.}}{22}{table.93}\protected@file@percent }
+\newlabel{tab_ci_binary}{{B1}{22}{Episode-level uncertainty for binary outcomes at density 0.15}{table.93}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Training Run Audit}{22}{appendix.94}\protected@file@percent }
+\newlabel{app_training_dynamics}{{C}{22}{Training Run Audit}{appendix.94}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Full Density Operating-Envelope Diagnostics}{23}{appendix.95}\protected@file@percent }
+\newlabel{app_density}{{D}{23}{Full Density Operating-Envelope Diagnostics}{appendix.95}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {D1}{\ignorespaces Compact operating-envelope summary.}}{23}{table.97}\protected@file@percent }
+\newlabel{tab_density_summary}{{D1}{23}{Compact operating-envelope summary}{table.97}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {D2}{\ignorespaces Full density diagnostics across the tested operating envelope.}}{23}{table.99}\protected@file@percent }
+\newlabel{tab_full_density}{{D2}{23}{Full density diagnostics across the tested operating envelope}{table.99}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {E}Qualitative Failure-Case Rollouts}{24}{appendix.100}\protected@file@percent }
+\newlabel{app_failure_rollouts}{{E}{24}{Qualitative Failure-Case Rollouts}{appendix.100}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {E1}{\ignorespaces Qualitative behavior rollouts at traffic density 0.15. The deterministic scenario illustrates three distinct closed-loop behaviors: Risk-only suppresses motion, No-action guard moves without execution-side intervention and terminates early, and Gated-risk maintains progress under frequent runtime intervention. The figure is used only for failure-mode interpretation.}}{24}{figure.102}\protected@file@percent }
+\newlabel{fig_behavior_rollouts_d015}{{E1}{24}{Qualitative behavior rollouts at traffic density 0.15. The deterministic scenario illustrates three distinct closed-loop behaviors: Risk-only suppresses motion, No-action guard moves without execution-side intervention and terminates early, and Gated-risk maintains progress under frequent runtime intervention. The figure is used only for failure-mode interpretation}{figure.102}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {F}Sensitivity and Runtime Diagnostics}{24}{appendix.103}\protected@file@percent }
+\newlabel{app_sensitivity_runtime}{{F}{24}{Sensitivity and Runtime Diagnostics}{appendix.103}{}}
+\bibdata{bib/references}
+\bibcite{alshiekh2018shielding}{{1}{2018}{{Alshiekh et~al.}}{{}}}
+\bibcite{ames2019control}{{2}{2019}{{Ames et~al.}}{{}}}
+\bibcite{achiam2017constrained}{{3}{2017}{{Achiam et~al.}}{{}}}
+\bibcite{altman1999constrained}{{4}{2021}{{Altman}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {F1}{\ignorespaces Target-speed sensitivity at density 0.15. The sweep is reported as secondary sensitivity evidence because the main text focuses on TTC-threshold behavior.}}{25}{figure.105}\protected@file@percent }
+\newlabel{fig_target_speed_sensitivity}{{F1}{25}{Target-speed sensitivity at density 0.15. The sweep is reported as secondary sensitivity evidence because the main text focuses on TTC-threshold behavior}{figure.105}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {F1}{\ignorespaces Compact sensitivity summary at density 0.15.}}{25}{table.107}\protected@file@percent }
+\newlabel{tab_sensitivity_summary}{{F1}{25}{Compact sensitivity summary at density 0.15}{table.107}{}}
+\bibcite{astrom2008feedback}{{5}{2008}{{{\r A}str{\"o}m and Murray}}{{}}}
+\bibcite{amodei2016concrete}{{6}{2016}{{Amodei et~al.}}{{}}}
+\bibcite{berkenkamp2017safe}{{7}{2017}{{Berkenkamp et~al.}}{{}}}
+\bibcite{chow2018lyapunov}{{8}{2018}{{Chow et~al.}}{{}}}
+\bibcite{dalal2018safe}{{9}{2018}{{Dalal et~al.}}{{}}}
+\bibcite{dosovitskiy2017carla}{{10}{2017}{{Dosovitskiy et~al.}}{{}}}
+\bibcite{fisac2019bridging}{{11}{2019}{{Fisac et~al.}}{{}}}
+\bibcite{feng2023dense}{{12}{2023}{{Feng et~al.}}{{}}}
+\bibcite{garcia2015safe}{{13}{2015}{{Garc{\'i}a and Fern{\'a}ndez}}{{}}}
+\bibcite{grigorescu2020survey}{{14}{2020}{{Grigorescu et~al.}}{{}}}
+\bibcite{henderson2018deep}{{15}{2018}{{Henderson et~al.}}{{}}}
+\bibcite{jia2024bench2drive}{{16}{2024}{{Jia et~al.}}{{}}}
+\bibcite{ji2023safetygymnasium}{{17}{2023}{{Ji et~al.}}{{}}}
+\bibcite{ji2024omnisafe}{{18}{2024}{{Ji et~al.}}{{}}}
+\bibcite{kuutti2021survey}{{19}{2021}{{Kuutti et~al.}}{{}}}
+\bibcite{kendall2019learning}{{20}{2019}{{Kendall et~al.}}{{}}}
+\bibcite{kiran2021deep}{{21}{2021}{{Kiran et~al.}}{{}}}
+\bibcite{koopman2017autonomous}{{22}{2017}{{Koopman and Wagner}}{{}}}
+\bibcite{leike2017ai}{{23}{2017}{{Leike et~al.}}{{}}}
+\bibcite{li2022metadrive}{{24}{2022}{{Li et~al.}}{{}}}
+\bibcite{miller2024optimal}{{25}{2024}{{Miller et~al.}}{{}}}
+\bibcite{pan2022reward}{{26}{2022}{{Pan et~al.}}{{}}}
+\bibcite{sallab2017deep}{{27}{2017}{{Sallab et~al.}}{{}}}
+\bibcite{skalse2022defining}{{28}{2022}{{Skalse et~al.}}{{}}}
+\bibcite{seto1998simplex}{{29}{1998}{{Seto et~al.}}{{}}}
+\bibcite{saunders2018trial}{{30}{2018}{{Saunders et~al.}}{{}}}
+\bibcite{shalev2017rss}{{31}{2017}{{Shalev-Shwartz et~al.}}{{}}}
+\bibcite{schulman2017ppo}{{32}{2017}{{Schulman et~al.}}{{}}}
+\bibcite{tessler2018reward}{{33}{2018}{{Tessler et~al.}}{{}}}
+\bibcite{wiener1948cybernetics}{{34}{1948}{{Wiener}}{{}}}
+\bibcite{xu2022safebench}{{35}{2022}{{Xu et~al.}}{{}}}
+\gdef \@abspage@last{28}

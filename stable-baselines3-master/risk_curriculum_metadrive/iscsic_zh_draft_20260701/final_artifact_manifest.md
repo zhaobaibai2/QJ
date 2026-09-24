@@ -1,0 +1,22 @@
+# Draft Artifact Manifest
+
+- main_zh.tex: Chinese manuscript draft.
+- references.bib: bibliography for draft.
+- IEEEtran.cls: copied from official ISCSIC full paper LaTeX template package.
+- tables/formal_main_d015.tex: formal main table.
+- tables/ablation_d015.tex: ablation table.
+- tables/external_d015.tex: external seed validation table.
+- figures/fig1_method_overview.tex/pdf: method overview.
+- figures/fig2_formal_results.tex/pdf: formal results chart.
+- figures/fig3_ablation_results.tex/pdf: ablation chart.
+- figures/fig4_stress_results.tex/pdf: stress chart.
+- figures/fig5_external_seed_ci.tex/pdf: external seed CI chart.
+- figures/fig6_behavior_rollouts_d015.pdf: copied qualitative rollout figure.
+- artifacts/source_map.md: provenance and boundary map.
+- artifacts/evidence_bank.md: quantitative evidence bank.
+- artifacts/claim_register.md: claim-evidence-boundary register.
+- artifacts/figure_asset_map.md: figure map.
+- artifacts/result_inventory_decisions.csv: scanned DECISION.md inventory.
+- artifacts/writing_rationale_matrix.md: writing execution rationale.
+- artifacts/all_result_files_inventory.csv: full file-level inventory of outputs/codex_longrun_iscsic/paper results.
+- artifacts/all_outputs_summary.md: count and role summary for the full inventory.

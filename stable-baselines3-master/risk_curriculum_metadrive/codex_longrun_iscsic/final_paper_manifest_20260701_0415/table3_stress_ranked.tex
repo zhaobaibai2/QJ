@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{rlrrrr}
+\toprule
+Density & Rank & Variant & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ \\
+\midrule
+0.20 & 1 & shield\_only & 0.480 & 0.360 & 0.778 \\
+0.20 & 2 & retune\_proposed\_ttc4\_cost10\_lane1 & 0.453 & 0.380 & 0.753 \\
+0.20 & 3 & proposed\_gated\_risk & 0.447 & 0.367 & 0.766 \\
+0.20 & 4 & guard\_only & 0.413 & 0.407 & 0.733 \\
+0.20 & 5 & full\_proposed\_candidate & 0.380 & 0.400 & 0.744 \\
+0.20 & 6 & risk & 0.000 & 0.000 & 0.009 \\
+0.25 & 1 & guard\_only & 0.267 & 0.487 & 0.658 \\
+0.25 & 2 & proposed\_gated\_risk & 0.220 & 0.527 & 0.628 \\
+0.25 & 3 & full\_proposed\_candidate & 0.207 & 0.587 & 0.587 \\
+0.25 & 4 & shield\_only & 0.193 & 0.587 & 0.609 \\
+0.25 & 5 & retune\_proposed\_ttc4\_cost10\_lane1 & 0.173 & 0.687 & 0.571 \\
+0.25 & 6 & risk & 0.000 & 0.000 & 0.009 \\
+\bottomrule
+\end{tabular}
+\caption{Stress evaluation at densities 0.20 and 0.25, ranked by success, cost, and route completion. These rows are robustness evidence, not the tuning objective.}
+\label{tab:stress-ranked}
+\end{table}

@@ -1,0 +1,426 @@
+% IJMLC journalized manuscript source.
+\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{url}
+\usepackage{xcolor}
+\providecommand{\blocation}[1]{}
+\hypersetup{hypertexnames=false}
+
+\raggedbottom
+
+\begin{document}
+
+\title[GuardShield-Runtime]{GuardShield-Runtime: Artifact-Aware Runtime Feedback for Progress-Preserving Safe Reinforcement Learning in Dense Traffic}
+
+\author*[1]{\fnm{Anonymous} \sur{Author}}\email{anonymous@example.com}
+\affil*[1]{\orgdiv{Department}, \orgname{Institution}, \orgaddress{\city{City}, \country{Country}}}
+
+\abstract{Safe reinforcement learning in dense traffic can produce misleading safety evidence when low measured cost is achieved by suppressing motion rather than by driving safely. We study this failure as a closed-loop feedback problem and propose GuardShield-Runtime, a simulator-level framework that couples a learned driving policy with runtime risk monitoring, bounded action intervention, and progress-safety diagnostics. The framework monitors time-to-collision, speed, route progress, and lane-related signals before execution, then bounds unsafe acceleration commands while logging each intervention. In MetaDrive dense-traffic simulations, the Risk-only baseline achieves 0.0\% cost at traffic density 0.15, but only by stopping, with 100.0\% stop ratio and 0.9\% route completion. In contrast, Guard, Shield, and Gated-risk preserve 85.7--86.9\% route completion with 18.3--20.8\% cost. A clean same-checkpoint ablation further shows that combining TTC and speed feedback reduces cost from 100.0\% to 20.8\% while raising route completion from 21.8\% to 85.3\%, outperforming TTC-only and speed-only intervention. These results support artifact-aware evaluation of safe reinforcement learning as monitored feedback regulation, not as formal safety certification or real-world validation.}
+
+\keywords{safe reinforcement learning, runtime feedback intervention, artifact-aware evaluation, autonomous driving simulation, cybernetic control}
+
+\maketitle
+
+\section{Introduction}\label{sec_introduction}
+
+Dense autonomous-driving control is a system--environment interaction problem. A policy chooses an action, surrounding traffic responds, the observation changes, and the next action is selected under new local risk. This feedback structure is central to cybernetics and control theory \citep{wiener1948cybernetics,astrom2008feedback}; it is also where reinforcement-learning policies can produce misleading safety evidence. In dense simulated traffic, low measured cost can arise either because the ego vehicle drives safely or because it stops and avoids interaction altogether.
+
+This distinction matters for safe reinforcement learning. Standard deep RL optimizes long-horizon return \citep{sutton2018reinforcement,mnih2015human,schulman2015trust,schulman2017ppo,lillicrap2015continuous,fujimoto2018addressing,haarnoja2018soft}, and safe-RL methods add cost constraints, penalties, or risk objectives \citep{altman1999constrained,garcia2015safe,achiam2017constrained,tessler2018reward,chow2018lyapunov}. However, when a risk penalty is evaluated only through cost, a policy can exploit the objective by suppressing motion. In driving, this behavior is not safe driving; it is task avoidance. Progress, stop ratio, low-progress rate, time-to-collision (TTC) danger, and intervention frequency must therefore be measured alongside collision-oriented cost.
+
+Runtime feedback intervention provides a complementary route. Rather than placing all safety regulation in the training reward, a runtime monitor can observe local risk before action execution and apply a bounded intervention to the proposed action. This turns the learned policy and driving environment into a monitored closed loop: the policy proposes actions, the environment generates feedback, the monitor estimates risk, and the intervention operator modifies unsafe acceleration commands. The resulting loop can be audited through progress-safety diagnostics.
+
+We study this idea through GuardShield-Runtime. The framework separates three variants: Guard, which applies action-side intervention without continuous risk reward; Shield, which isolates the same execution-side operator as a no-risk-reward shield baseline; and Gated-risk, which activates risk shaping only when motion or route progress indicates an active control state. Artifact controls include Risk-only and No-action guard, and external baselines include PPO-Lagrangian and a TTC/RSS-style filter. The claim is deliberately bounded: GuardShield-Runtime is a simulator-level runtime feedback and diagnostic framework, not a proof-producing safety shield or vehicle-grade real-time controller.
+
+This paper makes four contributions. First, it identifies stationary safety as a closed-loop evaluation artifact in dense-traffic safe reinforcement learning: a policy may reduce measured cost by avoiding motion rather than by regulating risk while completing the route. Second, it proposes GuardShield-Runtime, a simulator-level runtime feedback framework that couples a learned policy with TTC- and speed-aware monitoring, bounded acceleration intervention, and auditable intervention logging. Third, it introduces an artifact-aware diagnostic protocol that reports cost jointly with route completion, stop ratio, low-progress episodes, TTC-danger fraction, intervention frequency, and loop timing. Fourth, it evaluates the framework with artifact controls, external baselines, same-checkpoint runtime ablations, density stress, sensitivity sweeps, confidence intervals, seed-level summaries, and runtime diagnostics, while explicitly limiting the claim to simulator-level evidence.
+
+\section{Related Work}\label{sec_related_work}
+
+\subsection{Safe reinforcement learning and constrained policy optimization}
+Safe reinforcement learning seeks to optimize task reward while limiting unsafe outcomes \citep{garcia2015safe,amodei2016concrete,leike2017ai}. Constrained Markov decision processes, Constrained Policy Optimization, and related Lagrangian approaches formalize this idea by treating safety cost as a constraint or penalty during learning \citep{altman1999constrained,achiam2017constrained,tessler2018reward}. Other approaches use Lyapunov arguments, model-based stability conditions, or safety critics to restrict exploration \citep{berkenkamp2017safe,chow2018lyapunov,dalal2018safe}. These methods are important, but simulator evidence can be ambiguous when low cost is achieved by not moving. The non-motion artifact is related to reward hacking and specification gaming, where optimizing a proxy objective yields behavior that satisfies the measured signal without satisfying the intended task \citep{amodei2016concrete,pan2022reward,skalse2022defining}. Our study therefore treats cost as one diagnostic signal rather than the sole definition of safe driving.
+
+\subsection{Runtime shielding, safety filters, and vehicle rules}
+Runtime shielding modifies actions online when a monitored condition is violated \citep{alshiekh2018shielding,saunders2018trial}. This idea is also related to runtime-assurance and Simplex-style architectures, where an advanced controller is supervised by a simpler safety channel \citep{seto1998simplex}. In driving, rule-based safety models such as RSS provide interpretable distance or TTC-style constraints \citep{shalev2017rss}, while control barrier functions and reachability methods offer formal languages for safety filtering \citep{ames2019control,fisac2019bridging}. GuardShield-Runtime is related to this runtime family, but its evidence boundary is different. We do not claim a formal invariant set or certified safe controller. The focus is measurable runtime feedback intervention and artifact-aware evaluation in a closed-loop simulator.
+
+\subsection{Cybernetic feedback and system--environment interaction}
+Cybernetics emphasizes regulation through sensing, feedback, and action \citep{wiener1948cybernetics,astrom2008feedback}. Reinforcement learning also operates through an action--environment--observation loop, but the learned objective need not align with the desired closed-loop behavior. In our setting, the runtime monitor acts as a feedback sensor, the intervention operator acts as a bounded actuator, and progress-safety metrics act as diagnostic outputs. This framing is useful because it makes the central failure observable: a policy may reduce cost by changing the closed-loop interaction from driving to stationary avoidance.
+
+\subsection{Closed-loop autonomous-driving simulation}
+Driving simulators support repeatable evaluation of policy learning, planning, and control \citep{todorov2012mujoco,dosovitskiy2017carla,li2022metadrive}. Deep RL has been explored for autonomous-driving control and decision making \citep{sallab2017deep,kendall2019learning,grigorescu2020survey,kiran2021deep,kuutti2021survey}, but evaluation remains sensitive to scenario design, reward scale, baseline choice, random seed, and safety-case interpretation \citep{koopman2017autonomous,henderson2018deep,ray2019benchmarking}. Recent benchmark suites such as Safety-Gymnasium and SafeBench further show the need for standardized safety tasks, scenario coverage, and diagnostic metrics \citep{ji2023safetygymnasium,xu2022safebench}. MetaDrive is useful here because it provides compositional traffic scenarios and route-completion diagnostics \citep{li2022metadrive}. We use it not to claim real-world safety, but to expose whether runtime intervention preserves progress under dense closed-loop interaction.
+
+\subsection{Positioning of this work}
+GuardShield-Runtime sits between training-time safe RL and formal runtime certification. Unlike reward-only risk shaping, it modifies the action before execution and logs each intervention. Unlike RSS or CBF-style formal filters, it is not presented as a proof of safety. Its role is to demonstrate, through diagnostics, that runtime feedback intervention can mitigate a non-motion artifact that cost-only safe-RL evaluation would otherwise hide. The contribution is therefore not a new formal safety certificate, but a diagnostic feedback architecture that makes proxy-objective failure observable under closed-loop driving evaluation. The closest prior mechanisms are therefore TTC/RSS-style runtime filters, shielding/RTA architectures, and reward-misspecification analyses; the present distinction is the combined focus on action-side feedback, motion-gated risk shaping, and artifact-aware progress diagnostics under the same simulator protocol.
+
+\section{GuardShield-Runtime Framework}\label{sec_method}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig1_cybernetic_feedback_architecture.pdf}
+\caption{Closed-loop GuardShield-Runtime architecture. The learned PPO backbone proposes an action, the runtime monitor observes TTC, speed, route, and lane signals before execution, the intervention operator bounds unsafe acceleration, and the MetaDrive environment returns the next observation and diagnostic feedback.}
+\label{fig_architecture}
+\end{figure}
+
+\subsection{Problem setting and runtime signals}\label{sec_problem_signals}
+Let $o_t$ denote the simulator observation and let the learned policy propose a continuous action $a_t^\pi=(\delta_t,u_t)$, where $\delta_t$ is steering and $u_t$ is acceleration or braking. GuardShield-Runtime inserts an intervention operator $\mathcal{I}_\theta$ between policy output and environment execution:
+\begin{equation}
+a_t^{\mathrm{exec}}=\mathcal{I}_\theta(o_t,a_t^\pi),
+\end{equation}
+\begin{equation}
+o_{t+1}\sim P(\cdot\mid o_t,a_t^{\mathrm{exec}}).
+\end{equation}
+The controller uses wrapper-level feedback signals available during closed-loop simulation: speed $v_t$, lane deviation $d_t^{\mathrm{lane}}$, route-progress increment $\Delta p_t$, a forward TTC estimate, intervention events, and wall-clock loop timing. Table~\ref{tab_runtime_signals} defines how these signals enter the monitor and how they are logged. This keeps the intervention observable and auditable rather than dependent on route identifiers or hidden simulator truth.
+
+\input{table_runtime_signals_pub.tex}
+
+\subsection{Learning backbone and reward variants}\label{sec_learning_backbone}
+The learned controller is a PPO policy $\pi_\phi(o_t)$ with the native MetaDrive observation and a two-dimensional continuous action $(\delta_t,u_t)$ for steering and acceleration/braking. MetaDrive supplies the task reward and termination signals; the risk-aware wrappers optionally replace the step reward with a shaped objective. When risk reward is enabled, the shaped reward scales the task reward and subtracts an event penalty for nonzero cost together with continuous penalties for TTC risk, lane deviation, action variation, and overspeed. It then adds route-progress reward, idle penalty, success bonus, crash penalty, and out-of-road penalty according to the variant configuration.
+
+The Risk-only and No-action-guard controls keep the risk-oriented reward but disable execution-side action modification. Guard and Shield use the same TTC-plus-speed runtime operator without continuous risk reward, with Guard trained under the curriculum schedule and Shield trained without curriculum. Gated-risk uses the same runtime operator and activates the continuous risk penalty only when the ego vehicle is moving or making route progress and a risk signal is present:
+\[
+\mathrm{moving}_t=\mathbf{1}[v_t\geq 3\ \mathrm{km/h}\ \lor\ \Delta p_t>10^{-4}],
+\]
+\[
+\mathrm{risk}_t=\mathbf{1}[\mathrm{TTC\mbox{-}risk}_t\geq0.01\ \lor\ d_t^{\mathrm{lane}}\geq0.25\ \lor\ \mathrm{overspeed}_t>0].
+\]
+Thus $c_t^{\mathrm{risk}}$ is a continuous risk penalty gated by $\mathrm{moving}_t\land\mathrm{risk}_t$, while the simulator event cost remains logged as the binary episode-level safety outcome. The curriculum changes only the training density, map complexity, accident probability, and horizon schedule; it does not change the runtime intervention operator used in diagnostic evaluation.
+
+\subsection{Failure mode: non-motion artifact}\label{sec_nonmotion_method}
+The key failure mode is stationary safety. If a risk penalty or cost objective rewards the absence of collision without requiring route progress, the learned policy can reduce measured cost by slowing or stopping. This is not merely a reporting inconvenience: it changes the interpretation of a safe-RL result. A method with low cost, near-zero route completion, and high stop ratio should not be described as safe driving. For that reason, every main result reports cost together with success, route completion, low-progress rate, stop ratio, TTC-danger fraction, and intervention rate.
+
+\subsection{Runtime monitor}\label{sec_ttc_monitor}
+The runtime monitor estimates a conservative forward TTC signal from nearby traffic. For a forward vehicle $i$ with distance $d_i(t)$ and relative closing speed $v_{\mathrm{ego}}(t)-v_i(t)$, the monitored TTC is
+\begin{equation}
+\mathrm{TTC}_t=\min_i \frac{d_i(t)}{\max(\epsilon, v_{\mathrm{ego}}(t)-v_i(t))},
+\end{equation}
+with a small $\epsilon$ preventing division by zero. If no forward vehicle is available, or if the relative velocity does not indicate closing, the monitor assigns a non-dangerous default TTC state rather than inventing a collision risk. Hard, soft, and clear states are determined by thresholds $\tau_{\mathrm{hard}}$ and $\tau_{\mathrm{soft}}$; the sensitivity experiment later varies the TTC threshold independently from the core run. A dangerous step is counted when the monitored TTC is below the dangerous threshold used by the diagnostic logger.
+
+\subsection{Intervention operator}\label{sec_guard_operator}
+The intervention operator preserves steering unless the wrapper already limits it, and it bounds the acceleration command according to TTC and speed feedback:
+\begin{equation}
+u_t^{\mathrm{guard}}=
+\begin{cases}
+u_{\mathrm{hard}}, & \mathrm{TTC}_t<\tau_{\mathrm{hard}},\\
+\min(u_t^\pi,u_{\mathrm{soft}}), & \tau_{\mathrm{hard}}\leq \mathrm{TTC}_t<\tau_{\mathrm{soft}},\\
+u_t^\pi, & \mathrm{otherwise}.
+\end{cases}
+\end{equation}
+A speed guard then limits acceleration when the ego speed is above the target-speed band:
+\begin{equation}
+u_t^{\mathrm{exec}}=\min\{u_t^{\mathrm{guard}}, u_{\mathrm{speed}}(v_t)\}.
+\end{equation}
+The operator is per-step and memoryless in the reported implementation. It does not optimize a trajectory or certify future safety; it enforces a bounded action before the simulator step and logs whether the action was changed. Intervention frequency is therefore reported as Int./100 control steps. A high value is not automatically better or worse: it indicates how often the runtime controller had to override the proposed action.
+
+\subsection{Relation to TTC/RSS filtering and diagnostic scope}\label{sec_not_only_ttc}
+GuardShield-Runtime is close to TTC/RSS-style runtime filtering in the sense that both act before environment execution. The distinction is diagnostic and architectural rather than formal-certification based. The external RSS/TTC comparator is a single rule-based runtime filter driven by distance or TTC thresholds. GuardShield-Runtime instead treats the intervention as one component of a closed-loop evidence system: TTC danger, stop ratio, low-progress episodes, route completion, intervention frequency, and loop timing are reported together so that a lower cost cannot be mistaken for useful driving when progress collapses.
+
+The Gated-risk variant also addresses a reward-side failure mode that a pure execution filter does not target. Its risk reward is active only when speed or route progress indicates an active control state, which is intended to reduce stationary exploitation of a risk objective. The novelty claim is therefore not that the TTC cap is a certified safety rule. It is that runtime action intervention and artifact-aware diagnostics jointly expose whether dense-traffic safe-RL evidence reflects progress-preserving feedback regulation or conservative execution filtering alone.
+
+\subsection{Variant definitions}\label{sec_variants}
+Table~\ref{tab_compared_methods} separates the policy backbone, risk reward, action-side runtime intervention, speed guard, and progress gate. \textbf{Risk-only} uses risk reward without action intervention and is included to test the non-motion artifact. \textbf{No-action guard} disables execution-side action modification while retaining the risk-oriented objective, testing whether reward shaping alone can recover safety. \textbf{Guard} applies the action-side intervention without continuous risk reward. \textbf{Shield} isolates execution-side intervention as a non-risk-reward control. \textbf{Gated-risk} combines action intervention with risk reward that is active only when the ego vehicle is moving or making route progress:
+\begin{equation}
+g_t=\mathbf{1}\left[(v_t>v_{\min}\ \lor\ \Delta p_t>p_{\min})\land \mathrm{risk}_t=1\right],
+\end{equation}
+\begin{equation}
+r_t=r_t^{\mathrm{task}}-\lambda g_t c_t^{\mathrm{risk}}.
+\end{equation}
+This gate is designed to reduce stationary exploitation of a continuous risk penalty. If the agent stops, the risk penalty is no longer allowed to masquerade as safe progress.
+
+\input{table_compared_methods_pub.tex}
+
+\subsection{Algorithmic summary}\label{sec_algorithm}
+\begin{algorithm}[H]
+\footnotesize
+\caption{GuardShield-Runtime closed-loop execution}
+\label{alg_runtime}
+\begin{algorithmic}[1]
+\Require Learned policy $\pi_\phi$, monitor thresholds $\theta$, MetaDrive environment
+\For{each control step $t$ until termination}
+\State Observe $o_t$ and wrapper signals $v_t$, $\Delta p_t$, lane state, and nearby traffic.
+\State Query the learned policy for $a_t^\pi=(\delta_t,u_t)$.
+\State Estimate $\mathrm{TTC}_t$ and classify the risk state as hard, soft, or clear.
+\State Apply $\mathcal{I}_\theta(o_t,a_t^\pi)$ to obtain $a_t^{\mathrm{exec}}$.
+\State Execute $a_t^{\mathrm{exec}}$ in the simulator.
+\State Log cost, route, stop, low-progress, TTC-danger, intervention, and loop-time diagnostics.
+\EndFor
+\State Aggregate diagnostics by episode, training seed, traffic density, and sensitivity setting.
+\end{algorithmic}
+\end{algorithm}
+
+\section{Experimental Protocol}\label{sec_experimental_protocol}
+
+\subsection{Environment and task}\label{sec_environment_task}
+All experiments use MetaDrive dense-traffic closed-loop driving simulation. The agent receives continuous control commands and is evaluated by route progress, task success, collision or off-road cost, stop ratio, low-progress rate, speed, TTC-danger fraction, intervention frequency, and wall-clock simulation-loop timing. Success is the simulator episode-success flag for completing the driving task without terminal failure. Cost is reported as the percentage of episodes with a nonzero safety-cost event, dominated by collision or out-of-road termination in this protocol. Traffic density is the MetaDrive \texttt{traffic\_density} setting controlling background-traffic generation; the main density is 0.15, and density stress additionally evaluates 0.08, 0.20, and 0.25. Formal diagnostic episodes terminate on simulator success, simulator failure, or the fixed 1500-step horizon used by the reported checkpoints.
+
+\subsection{Compared methods}\label{sec_compared_methods}
+The compared rows are listed in Table~\ref{tab_compared_methods}. The unshielded PPO row is reported as \emph{PPO backbone} because it is the policy backbone and lower-bound comparator for runtime intervention. The PPO-Lagrangian row is a tested training-time constrained baseline under the same environment family and seed protocol; its zero-success result is reported as a protocol outcome, not as a universal claim about all constrained RL implementations. The RSS/TTC filter is a meaningful external runtime comparator because it also modifies behavior through an interpretable distance or TTC rule.
+
+\subsection{Training protocol and checkpoint selection}\label{sec_training_protocol}
+Training and ordinary evaluation use 16 parallel environments. The formal rows in the model manifest use one million training timesteps per seed, horizon 1500, and \texttt{ent\_coef}=0.01 for the reported PPO-family checkpoints. Each density-0.15 table aggregates three independently trained seeds. The default target speed for the proposed runtime variants is 18 km/h, and the stored reward/action-guard TTC threshold for the formal configuration is 12.0. The external RSS/TTC comparator is parameterized separately with soft and hard TTC thresholds of 6.0 s and 3.5 s and a 20 km/h target speed. The checkpoint selection is fixed before diagnostic evaluation so that post-hoc filtering is not used to select favourable episodes. Full PPO, PPO-Lagrangian, RSS/TTC, and runtime-variant hyperparameters are listed in Appendix~\ref{app_manifest}, with run-level configuration files retained in the supplementary package.
+
+\subsection{Diagnostic evaluation protocol}\label{sec_eval_protocol}
+The diagnostic evaluations are launched as per-seed shards so that episode-level TTC, speed, stop, intervention, route, and latency statistics remain traceable. Each formal density-0.15 aggregate row uses 120 diagnostic episodes across three training seeds. Density stress applies the same diagnostic logic across four traffic densities. Sensitivity sweeps are independent diagnostic reruns and therefore should be interpreted as trend evidence rather than an exact reproduction of the core default row. Appendix~\ref{app_manifest} reports the detailed parameter and result-block provenance tables.
+
+\subsection{Statistical reporting}\label{sec_stats_protocol}
+Main tables report one decimal place for percent metrics. Appendix B reports Wilson intervals for binary outcomes and a seed-level mean/range summary for the density-0.15 comparison; the full bootstrap and per-seed CSVs remain in the supplementary package. These intervals are intended to document uncertainty in the simulator diagnostic protocol; they do not replace broader policy-family or real-world validation.
+
+\subsection{Supplementary artifacts}\label{sec_evidence_package}
+The supplementary package includes anonymized episode-level results, aggregate tables, plotting scripts, table-generation scripts, and configuration files required to reproduce the reported figures and tables.
+
+\section{Results}\label{sec_results}
+
+\subsection{Stationary safety artifact under cost-only evaluation}\label{sec_artifact}
+Low cost does not necessarily reflect useful safe driving. Figure~\ref{fig_core_evidence} and Table~\ref{tab_core_mechanism} show that Risk-only obtains 0.0\% cost at density 0.15, but it also has 0.9\% route completion, 100.0\% stop ratio, and 100.0\% low-progress episodes. The PPO backbone has the opposite failure mode: it moves quickly but has 100.0\% cost and 20.7\% route completion. The artifact is therefore a substantive evaluation issue rather than a reporting detail. It only becomes visible when motion and progress diagnostics are reported next to cost.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig2_core_artifact_evidence.pdf}
+\caption{Core artifact-aware evidence at density 0.15. (a) Cost and route completion separate stationary cost reduction from progress-preserving behavior. (b) The progress-safety frontier separates PPO backbone, Risk-only, reward-only control, and runtime intervention. (c) Low-progress rate exposes the non-motion artifact. (d) TTC danger and intervention frequency show how runtime variants regulate the closed loop.}
+\label{fig_core_evidence}
+\end{figure}
+
+\input{table_core_mechanism_pub.tex}
+
+The PPO backbone is not selected as an artificially weakened baseline. It is the fixed learned policy used by the runtime-filter rows and is reported as a lower-bound/backbone comparator. Its zero-success result reflects the dense diagnostic success criterion: the policy still moves, with 20.7\% route completion and 41.1 km/h mean speed at density 0.15, but frequent collision or out-of-road cost prevents successful completion. The same sanity check applies to the PPO-Lagrangian row. It has 22.1\% route completion and 39.4 km/h mean speed, but collision and out-road rates of 69.2\% and 30.8\% prevent progress-preserving success. Risk-only is different: it has no collision or out-road cost because it almost does not move.
+
+\begin{table}[!htbp]
+\centering
+\caption{Baseline sanity check at density 0.15. This table distinguishes failed-but-moving learned baselines from the stationary Risk-only artifact. PPO and PPO-Lagrangian have nontrivial speed and route progress but fail due to collision or out-road events, whereas Risk-only avoids cost by suppressing motion.}
+\label{tab_baseline_sanity}
+\footnotesize
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Baseline & Route & Speed & Collision & Out-road & Interpretation \\
+\midrule
+PPO backbone & 20.7 & 41.1 & 63.3 & 36.7 & moves with unsafe failures \\
+PPO-Lagrangian & 22.1 & 39.4 & 69.2 & 30.8 & moves with unsafe failures \\
+Risk-only & 0.9 & 0.0 & 0.0 & 0.0 & stops rather than drives \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab_baseline_sanity} is why the external RSS/TTC filter is included as a stronger runtime-filter comparator rather than relying only on PPO-family training baselines.
+
+\subsection{Same-checkpoint evidence for execution-side intervention}\label{sec_mechanism}
+Reward shaping alone does not explain the improvement. No-action guard retains the risk-oriented objective but disables execution-side action intervention; it remains at 100.0\% cost. Guard, Shield, and Gated-risk instead reduce cost to 18.3--20.8\% while preserving 85.7--86.9\% route completion. This comparison rules out the explanation that the improvement comes only from adding a risk-oriented objective. The decisive difference is whether the proposed acceleration is bounded before execution.
+
+Table~\ref{tab_clean_runtime_ablation} removes the main training-context confound by applying runtime operators to the same frozen PPO-backbone checkpoints. TTC-only and speed-only interventions both improved the backbone, but neither single operator matched the combined intervention. The TTC cap reduced TTC-danger from 58.2\% to 10.5\% but retained 65.0\% cost and 56.3\% route completion. The speed guard raised route completion to 66.2\% but left TTC-danger at 32.7\% and cost at 65.0\%. Combining TTC and speed guards reduced cost to 20.8\%, preserved 85.3\% route completion, and reduced low-progress episodes to 1.7\%. The mechanism is therefore not explained by a single speed limit or a single TTC cap; the two feedback signals act together.
+
+\input{table_clean_runtime_ablation_pub.tex}
+
+Guard and Shield share the same execution-side operator but differ in training context, so they should be read as runtime deployment variants rather than a clean single-factor ablation. We therefore use Guard, Shield, and Gated-risk as a family-level intervention group rather than as a strict ranking among three independently controlled ablations. The high intervention rate also clarifies the evidence boundary. The improvement should not be interpreted as a learned policy that has fully internalized safe behavior. Rather, it shows that execution-side feedback can mitigate frequent unsafe acceleration proposals from the learned backbone under the reported simulator protocol.
+
+\subsection{Comparison with runtime and constrained-RL baselines}\label{sec_external}
+Table~\ref{tab_external_baseline} and Fig.~\ref{fig_external} show that the TTC/RSS-style filter is meaningful: it improves success to 53.3\% and reduces cost to 44.2\% relative to the PPO backbone. This improvement makes RSS/TTC a meaningful comparator. However, Guard, Shield, and Gated-risk reduce cost further, to 18.3--20.8\%, while preserving approximately 86\% route completion. RSS/TTC also has a similar intervention frequency to the proposed variants, 71.7 interventions per 100 steps versus 67.9--70.8, so the remaining gap is not simply caused by intervening more often. The RSS/TTC comparator uses its own interpretable threshold configuration, with soft/hard TTC thresholds of 6.0 s and 3.5 s and a target speed of 20 km/h, rather than an optimized sweep over the proposed framework's threshold. It should therefore be read as a meaningful runtime-filter comparator, not as a tuned upper bound on rule-based filtering.
+
+In this implementation and diagnostic setting, the PPO-Lagrangian row did not recover progress-preserving safety. Its cost limit, Lagrangian initialization, and update settings are reported in Appendix~\ref{app_manifest}; the evaluated policy was not stationary, with 22.1\% route completion and 39.4 km/h mean speed, but it failed through collision and out-road events. We therefore treat it as a protocol-specific constrained-baseline outcome rather than as a general statement about training-time constrained RL.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig3_external_baselines.pdf}
+\caption{External baseline comparison at density 0.15. Higher success and route completion are better, whereas lower cost is better. The TTC/RSS-style runtime filter improves over the PPO backbone but retains higher cost and a weaker progress-safety trade-off than the proposed runtime variants in this protocol.}
+\label{fig_external}
+\end{figure}
+
+\input{table_external_baseline_pub.tex}
+
+\subsection{Density stress and operating envelope}\label{sec_density}
+Density stress exposes an operating envelope rather than a universal safety guarantee. At density 0.08, runtime variants achieve high success and low cost; at density 0.25, success drops and cost rises. Fig.~\ref{fig_density} reports fixed-variant trends across traffic densities, while Appendix~\ref{app_density} reports the full density diagnostics and compact operating-envelope summary. Runtime variants consistently improve the progress-safety trade-off over PPO, but all variants degrade at density 0.25, indicating a bounded operating envelope. The degradation at high density is important evidence because it prevents an overbroad claim.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig4_density_stress.pdf}
+\caption{Traffic-density stress test. Runtime variants preserve progress-safety better than the PPO backbone at the tested densities, but the highest density remains difficult.}
+\label{fig_density}
+\end{figure}
+
+\subsection{Threshold sensitivity}\label{sec_sensitivity}
+The TTC-threshold sweep in Fig.~\ref{fig_ttc_sensitivity} tests whether the main result depends on a single fixed threshold. Conservative thresholds can reduce cost but also change route completion and intervention frequency, which is expected for a runtime controller. The sensitivity rows are independent diagnostic reruns, not duplicates of the Table~\ref{tab_core_mechanism} default run; even a row with the same nominal threshold should therefore be read as trend evidence rather than as an exact numerical repeat. The target-speed sweep is reported in Appendix~\ref{app_sensitivity_runtime} as a secondary sensitivity result.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig5_ttc_threshold_sensitivity.pdf}
+\caption{TTC-threshold sensitivity at density 0.15. Heatmaps report success, cost, and route completion for Guard, Shield, and Gated-risk. The heatmap is an independent rerun; the TTC=12 cell is a same-nominal configuration but not the stored core-evaluation row in Table~\ref{tab_core_mechanism}. The sweep shows threshold-dependent trade-offs rather than a single universally optimal setting.}
+\label{fig_ttc_sensitivity}
+\end{figure}
+
+\subsection{Simulation-loop timing diagnostics}\label{sec_runtime_overhead}
+Figure~\ref{fig_runtime_overhead} reports policy inference p95, full control-loop p95, and intervention frequency across traffic densities. The p95 loop time can be lower or higher than the PPO backbone because episode length, density, and intervention frequency alter the simulator workload; it should not be interpreted as a pure microbenchmark of the guard computation. These measurements are Python simulation-loop diagnostics, not vehicle-grade real-time certification. Appendix~\ref{app_sensitivity_runtime} provides the compact p95 runtime summary, while full per-seed timing remains in supplementary CSV form.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig6_simulation_loop_overhead.pdf}
+\caption{Simulation-loop wall-clock diagnostics, not vehicle-grade real-time certification. The panels separate policy inference p95, full control-loop p95, and intervention frequency across traffic densities.}
+\label{fig_runtime_overhead}
+\end{figure}
+
+\section{Discussion}\label{sec_discussion}
+
+The central finding is that cost-only safe-RL evaluation can be misleading in dense driving simulation. Risk-only appears safe under collision-oriented cost but is not a useful driving policy because it nearly stops. GuardShield-Runtime changes the closed-loop behavior by moving part of safety regulation from reward optimization to runtime feedback intervention, where unsafe acceleration commands can be bounded before execution and each intervention can be logged.
+
+\subsection{Cybernetic interpretation}\label{sec_discussion_cybernetic}
+The result can be read as a feedback-regulation problem. The runtime monitor serves as the sensor, the intervention operator serves as the actuator, the simulator response supplies feedback, and progress-safety diagnostics are the closed-loop outputs. Under this interpretation, the Risk-only failure is not simply a weak baseline. It is a degenerate feedback loop in which the policy reduces measured cost by avoiding interaction rather than regulating risk while making progress.
+
+\begin{table}[!htbp]
+\centering
+\caption{Cybernetic role mapping for GuardShield-Runtime.}
+\label{tab_cybernetic_mapping}
+\footnotesize
+\setlength{\tabcolsep}{5.0pt}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Cybernetic role & GuardShield-Runtime component \\
+\midrule
+Sensor & TTC, speed, route-progress, and lane-state monitor \\
+Actuator & Bounded acceleration intervention \\
+Plant/environment & MetaDrive dense-traffic simulator \\
+Controller & Learned PPO policy plus runtime operator \\
+Feedback output & Cost, route, stop, TTC-danger, intervention, and loop timing diagnostics \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This cybernetic view also clarifies the role of the runtime variants. Guard and Shield alter the action before environment execution, so the feedback loop is changed at the actuator side. Gated-risk changes both the actuator side and the reward side, but only when motion or route progress indicates an active control state. The evidence therefore supports a bounded mechanism claim: simulator-level feedback intervention can prevent a cost-only objective from being mistaken for progress-preserving safety.
+
+\subsection{What the evidence supports}\label{sec_discussion_evidence}
+Table~\ref{tab_claim_evidence} summarizes the evidence boundary. The supported claims concern artifact diagnosis and simulator-level runtime intervention. The bounded claims concern density stress and runtime overhead. The method should be interpreted as a family of runtime feedback interventions, not as a single universally dominant controller. The fixed-variant density curves and sensitivity sweeps are therefore part of the main evidence rather than hidden in supplementary files.
+
+\input{table_claim_evidence_pub.tex}
+
+\subsection{Intervention burden and operating envelope}\label{sec_intervention_burden}
+The runtime variants intervene in a large fraction of steps: approximately 68--71 interventions per 100 steps at density 0.15 and more than 80 interventions per 100 steps for the best low-density rows. This should not be interpreted as an ideal deployment property. It indicates that the learned backbone frequently proposes acceleration commands that the monitor regards as unsafe under dense traffic. The present contribution is therefore runtime feedback mitigation and diagnostic exposure, not an autonomous policy that has internalized the shield.
+
+The operating envelope is likewise bounded. Density stress shows that the runtime family remains useful at moderate density but degrades under the highest tested density. Sensitivity sweeps show that TTC threshold and target speed alter the balance among cost, route completion, and intervention frequency. Qualitative rollout traces in Appendix~\ref{app_failure_rollouts} illustrate the corresponding failure modes at density 0.15 and 0.25. These results argue for future training that reduces intervention burden by helping the learned policy internalize guard-compatible behavior, rather than treating high intervention frequency as a finished control solution.
+
+\subsection{Limitations and threats to validity}\label{sec_limitations}
+Internal validity is limited by the Guard/Shield training-context confound: they share the execution-side operator but are not a strict same-policy ablation. The same-checkpoint runtime ablation in Table~\ref{tab_clean_runtime_ablation} mitigates this concern for the execution operator, but it does not make the separately trained Guard, Shield, and Gated-risk policies into a strict single-policy ranking. Construct validity is limited by heuristic TTC thresholds and by simulator definitions of success, cost, low-progress, and TTC danger. External validity is limited because all evidence comes from MetaDrive simulation rather than real vehicles or hardware-in-the-loop control. Statistical validity is limited by three independently trained seeds; Appendix~\ref{app_ci} reports episode-level intervals and seed ranges, but these do not replace larger training-seed replication. Runtime validity is limited because wall-clock measurements are Python simulation-loop timings rather than embedded real-time guarantees. The tested PPO-Lagrangian result is a baseline under this implementation and protocol, not a claim that all constrained RL methods fail. The step-level rollout visualizations are qualitative single-scenario diagnostics and should be read as failure-mode illustrations rather than aggregate evidence.
+
+\section{Conclusion}\label{sec_conclusion}
+
+This paper studied progress-preserving safe reinforcement learning in dense simulated traffic as a closed-loop feedback problem. The main finding is that cost-only evaluation can be misleading: a Risk-only policy can achieve zero measured cost by suppressing motion, rather than by completing the driving task safely. GuardShield-Runtime addresses this artifact by coupling a learned policy with runtime risk monitoring, bounded acceleration intervention, and progress-safety diagnostics. Across MetaDrive evaluations, runtime-intervention variants reduced cost while preserving route progress, and a same-checkpoint ablation showed that TTC and speed feedback are complementary rather than redundant. The evidence remains bounded to simulation and does not establish formal safety certification or real-world vehicle validity. The broader implication is that safe reinforcement learning for dense traffic should be evaluated as monitored feedback regulation, where cost, progress, intervention burden, and closed-loop behavior are interpreted jointly.
+
+\backmatter
+
+\bmhead{Supplementary information}
+The supplementary package includes anonymized episode-level results, aggregate tables, plotting scripts, table-generation scripts, and configuration files required to reproduce the reported figures and tables.
+
+\section*{Declarations}
+
+\bmhead{Funding}
+The authors received no specific funding for this work.
+
+\bmhead{Competing interests}
+The authors declare no competing interests.
+
+\bmhead{Ethics approval and consent to participate}
+Not applicable. The study uses closed-loop driving simulation and does not involve human participants, human tissue, or animals.
+
+\bmhead{Consent for publication}
+Not applicable.
+
+\bmhead{Data availability}
+The anonymized submission package contains the raw episode CSVs, summary tables, generated publication figures, and source tables needed to reproduce the manuscript results.
+
+\bmhead{Code availability}
+The anonymized submission package contains the training, evaluation, diagnostic, table-generation, and figure-generation code used for the reported simulator study.
+
+\bmhead{Use of AI-assisted tools}
+AI-assisted tools were used only for language polishing and editorial organization. All technical content, experiments, code, and claims were verified by the authors.
+
+\bmhead{Author contribution}
+Author contributions are omitted for anonymous review and will be provided in the final version.
+
+\begin{appendices}
+\renewcommand{\theHtable}{appendix.\thesection.\arabic{table}}
+\renewcommand{\theHfigure}{appendix.\thesection.\arabic{figure}}
+
+\section{Reproducibility and Evidence Map}\label{app_manifest}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+This appendix groups reproducibility material by the manuscript claim it supports. The printed tables give the evidence map, detailed parameters, and result-block provenance; full episode-level files and table-ready aggregates are retained in the supplementary package.
+
+\input{table_manifest_pub.tex}
+\input{table_parameter_defaults_pub.tex}
+\input{table_result_block_provenance_pub.tex}
+
+\section{Statistical Reliability at Density 0.15}\label{app_ci}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+Appendix B reports episode-level uncertainty and seed variation for the density-0.15 diagnostic comparison. These intervals make the comparison auditable, but they do not replace larger training-seed replication. Wider Shield ranges support the family-level interpretation rather than a strict ranking among runtime variants.
+
+\input{table_ci_binary_pub.tex}
+\FloatBarrier
+\input{table_seed_range_pub.tex}
+\FloatBarrier
+
+\section{Training Dynamics}\label{app_training_dynamics}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+The formal checkpoints come from completed nenv16 training runs whose configuration and result-block provenance are reported in Appendix~\ref{app_manifest}. Training curves are retained in the supplementary CSV and run logs for auditability, but they are not used for checkpoint selection or for the main mechanism claim. The quantitative conclusions in the paper are based on frozen-checkpoint diagnostic evaluation, same-checkpoint runtime ablation, seed-level summaries, and density stress rather than visual inspection of training curves.
+\FloatBarrier
+
+\section{Full Density Operating-Envelope Diagnostics}\label{app_density}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+The main text summarizes fixed-variant density stress in Fig.~\ref{fig_density}. Table~\ref{tab_density_summary} gives a compact lowest-cost observed runtime summary at each density, and Table~\ref{tab_full_density} reports the full method-by-density diagnostics. These tables are included because the paper claims a bounded operating envelope, not universal safety.
+
+\input{table_density_summary_pub.tex}
+\input{table_density_operating_envelope_pub.tex}
+\FloatBarrier
+
+\section{Qualitative Failure-Case Rollouts}\label{app_failure_rollouts}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+Figures~\ref{fig_behavior_rollouts_d015} and \ref{fig_behavior_rollouts_d025} report deterministic single-scenario rollouts used only for failure-mode interpretation. The source files include per-step position, speed, lane deviation, TTC-risk, risk-gate, and intervention traces. These figures are not used for aggregate claims; the main density, ablation, and confidence-interval tables remain the quantitative evidence.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{figS2_behavior_rollouts_density_0p15.pdf}
+\caption{Qualitative behavior rollouts at traffic density 0.15. The figure illustrates stationary Risk-only behavior, high-speed failure without action intervention, and progress-preserving runtime-regulated behavior in a deterministic scenario.}
+\label{fig_behavior_rollouts_d015}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{figS3_behavior_rollouts_density_0p25.pdf}
+\caption{Qualitative behavior rollouts at traffic density 0.25. The high-density scenario illustrates the collision-dominated operating-envelope failure that remains despite runtime intervention.}
+\label{fig_behavior_rollouts_d025}
+\end{figure}
+\FloatBarrier
+
+\section{Sensitivity and Runtime Diagnostics}\label{app_sensitivity_runtime}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+This section reports secondary diagnostics that are useful for interpreting the controller but are not primary evidence for the main mechanism claim. The sensitivity results check whether the runtime variants depend on a single parameter choice. The runtime results report Python simulation-loop timing only; they are not embedded real-time guarantees.
+
+The target-speed sweep is included to check whether the runtime controller simply benefits from an arbitrary low-speed setting. The observed pattern shows a real progress-safety coupling: lower speed can reduce cost, while moderate speed often preserves success and route completion.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{figS1_target_speed_sensitivity.pdf}
+\caption{Target-speed sensitivity at density 0.15. The sweep is reported as secondary sensitivity evidence because the main text focuses on TTC-threshold behavior.}
+\label{fig_target_speed_sensitivity}
+\end{figure}
+
+\input{table_sensitivity_summary_pub.tex}
+\input{table_runtime_summary_pub.tex}
+\FloatBarrier
+
+\end{appendices}
+
+\begingroup
+\small
+\bibliography{references}
+\endgroup
+
+\end{document}

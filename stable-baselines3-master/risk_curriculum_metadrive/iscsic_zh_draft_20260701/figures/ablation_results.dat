@@ -1,0 +1,6 @@
+method success cost route
+NoGuard 0.000 1.000 0.172
+NoTTC 0.540 0.360 0.823
+NoLane 0.607 0.280 0.844
+NoSmooth 0.567 0.287 0.821
+Guard 0.633 0.207 0.868

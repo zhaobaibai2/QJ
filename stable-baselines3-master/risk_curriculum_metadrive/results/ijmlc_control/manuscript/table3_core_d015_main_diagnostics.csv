@@ -1,0 +1,7 @@
+method,episodes,train_seeds,success_pct,success_seed_std_pct,cost_pct,cost_seed_std_pct,route_completion_pct,route_seed_std_pct,low_progress_pct,stop_ratio_pct,mean_speed_kmh,ttc_dangerous_pct,interventions_per_100_steps,control_loop_p95_ms
+PPO,120,3,0.0,0.0,100.0,0.0,20.746,0.761,57.5,0.145,41.053,60.353,0.0,16.932
+Risk-only,120,3,0.0,0.0,0.0,0.0,0.899,0.0,100.0,100.0,0.013,0.0,0.0,6.148
+No-action guard,120,3,0.833,1.443,100.0,0.0,21.726,1.228,55.833,0.196,36.832,48.687,0.0,7.589
+Guard,120,3,59.167,1.443,20.833,8.036,86.382,0.782,0.0,2.449,15.802,11.818,69.646,13.31
+Shield,120,3,62.5,9.014,19.167,11.815,85.687,3.243,0.833,2.803,15.887,11.352,70.751,12.681
+Gated-risk,120,3,61.667,2.887,18.333,1.443,86.874,1.167,0.833,3.527,15.303,11.421,67.872,12.398

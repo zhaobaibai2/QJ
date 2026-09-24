@@ -1,0 +1,134 @@
+\begin{table}[!htbp]
+\centering
+\caption{Per-seed runtime diagnostics, part I: policy and loop timing.}
+\label{tab_runtime_by_seed}
+\tiny
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Policy and loop timing}\par
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Method & Density & Seed & Ep & Policy mean (ms) & Policy p95 (ms) & Loop mean (ms) & Loop p95 (ms) \\
+\midrule
+PPO backbone & 0.08 & 0 & 40 & 1.41 & 3.52 & 6.35 & 10.83 \\
+PPO backbone & 0.08 & 1 & 40 & 1.82 & 4.39 & 7.64 & 12.45 \\
+PPO backbone & 0.08 & 2 & 40 & 1.64 & 4.47 & 7.21 & 12.76 \\
+Guard & 0.08 & 0 & 40 & 1.32 & 3.66 & 6.86 & 14.08 \\
+Guard & 0.08 & 1 & 40 & 1.45 & 4.35 & 7.36 & 14.83 \\
+Guard & 0.08 & 2 & 40 & 1.37 & 4.05 & 7.07 & 13.70 \\
+Shield & 0.08 & 0 & 40 & 1.41 & 3.97 & 7.43 & 14.30 \\
+Shield & 0.08 & 1 & 40 & 1.35 & 4.03 & 7.03 & 14.39 \\
+Shield & 0.08 & 2 & 40 & 1.34 & 3.76 & 7.00 & 13.80 \\
+Gated-risk & 0.08 & 0 & 40 & 1.32 & 3.76 & 6.84 & 14.03 \\
+Gated-risk & 0.08 & 1 & 40 & 1.40 & 3.93 & 7.30 & 14.87 \\
+Gated-risk & 0.08 & 2 & 40 & 1.38 & 4.17 & 7.35 & 14.66 \\
+PPO backbone & 0.15 & 0 & 40 & 1.44 & 3.75 & 10.58 & 17.61 \\
+PPO backbone & 0.15 & 1 & 40 & 1.39 & 3.66 & 10.36 & 16.41 \\
+PPO backbone & 0.15 & 2 & 40 & 1.33 & 3.43 & 9.93 & 16.77 \\
+Guard & 0.15 & 0 & 40 & 0.88 & 1.54 & 8.27 & 12.74 \\
+Guard & 0.15 & 1 & 40 & 0.86 & 1.43 & 8.41 & 13.56 \\
+Guard & 0.15 & 2 & 40 & 0.84 & 1.39 & 8.44 & 13.62 \\
+Shield & 0.15 & 0 & 40 & 0.86 & 1.52 & 8.17 & 13.16 \\
+Shield & 0.15 & 1 & 40 & 0.82 & 1.31 & 7.84 & 12.33 \\
+Shield & 0.15 & 2 & 40 & 0.84 & 1.43 & 7.94 & 12.56 \\
+Gated-risk & 0.15 & 0 & 40 & 0.80 & 1.40 & 7.60 & 12.26 \\
+Gated-risk & 0.15 & 1 & 40 & 0.79 & 1.42 & 7.75 & 12.63 \\
+Gated-risk & 0.15 & 2 & 40 & 0.80 & 1.28 & 7.84 & 12.30 \\
+PPO backbone & 0.20 & 0 & 40 & 1.32 & 3.08 & 12.11 & 19.52 \\
+PPO backbone & 0.20 & 1 & 40 & 1.48 & 4.09 & 13.91 & 23.26 \\
+PPO backbone & 0.20 & 2 & 40 & 1.39 & 3.85 & 13.38 & 23.16 \\
+Guard & 0.20 & 0 & 40 & 1.02 & 1.70 & 13.48 & 20.53 \\
+Guard & 0.20 & 1 & 40 & 1.01 & 1.60 & 13.72 & 21.26 \\
+Guard & 0.20 & 2 & 40 & 0.98 & 1.49 & 13.51 & 20.34 \\
+Shield & 0.20 & 0 & 40 & 0.99 & 1.46 & 13.63 & 20.93 \\
+Shield & 0.20 & 1 & 40 & 1.01 & 1.72 & 13.91 & 21.42 \\
+Shield & 0.20 & 2 & 40 & 1.01 & 1.65 & 13.82 & 21.78 \\
+Gated-risk & 0.20 & 0 & 40 & 0.99 & 1.56 & 13.64 & 21.29 \\
+Gated-risk & 0.20 & 1 & 40 & 0.98 & 1.38 & 13.50 & 20.07 \\
+Gated-risk & 0.20 & 2 & 40 & 0.99 & 1.55 & 13.86 & 21.58 \\
+PPO backbone & 0.25 & 0 & 40 & 1.34 & 3.30 & 14.59 & 23.89 \\
+PPO backbone & 0.25 & 1 & 40 & 1.42 & 3.66 & 15.51 & 24.45 \\
+PPO backbone & 0.25 & 2 & 40 & 1.33 & 3.14 & 14.29 & 23.24 \\
+Guard & 0.25 & 0 & 40 & 0.84 & 1.05 & 13.93 & 18.17 \\
+Guard & 0.25 & 1 & 40 & 0.77 & 0.97 & 12.59 & 17.08 \\
+Guard & 0.25 & 2 & 40 & 0.78 & 1.00 & 13.13 & 18.07 \\
+Shield & 0.25 & 0 & 40 & 0.80 & 1.02 & 13.06 & 17.73 \\
+Shield & 0.25 & 1 & 40 & 0.77 & 0.98 & 12.72 & 17.09 \\
+Shield & 0.25 & 2 & 40 & 0.72 & 0.94 & 11.28 & 15.21 \\
+Gated-risk & 0.25 & 0 & 40 & 0.76 & 0.98 & 12.40 & 16.37 \\
+Gated-risk & 0.25 & 1 & 40 & 0.74 & 0.95 & 12.41 & 16.40 \\
+Gated-risk & 0.25 & 2 & 40 & 0.73 & 0.94 & 12.23 & 16.65 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: lower latency is preferred. Times are milliseconds. Artifact-only controls remain in the CSV package and are omitted here to keep the printed appendix readable.
+\end{tablenotes}
+\end{table}
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Per-seed runtime diagnostics, part II: total action latency.}
+\label{tab_runtime_by_seed_action}
+\tiny
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Total action latency}\par
+\begin{tabular}{@{}lllrr@{}}
+\toprule
+Method & Density & Seed & Action mean (ms) & Action p95 (ms) \\
+\midrule
+PPO backbone & 0.08 & 0 & 1.41 & 3.52 \\
+PPO backbone & 0.08 & 1 & 1.82 & 4.39 \\
+PPO backbone & 0.08 & 2 & 1.64 & 4.47 \\
+Guard & 0.08 & 0 & 1.32 & 3.66 \\
+Guard & 0.08 & 1 & 1.45 & 4.35 \\
+Guard & 0.08 & 2 & 1.37 & 4.05 \\
+Shield & 0.08 & 0 & 1.41 & 3.97 \\
+Shield & 0.08 & 1 & 1.35 & 4.03 \\
+Shield & 0.08 & 2 & 1.34 & 3.76 \\
+Gated-risk & 0.08 & 0 & 1.32 & 3.76 \\
+Gated-risk & 0.08 & 1 & 1.40 & 3.93 \\
+Gated-risk & 0.08 & 2 & 1.38 & 4.17 \\
+PPO backbone & 0.15 & 0 & 1.44 & 3.75 \\
+PPO backbone & 0.15 & 1 & 1.39 & 3.66 \\
+PPO backbone & 0.15 & 2 & 1.33 & 3.43 \\
+Guard & 0.15 & 0 & 0.88 & 1.54 \\
+Guard & 0.15 & 1 & 0.86 & 1.43 \\
+Guard & 0.15 & 2 & 0.84 & 1.39 \\
+Shield & 0.15 & 0 & 0.86 & 1.52 \\
+Shield & 0.15 & 1 & 0.82 & 1.31 \\
+Shield & 0.15 & 2 & 0.84 & 1.43 \\
+Gated-risk & 0.15 & 0 & 0.80 & 1.40 \\
+Gated-risk & 0.15 & 1 & 0.79 & 1.42 \\
+Gated-risk & 0.15 & 2 & 0.80 & 1.28 \\
+PPO backbone & 0.20 & 0 & 1.32 & 3.08 \\
+PPO backbone & 0.20 & 1 & 1.48 & 4.09 \\
+PPO backbone & 0.20 & 2 & 1.39 & 3.85 \\
+Guard & 0.20 & 0 & 1.02 & 1.70 \\
+Guard & 0.20 & 1 & 1.01 & 1.60 \\
+Guard & 0.20 & 2 & 0.98 & 1.49 \\
+Shield & 0.20 & 0 & 0.99 & 1.46 \\
+Shield & 0.20 & 1 & 1.01 & 1.72 \\
+Shield & 0.20 & 2 & 1.01 & 1.65 \\
+Gated-risk & 0.20 & 0 & 0.99 & 1.56 \\
+Gated-risk & 0.20 & 1 & 0.98 & 1.38 \\
+Gated-risk & 0.20 & 2 & 0.99 & 1.55 \\
+PPO backbone & 0.25 & 0 & 1.34 & 3.30 \\
+PPO backbone & 0.25 & 1 & 1.42 & 3.66 \\
+PPO backbone & 0.25 & 2 & 1.33 & 3.14 \\
+Guard & 0.25 & 0 & 0.84 & 1.05 \\
+Guard & 0.25 & 1 & 0.77 & 0.97 \\
+Guard & 0.25 & 2 & 0.78 & 1.00 \\
+Shield & 0.25 & 0 & 0.80 & 1.02 \\
+Shield & 0.25 & 1 & 0.77 & 0.98 \\
+Shield & 0.25 & 2 & 0.72 & 0.94 \\
+Gated-risk & 0.25 & 0 & 0.76 & 0.98 \\
+Gated-risk & 0.25 & 1 & 0.74 & 0.95 \\
+Gated-risk & 0.25 & 2 & 0.73 & 0.94 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: lower latency is preferred. This continuation reports total action-latency summaries for the same rows as Table~\ref{tab_runtime_by_seed}.
+\end{tablenotes}
+\end{table}

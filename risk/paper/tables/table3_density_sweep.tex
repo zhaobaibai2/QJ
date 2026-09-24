@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering
+\caption{Density sweep for competitive variants. The runtime guard and shield modes stay on the leading frontier from easy traffic to the formal held-out density. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:density}
+\scriptsize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+& \multicolumn{3}{c}{$d=0.00$} & \multicolumn{3}{c}{$d=0.08$} & \multicolumn{3}{c}{$d=0.15$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Variant & Succ. $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Succ. $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Succ. $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ \\
+\midrule
+Guard runtime & \second{97.3} & \best{0.0} & 0.990 & 87.3 & 9.3 & 0.940 & \best{63.3} & \best{20.7} & \second{0.868} \\
+Shield runtime & \best{99.3} & \best{0.0} & \best{0.992} & \best{91.3} & \best{6.7} & \second{0.959} & \second{62.7} & \second{22.7} & \best{0.871} \\
+Retuned full extension & 96.7 & \best{0.0} & \second{0.991} & \second{88.7} & \second{7.3} & 0.953 & 62.0 & 24.0 & 0.853 \\
+Full extension & \second{97.3} & \best{0.0} & 0.989 & 83.3 & 13.3 & 0.929 & 62.0 & 24.7 & 0.865 \\
+Gated-risk extension & 94.0 & \best{0.0} & 0.988 & 86.7 & 8.0 & \best{0.961} & 60.0 & 25.3 & 0.849 \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{1mm}
+\begin{minipage}{0.97\textwidth}\scriptsize Exact ties are marked together. Failure controls are not ranked here because they are diagnostic lower bounds rather than competitive density-sweep candidates.\end{minipage}
+\end{table*}

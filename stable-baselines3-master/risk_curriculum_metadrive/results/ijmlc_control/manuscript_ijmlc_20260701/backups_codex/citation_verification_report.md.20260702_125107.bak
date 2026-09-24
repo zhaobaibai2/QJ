@@ -1,0 +1,30 @@
+# Citation Verification Report
+
+generated_at: 2026-07-01T19:28:51.601847
+workflow: nature-academic-search citation verification, using T1/T2 public sources available through web lookup.
+
+## Summary
+- total references: 11
+- verified by primary scholarly source or canonical preprint page: 10
+- manually accepted canonical book: 1
+- mismatch: 0
+- not_found: 0
+- suspicious: 0
+
+## Detail
+| key | status | verification source | metadata action |
+|---|---|---|---|
+| wiener1948cybernetics | manual_verified_book | canonical MIT Press book metadata; no DOI expected | retained book entry |
+| garcia2015safe | verified | JMLR page `https://jmlr.org/papers/v16/garcia15a.html` | added JMLR URL; kept volume/pages |
+| achiam2017constrained | verified | PMLR page `https://proceedings.mlr.press/v70/achiam17a.html` | added PMLR volume/series/publisher/url |
+| tessler2018reward | verified | arXiv `https://arxiv.org/abs/1805.11074` | added arXiv eprint/url |
+| alshiekh2018shielding | verified | AAAI page `https://ojs.aaai.org/index.php/AAAI/article/view/11797` | added DOI, volume, pages, url |
+| ray2019benchmarking | verified | arXiv `https://arxiv.org/abs/1910.01708` | added arXiv eprint/url |
+| shalev2017rss | verified | arXiv `https://arxiv.org/abs/1708.06374` | added arXiv eprint/url |
+| ames2019control | verified | IEEE Xplore `https://ieeexplore.ieee.org/document/8796030` | added DOI/url/pages |
+| li2022metadrive | verified | arXiv page and DOI evidence `10.1109/TPAMI.2022.3190471` | retained six-author arXiv/TPAMI author list and added DOI/pages |
+| schulman2017ppo | verified | arXiv `https://arxiv.org/abs/1707.06347` | added arXiv eprint/url |
+| haarnoja2018soft | verified | PMLR page `https://proceedings.mlr.press/v80/haarnoja18b.html` | added PMLR volume/series/publisher/url |
+
+## Remaining caution
+The bibliography now compiles and has source-backed metadata. Before final journal submission, the author team can still choose to run a formal reference-manager export, but there are no known fabricated or unresolved entries in the current BibTeX.

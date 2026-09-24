@@ -1,0 +1,631 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{35}
+% BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
+\ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
+\ifx \binits  \undefined \def \binits#1{#1}\fi
+\ifx \bauthor  \undefined \def \bauthor#1{#1}\fi
+\ifx \batitle  \undefined \def \batitle#1{#1}\fi
+\ifx \bjtitle  \undefined \def \bjtitle#1{#1}\fi
+\ifx \bvolume  \undefined \def \bvolume#1{\textbf{#1}}\fi
+\ifx \byear  \undefined \def \byear#1{#1}\fi
+\ifx \bissue  \undefined \def \bissue#1{#1}\fi
+\ifx \bfpage  \undefined \def \bfpage#1{#1}\fi
+\ifx \blpage  \undefined \def \blpage #1{#1}\fi
+\ifx \burl  \undefined \def \burl#1{\textsf{#1}}\fi
+\ifx \doiurl  \undefined \def \doiurl#1{\url{https://doi.org/#1}}\fi
+\ifx \betal  \undefined \def \betal{\textit{et al.}}\fi
+\ifx \binstitute  \undefined \def \binstitute#1{#1}\fi
+\ifx \binstitutionaled  \undefined \def \binstitutionaled#1{#1}\fi
+\ifx \bctitle  \undefined \def \bctitle#1{#1}\fi
+\ifx \beditor  \undefined \def \beditor#1{#1}\fi
+\ifx \bpublisher  \undefined \def \bpublisher#1{#1}\fi
+\ifx \bbtitle  \undefined \def \bbtitle#1{#1}\fi
+\ifx \bedition  \undefined \def \bedition#1{#1}\fi
+\ifx \bseriesno  \undefined \def \bseriesno#1{#1}\fi
+\ifx \blocation  \undefined \def \blocation#1{#1}\fi
+\ifx \bsertitle  \undefined \def \bsertitle#1{#1}\fi
+\ifx \bsnm \undefined \def \bsnm#1{#1}\fi
+\ifx \bsuffix \undefined \def \bsuffix#1{#1}\fi
+\ifx \bparticle \undefined \def \bparticle#1{#1}\fi
+\ifx \barticle \undefined \def \barticle#1{#1}\fi
+\bibcommenthead
+\ifx \bconfdate \undefined \def \bconfdate #1{#1}\fi
+\ifx \botherref \undefined \def \botherref #1{#1}\fi
+\ifx \url \undefined \def \url#1{\textsf{#1}}\fi
+\ifx \bchapter \undefined \def \bchapter#1{#1}\fi
+\ifx \bbook \undefined \def \bbook#1{#1}\fi
+\ifx \bcomment \undefined \def \bcomment#1{#1}\fi
+\ifx \oauthor \undefined \def \oauthor#1{#1}\fi
+\ifx \citeauthoryear \undefined \def \citeauthoryear#1{#1}\fi
+\ifx \endbibitem  \undefined \def \endbibitem {}\fi
+\ifx \bconflocation  \undefined \def \bconflocation#1{#1}\fi
+\ifx \arxivurl  \undefined \def \arxivurl#1{\textsf{#1}}\fi
+\csname PreBibitemsHook\endcsname
+
+%%% 1
+\bibitem[\protect\citeauthoryear{Alshiekh et~al.}{2018}]{alshiekh2018shielding}
+\begin{bchapter}
+\bauthor{\bsnm{Alshiekh}, \binits{M.}},
+\bauthor{\bsnm{Bloem}, \binits{R.}},
+\bauthor{\bsnm{Ehlers}, \binits{R.}},
+\bauthor{\bsnm{K{\"o}nighofer}, \binits{B.}},
+\bauthor{\bsnm{Niekum}, \binits{S.}},
+\bauthor{\bsnm{Topcu}, \binits{U.}}:
+\bctitle{Safe reinforcement learning via shielding}.
+In: \bbtitle{Proceedings of the AAAI Conference on Artificial Intelligence},
+vol. \bseriesno{32},
+pp. \bfpage{2669}--\blpage{2678}
+(\byear{2018}).
+\doiurl{10.1609/aaai.v32i1.11797}
+\end{bchapter}
+\endbibitem
+
+%%% 2
+\bibitem[\protect\citeauthoryear{Ames et~al.}{2019}]{ames2019control}
+\begin{bchapter}
+\bauthor{\bsnm{Ames}, \binits{A.D.}},
+\bauthor{\bsnm{Coogan}, \binits{S.}},
+\bauthor{\bsnm{Egerstedt}, \binits{M.}},
+\bauthor{\bsnm{Notomista}, \binits{G.}},
+\bauthor{\bsnm{Sreenath}, \binits{K.}},
+\bauthor{\bsnm{Tabuada}, \binits{P.}}:
+\bctitle{Control barrier functions: Theory and applications}.
+In: \bbtitle{2019 18th European Control Conference},
+pp. \bfpage{3420}--\blpage{3431}
+(\byear{2019}).
+\doiurl{10.23919/ECC.2019.8796030}
+\end{bchapter}
+\endbibitem
+
+%%% 3
+\bibitem[\protect\citeauthoryear{Achiam et~al.}{2017}]{achiam2017constrained}
+\begin{bchapter}
+\bauthor{\bsnm{Achiam}, \binits{J.}},
+\bauthor{\bsnm{Held}, \binits{D.}},
+\bauthor{\bsnm{Tamar}, \binits{A.}},
+\bauthor{\bsnm{Abbeel}, \binits{P.}}:
+\bctitle{Constrained policy optimization}.
+In: \bbtitle{Proceedings of the 34th International Conference on Machine
+  Learning}.
+\bsertitle{Proceedings of Machine Learning Research},
+vol. \bseriesno{70},
+pp. \bfpage{22}--\blpage{31}.
+\bpublisher{PMLR},
+\blocation{Cambridge, MA}
+(\byear{2017}).
+\burl{https://proceedings.mlr.press/v70/achiam17a.html}
+\end{bchapter}
+\endbibitem
+
+%%% 4
+\bibitem[\protect\citeauthoryear{Altman}{2021}]{altman1999constrained}
+\begin{bbook}
+\bauthor{\bsnm{Altman}, \binits{E.}}:
+\bbtitle{Constrained Markov Decision Processes}.
+\bpublisher{CRC Press},
+\blocation{Boca Raton, FL}
+(\byear{2021}).
+\doiurl{10.1201/9781315140223}
+\end{bbook}
+\endbibitem
+
+%%% 5
+\bibitem[\protect\citeauthoryear{{\AA}str{\"o}m and
+  Murray}{2008}]{astrom2008feedback}
+\begin{bbook}
+\bauthor{\bsnm{{\AA}str{\"o}m}, \binits{K.J.}},
+\bauthor{\bsnm{Murray}, \binits{R.M.}}:
+\bbtitle{Feedback Systems: An Introduction for Scientists and Engineers}.
+\bpublisher{Princeton University Press},
+\blocation{Princeton, NJ}
+(\byear{2008}).
+\burl{https://fbsbook.org/}
+\end{bbook}
+\endbibitem
+
+%%% 6
+\bibitem[\protect\citeauthoryear{Amodei et~al.}{2016}]{amodei2016concrete}
+\begin{botherref}
+\oauthor{\bsnm{Amodei}, \binits{D.}},
+\oauthor{\bsnm{Olah}, \binits{C.}},
+\oauthor{\bsnm{Steinhardt}, \binits{J.}},
+\oauthor{\bsnm{Christiano}, \binits{P.}},
+\oauthor{\bsnm{Schulman}, \binits{J.}},
+\oauthor{\bsnm{Man{\'e}}, \binits{D.}}:
+Concrete problems in ai safety.
+arXiv preprint arXiv:1606.06565
+(2016)
+{\href{https://arxiv.org/abs/1606.06565}{{arXiv:1606.06565}}}
+\end{botherref}
+\endbibitem
+
+%%% 7
+\bibitem[\protect\citeauthoryear{Berkenkamp et~al.}{2017}]{berkenkamp2017safe}
+\begin{bchapter}
+\bauthor{\bsnm{Berkenkamp}, \binits{F.}},
+\bauthor{\bsnm{Turchetta}, \binits{M.}},
+\bauthor{\bsnm{Schoellig}, \binits{A.P.}},
+\bauthor{\bsnm{Krause}, \binits{A.}}:
+\bctitle{Safe model-based reinforcement learning with stability guarantees}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{30}
+(\byear{2017}).
+\burl{https://papers.nips.cc/paper/6692-safe-model-based-reinforcement-learning-with-stability-guarantees}
+\end{bchapter}
+\endbibitem
+
+%%% 8
+\bibitem[\protect\citeauthoryear{Chow et~al.}{2018}]{chow2018lyapunov}
+\begin{bchapter}
+\bauthor{\bsnm{Chow}, \binits{Y.}},
+\bauthor{\bsnm{Nachum}, \binits{O.}},
+\bauthor{\bsnm{Duenez-Guzman}, \binits{E.}},
+\bauthor{\bsnm{Ghavamzadeh}, \binits{M.}}:
+\bctitle{A lyapunov-based approach to safe reinforcement learning}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{31}
+(\byear{2018}).
+\burl{https://papers.nips.cc/paper/8032-a-lyapunov-based-approach-to-safe-reinforcement-learning}
+\end{bchapter}
+\endbibitem
+
+%%% 9
+\bibitem[\protect\citeauthoryear{Dalal et~al.}{2018}]{dalal2018safe}
+\begin{botherref}
+\oauthor{\bsnm{Dalal}, \binits{G.}},
+\oauthor{\bsnm{Dvijotham}, \binits{K.}},
+\oauthor{\bsnm{Vecerik}, \binits{M.}},
+\oauthor{\bsnm{Hester}, \binits{T.}},
+\oauthor{\bsnm{Paduraru}, \binits{C.}},
+\oauthor{\bsnm{Tassa}, \binits{Y.}}:
+Safe exploration in continuous action spaces.
+arXiv preprint arXiv:1801.08757
+(2018)
+{\href{https://arxiv.org/abs/1801.08757}{{arXiv:1801.08757}}}
+\end{botherref}
+\endbibitem
+
+%%% 10
+\bibitem[\protect\citeauthoryear{Dosovitskiy
+  et~al.}{2017}]{dosovitskiy2017carla}
+\begin{bchapter}
+\bauthor{\bsnm{Dosovitskiy}, \binits{A.}},
+\bauthor{\bsnm{Ros}, \binits{G.}},
+\bauthor{\bsnm{Codevilla}, \binits{F.}},
+\bauthor{\bsnm{Lopez}, \binits{A.}},
+\bauthor{\bsnm{Koltun}, \binits{V.}}:
+\bctitle{Carla: An open urban driving simulator}.
+In: \bbtitle{Proceedings of the 1st Annual Conference on Robot Learning}.
+\bsertitle{Proceedings of Machine Learning Research},
+vol. \bseriesno{78},
+pp. \bfpage{1}--\blpage{16}.
+\bpublisher{PMLR},
+\blocation{Cambridge, MA}
+(\byear{2017}).
+\burl{https://proceedings.mlr.press/v78/dosovitskiy17a.html}
+\end{bchapter}
+\endbibitem
+
+%%% 11
+\bibitem[\protect\citeauthoryear{Fisac et~al.}{2019}]{fisac2019bridging}
+\begin{bchapter}
+\bauthor{\bsnm{Fisac}, \binits{J.F.}},
+\bauthor{\bsnm{Akametalu}, \binits{A.K.}},
+\bauthor{\bsnm{Zeilinger}, \binits{M.N.}},
+\bauthor{\bsnm{Kaynama}, \binits{S.}},
+\bauthor{\bsnm{Gillula}, \binits{J.}},
+\bauthor{\bsnm{Tomlin}, \binits{C.J.}}:
+\bctitle{Bridging hamilton-jacobi safety analysis and reinforcement learning}.
+In: \bbtitle{2019 International Conference on Robotics and Automation},
+pp. \bfpage{8550}--\blpage{8556}
+(\byear{2019}).
+\doiurl{10.1109/ICRA.2019.8794107}
+\end{bchapter}
+\endbibitem
+
+%%% 12
+\bibitem[\protect\citeauthoryear{Feng et~al.}{2023}]{feng2023dense}
+\begin{barticle}
+\bauthor{\bsnm{Feng}, \binits{S.}},
+\bauthor{\bsnm{Sun}, \binits{H.}},
+\bauthor{\bsnm{Yan}, \binits{X.}},
+\bauthor{\bsnm{Zhu}, \binits{H.}},
+\bauthor{\bsnm{Zou}, \binits{Z.}},
+\bauthor{\bsnm{Shen}, \binits{S.}},
+\bauthor{\bsnm{Liu}, \binits{H.X.}}:
+\batitle{Dense reinforcement learning for safety validation of autonomous
+  vehicles}.
+\bjtitle{Nature}
+\bvolume{615}(\bissue{7953}),
+\bfpage{620}--\blpage{627}
+(\byear{2023})
+\doiurl{10.1038/s41586-023-05732-2}
+\end{barticle}
+\endbibitem
+
+%%% 13
+\bibitem[\protect\citeauthoryear{Garc{\'i}a and
+  Fern{\'a}ndez}{2015}]{garcia2015safe}
+\begin{barticle}
+\bauthor{\bsnm{Garc{\'i}a}, \binits{J.}},
+\bauthor{\bsnm{Fern{\'a}ndez}, \binits{F.}}:
+\batitle{A comprehensive survey on safe reinforcement learning}.
+\bjtitle{Journal of Machine Learning Research}
+\bvolume{16}(\bissue{1}),
+\bfpage{1437}--\blpage{1480}
+(\byear{2015})
+\end{barticle}
+\endbibitem
+
+%%% 14
+\bibitem[\protect\citeauthoryear{Grigorescu
+  et~al.}{2020}]{grigorescu2020survey}
+\begin{barticle}
+\bauthor{\bsnm{Grigorescu}, \binits{S.}},
+\bauthor{\bsnm{Trasnea}, \binits{B.}},
+\bauthor{\bsnm{Cocias}, \binits{T.}},
+\bauthor{\bsnm{Macesanu}, \binits{G.}}:
+\batitle{A survey of deep learning techniques for autonomous driving}.
+\bjtitle{Journal of Field Robotics}
+\bvolume{37}(\bissue{3}),
+\bfpage{362}--\blpage{386}
+(\byear{2020})
+\doiurl{10.1002/rob.21918}
+\end{barticle}
+\endbibitem
+
+%%% 15
+\bibitem[\protect\citeauthoryear{Henderson et~al.}{2018}]{henderson2018deep}
+\begin{bchapter}
+\bauthor{\bsnm{Henderson}, \binits{P.}},
+\bauthor{\bsnm{Islam}, \binits{R.}},
+\bauthor{\bsnm{Bachman}, \binits{P.}},
+\bauthor{\bsnm{Pineau}, \binits{J.}},
+\bauthor{\bsnm{Precup}, \binits{D.}},
+\bauthor{\bsnm{Meger}, \binits{D.}}:
+\bctitle{Deep reinforcement learning that matters}.
+In: \bbtitle{Proceedings of the AAAI Conference on Artificial Intelligence},
+vol. \bseriesno{32}
+(\byear{2018})
+\end{bchapter}
+\endbibitem
+
+%%% 16
+\bibitem[\protect\citeauthoryear{Jia et~al.}{2024}]{jia2024bench2drive}
+\begin{bchapter}
+\bauthor{\bsnm{Jia}, \binits{X.}},
+\bauthor{\bsnm{Yang}, \binits{Z.}},
+\bauthor{\bsnm{Li}, \binits{Q.}},
+\bauthor{\bsnm{Zhang}, \binits{Z.}},
+\bauthor{\bsnm{Yan}, \binits{J.}}:
+\bctitle{{Bench2Drive}: Towards multi-ability benchmarking of closed-loop
+  end-to-end autonomous driving}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{37}
+(\byear{2024}).
+\burl{https://arxiv.org/abs/2406.03877}
+\end{bchapter}
+\endbibitem
+
+%%% 17
+\bibitem[\protect\citeauthoryear{Ji et~al.}{2023}]{ji2023safetygymnasium}
+\begin{bchapter}
+\bauthor{\bsnm{Ji}, \binits{J.}},
+\bauthor{\bsnm{Zhang}, \binits{B.}},
+\bauthor{\bsnm{Zhou}, \binits{J.}},
+\bauthor{\bsnm{Pan}, \binits{X.}},
+\bauthor{\bsnm{Huang}, \binits{W.}},
+\bauthor{\bsnm{Sun}, \binits{R.}},
+\bauthor{\bsnm{Geng}, \binits{Y.}},
+\bauthor{\bsnm{Zhong}, \binits{Y.}},
+\bauthor{\bsnm{Dai}, \binits{J.}},
+\bauthor{\bsnm{Yang}, \binits{Y.}}:
+\bctitle{Safety-gymnasium: A unified safe reinforcement learning benchmark}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{36}
+(\byear{2023})
+\end{bchapter}
+\endbibitem
+
+%%% 18
+\bibitem[\protect\citeauthoryear{Ji et~al.}{2024}]{ji2024omnisafe}
+\begin{barticle}
+\bauthor{\bsnm{Ji}, \binits{J.}},
+\bauthor{\bsnm{Zhou}, \binits{J.}},
+\bauthor{\bsnm{Zhang}, \binits{B.}},
+\bauthor{\bsnm{Dai}, \binits{J.}},
+\bauthor{\bsnm{Pan}, \binits{X.}},
+\bauthor{\bsnm{Sun}, \binits{R.}},
+\bauthor{\bsnm{Huang}, \binits{W.}},
+\bauthor{\bsnm{Geng}, \binits{Y.}},
+\bauthor{\bsnm{Liu}, \binits{M.}},
+\bauthor{\bsnm{Yang}, \binits{Y.}}:
+\batitle{{OmniSafe}: An infrastructure for accelerating safe reinforcement
+  learning research}.
+\bjtitle{Journal of Machine Learning Research}
+\bvolume{25}(\bissue{285}),
+\bfpage{1}--\blpage{6}
+(\byear{2024})
+\end{barticle}
+\endbibitem
+
+%%% 19
+\bibitem[\protect\citeauthoryear{Kuutti et~al.}{2021}]{kuutti2021survey}
+\begin{barticle}
+\bauthor{\bsnm{Kuutti}, \binits{S.}},
+\bauthor{\bsnm{Bowden}, \binits{R.}},
+\bauthor{\bsnm{Jin}, \binits{Y.}},
+\bauthor{\bsnm{Barber}, \binits{P.}},
+\bauthor{\bsnm{Fallah}, \binits{S.}}:
+\batitle{A survey of deep learning applications to autonomous vehicle control}.
+\bjtitle{IEEE Transactions on Intelligent Transportation Systems}
+\bvolume{22}(\bissue{2}),
+\bfpage{712}--\blpage{733}
+(\byear{2021})
+\doiurl{10.1109/TITS.2019.2962338}
+\end{barticle}
+\endbibitem
+
+%%% 20
+\bibitem[\protect\citeauthoryear{Kendall et~al.}{2019}]{kendall2019learning}
+\begin{bchapter}
+\bauthor{\bsnm{Kendall}, \binits{A.}},
+\bauthor{\bsnm{Hawke}, \binits{J.}},
+\bauthor{\bsnm{Janz}, \binits{D.}},
+\bauthor{\bsnm{Mazur}, \binits{P.}},
+\bauthor{\bsnm{Reda}, \binits{D.}},
+\bauthor{\bsnm{Allen}, \binits{J.-M.}},
+\bauthor{\bsnm{Lam}, \binits{V.-D.}},
+\bauthor{\bsnm{Bewley}, \binits{A.}},
+\bauthor{\bsnm{Shah}, \binits{A.}}:
+\bctitle{Learning to drive in a day}.
+In: \bbtitle{2019 International Conference on Robotics and Automation},
+pp. \bfpage{8248}--\blpage{8254}
+(\byear{2019}).
+\doiurl{10.1109/ICRA.2019.8793742}
+\end{bchapter}
+\endbibitem
+
+%%% 21
+\bibitem[\protect\citeauthoryear{Kiran et~al.}{2021}]{kiran2021deep}
+\begin{barticle}
+\bauthor{\bsnm{Kiran}, \binits{B.R.}},
+\bauthor{\bsnm{Sobh}, \binits{I.}},
+\bauthor{\bsnm{Talpaert}, \binits{V.}},
+\bauthor{\bsnm{Mannion}, \binits{P.}},
+\bauthor{\bsnm{Al~Sallab}, \binits{A.A.}},
+\bauthor{\bsnm{Yogamani}, \binits{S.}},
+\bauthor{\bsnm{P{\'e}rez}, \binits{P.}}:
+\batitle{Deep reinforcement learning for autonomous driving: A survey}.
+\bjtitle{IEEE Transactions on Intelligent Transportation Systems}
+\bvolume{23}(\bissue{6}),
+\bfpage{4909}--\blpage{4926}
+(\byear{2021})
+\doiurl{10.1109/TITS.2021.3054625}
+\end{barticle}
+\endbibitem
+
+%%% 22
+\bibitem[\protect\citeauthoryear{Koopman and
+  Wagner}{2017}]{koopman2017autonomous}
+\begin{barticle}
+\bauthor{\bsnm{Koopman}, \binits{P.}},
+\bauthor{\bsnm{Wagner}, \binits{M.}}:
+\batitle{Autonomous vehicle safety: An interdisciplinary challenge}.
+\bjtitle{IEEE Intelligent Transportation Systems Magazine}
+\bvolume{9}(\bissue{1}),
+\bfpage{90}--\blpage{96}
+(\byear{2017})
+\doiurl{10.1109/MITS.2016.2583491}
+\end{barticle}
+\endbibitem
+
+%%% 23
+\bibitem[\protect\citeauthoryear{Leike et~al.}{2017}]{leike2017ai}
+\begin{botherref}
+\oauthor{\bsnm{Leike}, \binits{J.}},
+\oauthor{\bsnm{Martic}, \binits{M.}},
+\oauthor{\bsnm{Krakovna}, \binits{V.}},
+\oauthor{\bsnm{Ortega}, \binits{P.A.}},
+\oauthor{\bsnm{Everitt}, \binits{T.}},
+\oauthor{\bsnm{Lefrancq}, \binits{A.}},
+\oauthor{\bsnm{Orseau}, \binits{L.}},
+\oauthor{\bsnm{Legg}, \binits{S.}}:
+Ai safety gridworlds.
+arXiv preprint arXiv:1711.09883
+(2017)
+{\href{https://arxiv.org/abs/1711.09883}{{arXiv:1711.09883}}}
+\end{botherref}
+\endbibitem
+
+%%% 24
+\bibitem[\protect\citeauthoryear{Li et~al.}{2022}]{li2022metadrive}
+\begin{barticle}
+\bauthor{\bsnm{Li}, \binits{Q.}},
+\bauthor{\bsnm{Peng}, \binits{Z.}},
+\bauthor{\bsnm{Feng}, \binits{L.}},
+\bauthor{\bsnm{Zhang}, \binits{Q.}},
+\bauthor{\bsnm{Xue}, \binits{Z.}},
+\bauthor{\bsnm{Zhou}, \binits{B.}}:
+\batitle{Metadrive: Composing diverse driving scenarios for generalizable
+  reinforcement learning}.
+\bjtitle{IEEE Transactions on Pattern Analysis and Machine Intelligence}
+\bvolume{45},
+\bfpage{3461}--\blpage{3475}
+(\byear{2022})
+\doiurl{10.1109/TPAMI.2022.3190471}
+\end{barticle}
+\endbibitem
+
+%%% 25
+\bibitem[\protect\citeauthoryear{Miller et~al.}{2024}]{miller2024optimal}
+\begin{bchapter}
+\bauthor{\bsnm{Miller}, \binits{K.}},
+\bauthor{\bsnm{Zeitler}, \binits{C.K.}},
+\bauthor{\bsnm{Shen}, \binits{W.}},
+\bauthor{\bsnm{Hobbs}, \binits{K.}},
+\bauthor{\bsnm{Schierman}, \binits{J.}},
+\bauthor{\bsnm{Viswanathan}, \binits{M.}},
+\bauthor{\bsnm{Mitra}, \binits{S.}}:
+\bctitle{Optimal runtime assurance via reinforcement learning}.
+In: \bbtitle{2024 ACM/IEEE 15th International Conference on Cyber-Physical
+  Systems (ICCPS)},
+pp. \bfpage{67}--\blpage{76}
+(\byear{2024}).
+\doiurl{10.1109/ICCPS61052.2024.00013}
+\end{bchapter}
+\endbibitem
+
+%%% 26
+\bibitem[\protect\citeauthoryear{Pan et~al.}{2022}]{pan2022reward}
+\begin{bchapter}
+\bauthor{\bsnm{Pan}, \binits{A.}},
+\bauthor{\bsnm{Bhatia}, \binits{K.}},
+\bauthor{\bsnm{Steinhardt}, \binits{J.}}:
+\bctitle{The effects of reward misspecification: Mapping and mitigating
+  misaligned models}.
+In: \bbtitle{International Conference on Learning Representations}
+(\byear{2022}).
+\burl{https://openreview.net/forum?id=JYtwGwIL7ye}
+\end{bchapter}
+\endbibitem
+
+%%% 27
+\bibitem[\protect\citeauthoryear{Sallab et~al.}{2017}]{sallab2017deep}
+\begin{barticle}
+\bauthor{\bsnm{Sallab}, \binits{A.E.}},
+\bauthor{\bsnm{Abdou}, \binits{M.}},
+\bauthor{\bsnm{Perot}, \binits{E.}},
+\bauthor{\bsnm{Yogamani}, \binits{S.}}:
+\batitle{Deep reinforcement learning framework for autonomous driving}.
+\bjtitle{Electronic Imaging}
+\bvolume{2017}(\bissue{19}),
+\bfpage{70}--\blpage{76}
+(\byear{2017})
+\doiurl{10.2352/ISSN.2470-1173.2017.19.AVM-023}
+\end{barticle}
+\endbibitem
+
+%%% 28
+\bibitem[\protect\citeauthoryear{Skalse et~al.}{2022}]{skalse2022defining}
+\begin{bchapter}
+\bauthor{\bsnm{Skalse}, \binits{J.}},
+\bauthor{\bsnm{Howe}, \binits{N.H.R.}},
+\bauthor{\bsnm{Krasheninnikov}, \binits{D.}},
+\bauthor{\bsnm{Krueger}, \binits{D.}}:
+\bctitle{Defining and characterizing reward hacking}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{35},
+pp. \bfpage{9460}--\blpage{9471}
+(\byear{2022})
+\end{bchapter}
+\endbibitem
+
+%%% 29
+\bibitem[\protect\citeauthoryear{Seto et~al.}{1998}]{seto1998simplex}
+\begin{bchapter}
+\bauthor{\bsnm{Seto}, \binits{D.}},
+\bauthor{\bsnm{Krogh}, \binits{B.}},
+\bauthor{\bsnm{Sha}, \binits{L.}},
+\bauthor{\bsnm{Chutinan}, \binits{A.}}:
+\bctitle{The simplex architecture for safe online control system upgrades}.
+In: \bbtitle{Proceedings of the 1998 American Control Conference},
+vol. \bseriesno{6},
+pp. \bfpage{3504}--\blpage{3508}
+(\byear{1998}).
+\doiurl{10.1109/ACC.1998.703255}
+\end{bchapter}
+\endbibitem
+
+%%% 30
+\bibitem[\protect\citeauthoryear{Saunders et~al.}{2018}]{saunders2018trial}
+\begin{bchapter}
+\bauthor{\bsnm{Saunders}, \binits{W.}},
+\bauthor{\bsnm{Sastry}, \binits{G.}},
+\bauthor{\bsnm{Stuhlm{\"u}ller}, \binits{A.}},
+\bauthor{\bsnm{Evans}, \binits{O.}}:
+\bctitle{Trial without error: Towards safe reinforcement learning via human
+  intervention}.
+In: \bbtitle{Proceedings of the 17th International Conference on Autonomous
+  Agents and MultiAgent Systems},
+pp. \bfpage{2067}--\blpage{2069}
+(\byear{2018})
+\end{bchapter}
+\endbibitem
+
+%%% 31
+\bibitem[\protect\citeauthoryear{Shalev-Shwartz et~al.}{2017}]{shalev2017rss}
+\begin{botherref}
+\oauthor{\bsnm{Shalev-Shwartz}, \binits{S.}},
+\oauthor{\bsnm{Shammah}, \binits{S.}},
+\oauthor{\bsnm{Shashua}, \binits{A.}}:
+On a formal model of safe and scalable self-driving cars.
+arXiv preprint arXiv:1708.06374
+(2017)
+{\href{https://arxiv.org/abs/1708.06374}{{arXiv:1708.06374}}}
+\end{botherref}
+\endbibitem
+
+%%% 32
+\bibitem[\protect\citeauthoryear{Schulman et~al.}{2017}]{schulman2017ppo}
+\begin{botherref}
+\oauthor{\bsnm{Schulman}, \binits{J.}},
+\oauthor{\bsnm{Wolski}, \binits{F.}},
+\oauthor{\bsnm{Dhariwal}, \binits{P.}},
+\oauthor{\bsnm{Radford}, \binits{A.}},
+\oauthor{\bsnm{Klimov}, \binits{O.}}:
+Proximal policy optimization algorithms.
+arXiv preprint arXiv:1707.06347
+(2017)
+{\href{https://arxiv.org/abs/1707.06347}{{arXiv:1707.06347}}}
+\end{botherref}
+\endbibitem
+
+%%% 33
+\bibitem[\protect\citeauthoryear{Tessler et~al.}{2018}]{tessler2018reward}
+\begin{botherref}
+\oauthor{\bsnm{Tessler}, \binits{C.}},
+\oauthor{\bsnm{Mankowitz}, \binits{D.J.}},
+\oauthor{\bsnm{Mannor}, \binits{S.}}:
+Reward constrained policy optimization.
+arXiv preprint arXiv:1805.11074
+(2018)
+{\href{https://arxiv.org/abs/1805.11074}{{arXiv:1805.11074}}}
+\end{botherref}
+\endbibitem
+
+%%% 34
+\bibitem[\protect\citeauthoryear{Wiener}{1948}]{wiener1948cybernetics}
+\begin{bbook}
+\bauthor{\bsnm{Wiener}, \binits{N.}}:
+\bbtitle{Cybernetics: Or Control and Communication in the Animal and the
+  Machine}.
+\bpublisher{MIT Press},
+\blocation{Cambridge, MA}
+(\byear{1948})
+\end{bbook}
+\endbibitem
+
+%%% 35
+\bibitem[\protect\citeauthoryear{Xu et~al.}{2022}]{xu2022safebench}
+\begin{bchapter}
+\bauthor{\bsnm{Xu}, \binits{C.}},
+\bauthor{\bsnm{Ding}, \binits{W.}},
+\bauthor{\bsnm{Lyu}, \binits{W.}},
+\bauthor{\bsnm{Liu}, \binits{Z.}},
+\bauthor{\bsnm{Wang}, \binits{S.}},
+\bauthor{\bsnm{He}, \binits{Y.}},
+\bauthor{\bsnm{Hu}, \binits{H.}},
+\bauthor{\bsnm{Zhao}, \binits{D.}},
+\bauthor{\bsnm{Li}, \binits{B.}}:
+\bctitle{Safebench: A benchmarking platform for safety evaluation of autonomous
+  vehicles}.
+In: \bbtitle{Advances in Neural Information Processing Systems},
+vol. \bseriesno{35},
+pp. \bfpage{25667}--\blpage{25682}
+(\byear{2022})
+\end{bchapter}
+\endbibitem
+
+\end{thebibliography}

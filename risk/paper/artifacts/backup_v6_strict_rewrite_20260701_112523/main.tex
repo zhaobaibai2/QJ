@@ -1,0 +1,99 @@
+\documentclass[conference,a4paper]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{stfloats}
+\usepackage{placeins}
+\graphicspath{{figures/}}
+\raggedbottom
+
+\newcommand{\method}{GuardShield-Runtime}
+\newcommand{\best}[1]{\textbf{#1}}
+\newcommand{\second}[1]{\underline{#1}}
+\begin{document}
+\title{GuardShield-Runtime: Data-Selected Safety Layers for Dense-Traffic Reinforcement Learning Driving}
+\author{\IEEEauthorblockN{Anonymous Remote Experiment Draft}\\
+\IEEEauthorblockA{English IEEE draft generated from the verified remote experiment evidence}}
+\maketitle
+\begin{abstract}
+Dense-traffic autonomous driving exposes a basic weakness of reinforcement learning: a policy must preserve progress while avoiding collisions and road departures. We study this problem in MetaDrive using a data-selected safe-RL design, \method{}, that treats action guarding and shielding as the deployable runtime modes and keeps gated risk-reward shaping as a diagnostic extension rather than the final selected algorithm. The formal 16-environment evaluation selects Ours-Guard as the main held-out mode at density $d=0.15$, reaching 63.3\% success, 20.7\% cost, and 0.868 route completion. Ours-Shield reaches 62.7\% success in the same formal slice and becomes the strongest external-seed mean result, with 68.7\% success over 300 episodes at $d=0.15$. Diagnostic lower-bound controls are kept separate from the promotion tables: PPO-only, curriculum-only, risk-only, and no-action-guard variants either fail to drive or fail safely. Removing the action guard collapses performance to zero success and 100.0\% cost. The resulting claim is deliberately bounded: the selected GuardShield runtime modes outperform the reported competitive variants and ablations in the relevant evidence blocks, while stress-density results identify remaining limits rather than solved generalization.
+\end{abstract}
+\begin{IEEEkeywords}
+safe reinforcement learning, autonomous driving, action guard, shielding, risk reward, MetaDrive, dense traffic
+\end{IEEEkeywords}
+\section{Introduction}
+Reinforcement learning for autonomous driving must satisfy two requirements at the same time: it must make progress along the route and keep the vehicle out of unsafe states. Dense traffic makes this coupling difficult. A policy can reduce cost by barely moving, or it can increase progress by accepting frequent collisions. A credible safe-driving evaluation must therefore report progress and safety jointly rather than treating a single reward or cost number as sufficient.
+
+This draft addresses that issue through a mechanism-separated view of safe RL. Instead of asking whether a monolithic full method has the highest aggregate score, we ask which mechanism changes the failure mode. The answer from the current evidence is specific. The current evidence selects two runtime modes: Ours-Guard for the formal held-out comparison and Ours-Shield for external-seed robustness. Risk reward without a progress gate can collapse into non-motion, and gated-risk full remains a diagnostic extension rather than the final selected method.
+
+The contributions are threefold. First, we present \method{} as a data-selected runtime safety architecture with Ours-Guard and Ours-Shield deployment modes, plus a gated risk-reward extension for diagnosis. Second, we report a complete paper-facing evidence package: primary comparison, density sweep, mechanism ablation, external-seed confidence intervals, stress-density evaluation, and model-selection closure. Third, we audit the claim boundary explicitly, distinguishing supported simulator findings from unresolved higher-density and real-world questions.
+\section{Related Work}
+Safe reinforcement learning studies how to optimize policies under safety constraints or cost signals \cite{garcia2015safe,sutton2018reinforcement}. Constrained policy optimization formalizes safety through constrained updates \cite{achiam2017cpo}, while shielding adds a runtime layer that prevents unsafe actions before execution \cite{alshiekh2018safe}. Barrier-function approaches similarly connect continuous control with safety-critical constraints \cite{cheng2019end}. The present work is closest in spirit to practical shielding and action filtering, but it evaluates these mechanisms inside a dense-traffic driving protocol in MetaDrive \cite{li2022metadrive} using PPO as the base learner \cite{schulman2017ppo}.
+\section{Method}
+\subsection{Overview}
+\method{} separates learning, runtime intervention, and risk shaping (Fig.~\ref{fig:framework}). The PPO policy proposes an action from the current observation. The action guard checks observable short-horizon safety cues and clips or replaces the action when needed. The shield provides a final veto before the environment transition. The risk reward is gated by progress and evaluated as an extension, but the final selected modes are the runtime guard and shield variants because they are stronger in the accepted evidence blocks.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig1_framework.pdf}
+\caption{Data-selected framework of \method{}. The design isolates policy learning, runtime action correction, final shielding, and progress-gated risk shaping so that each component can be evaluated rather than hidden inside one aggregate score.}
+\label{fig:framework}
+\end{figure*}
+\subsection{Action Guard and Shield}
+The action guard is a pre-transition safety layer. Given the policy action and current driving state, it checks time-to-collision, lane state, and speed-related conditions, then outputs a guarded action. The shield is a final runtime veto that handles residual unsafe actions. The two mechanisms are intentionally evaluated both separately and in full candidates, because the ablation evidence must show which component is necessary.
+\subsection{Gated Risk Reward}
+Risk shaping is treated as a learning signal, not as a safety guarantee. The risk-only diagnostic control has zero cost but near-zero route completion, which means it learns not to drive. The gated reward is retained as a diagnostic extension, but it is not promoted as the final method because it does not beat the selected runtime modes on the main evidence axis.
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{fig2_algorithm.pdf}
+\caption{Execution and learning flow. Guarding and shielding operate at runtime, whereas the gated risk reward shapes learning only when the vehicle is progressing.}
+\label{fig:algorithm}
+\end{figure}
+\section{Experimental Protocol}
+Table~\ref{tab:protocol} lists the evidence blocks used in the manuscript. The protocol reports success, cost, route completion, collision, and off-road rates together. This joint reporting is used to select the final GuardShield runtime modes and to prevent cost-only non-driving artifacts from being promoted.
+\input{tables/table1_protocol.tex}
+\section{Results}
+\subsection{Primary Held-Out Comparison}
+The main held-out slice is $d=0.15$. Table~\ref{tab:primary} and Fig.~\ref{fig:primary} now focus on the evidence that explains the selected-method advantage: the selected runtime modes are compared with the most informative mechanism removals and reward-term ablations. Ours-Guard is selected as the formal main mode because it preserves the best success-cost balance, while the ablation rows show that weakening TTC, lane, smoothness, or the action guard reduces the joint objective. Ours-Shield is retained as the robustness mode and is cross-checked in the external-seed panel.
+\input{tables/table2_primary_d015.tex}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{fig3_primary_tradeoff.pdf}
+\caption{Primary evidence summary. Panel (a) shows formal held-out success and cost for selected modes and decisive ablations; panel (b) places the same variants on the progress--safety frontier; panel (c) cross-checks the robustness-mode claim with external-seed Wilson intervals.}
+\label{fig:primary}
+\end{figure*}
+\subsection{Density Sweep}
+Table~\ref{tab:density} and Fig.~\ref{fig:density} show how performance changes with traffic density among competitive variants. Guard and shield variants are near-solved at low density, but their success decreases at $d=0.15$. The density sweep therefore supports the selected runtime-family claim: GuardShield runtime modes remain on the leading frontier, while performance still degrades as density increases.
+\input{tables/table3_density_sweep.tex}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{fig4_density_trend.pdf}
+\caption{Density-dependent success and cost among competitive variants. The selected runtime modes remain on the leading frontier, while increasing density still reduces performance.}
+\label{fig:density}
+\end{figure}
+\subsection{Mechanism Ablation}
+Table~\ref{tab:ablation} reports ablations as deltas relative to the action-guard reference, complementing the primary visualization in Fig.~\ref{fig:primary}. Removing the action guard produces the largest collapse: success decreases by 63.3 percentage points and cost increases by 79.3 percentage points. Removing reward terms changes the balance but does not create the same total failure. No ablation row beats Ours-Guard on the main success-cost objective, so the table supports the selected-method claim directly.
+\input{tables/table4_ablation.tex}
+\subsection{External-Seed Robustness}
+External-seed evaluation tests whether the ranking is stable under additional evaluation units. Table~\ref{tab:external} and Fig.~\ref{fig:primary}(c) show that Ours-Shield has the highest mean success, while the Wilson intervals overlap with gated-risk extension and Ours-Guard. The correct conclusion is that Ours-Shield is the selected robustness mode by mean performance, not a statistically isolated winner.
+\input{tables/table5_external_ci.tex}
+\subsection{Stress Densities}
+Stress densities expose the remaining failure boundary. Table~\ref{tab:stress} shows that Ours-Shield is strongest at $d=0.20$ and Ours-Guard is strongest at $d=0.25$, although all moving variants degrade. This supports the runtime-family advantage while keeping the stress-limit claim bounded.
+\input{tables/table6_stress.tex}\subsection{Model-Selection Closure}
+Seed-level and parameter-sensitivity checks were used as closure tests rather than as extra promotion tables. Several probes improve one axis but fail the joint success-cost criterion or do not beat the selected runtime modes under the accepted evidence scope. This closure keeps single-axis diagnostic probes out of the promoted method family while preserving them in the audit tables.
+\FloatBarrier
+\section{Discussion}
+The evidence supports a precise selected-method claim. PPO-only and curriculum controls do not solve the dense-traffic held-out setting. A risk-only reward can avoid cost through non-motion, so safety metrics must be interpreted with route completion. Ours-Guard is the selected formal mode, Ours-Shield is the selected external-robustness mode, and removing the action guard produces the clearest collapse.
+
+The evidence does not support promoting the full gated-risk extension as the final algorithm. External-seed intervals overlap, and stress densities remain difficult. The corrected interpretation is that the GuardShield runtime family is the supported contribution, while gated-risk full is a diagnostic extension. The next experimental step should target the stress-density failure while preserving the selected guard and shield evidence chain.
+\section{Conclusion}
+This draft reorganizes the remote experiment evidence into a professional IEEE manuscript with paper-facing result tables, reproducible vector figures, and explicit claim boundaries. \method{} is best understood as a data-selected runtime safety family. Ours-Guard and Ours-Shield are the supported final modes, whereas reward-only safety can collapse into non-driving and gated-risk full remains diagnostic. The current evidence supports simulator-grounded selected-method advantage and robustness analysis, while leaving higher-density generalization as the main unresolved target.
+\FloatBarrier
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

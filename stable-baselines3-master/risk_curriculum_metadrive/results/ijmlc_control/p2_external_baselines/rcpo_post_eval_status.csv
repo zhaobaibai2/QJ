@@ -1,0 +1,7 @@
+stage,seed,status,start_time,end_time,exit_code,output_path,log_path
+normal_eval,0,done,2026-07-01T18:16:32+08:00,2026-07-01T18:17:29+08:00,0,results/ijmlc_control/p2_external_baselines/rcpo_normal_eval_nenv16/rcpo_lagrangian_ppo_s0.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_normal_eval_s0.log
+normal_eval,1,done,2026-07-01T18:17:29+08:00,2026-07-01T18:18:27+08:00,0,results/ijmlc_control/p2_external_baselines/rcpo_normal_eval_nenv16/rcpo_lagrangian_ppo_s1.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_normal_eval_s1.log
+normal_eval,2,done,2026-07-01T18:18:27+08:00,2026-07-01T18:19:30+08:00,0,results/ijmlc_control/p2_external_baselines/rcpo_normal_eval_nenv16/rcpo_lagrangian_ppo_s2.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_normal_eval_s2.log
+diagnostic_eval,1,done,2026-07-01T18:19:30+08:00,2026-07-01T18:21:13+08:00,0,results/ijmlc_control/raw_csv/ijmlc_p2_external_20260701_1733_rcpo_diag_s1_episodes.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_diag_s1.log
+diagnostic_eval,0,done,2026-07-01T18:19:30+08:00,2026-07-01T18:21:19+08:00,0,results/ijmlc_control/raw_csv/ijmlc_p2_external_20260701_1733_rcpo_diag_s0_episodes.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_diag_s0.log
+diagnostic_eval,2,done,2026-07-01T18:19:30+08:00,2026-07-01T18:21:39+08:00,0,results/ijmlc_control/raw_csv/ijmlc_p2_external_20260701_1733_rcpo_diag_s2_episodes.csv,results/ijmlc_control/logs/ijmlc_p2_external_20260701_1733_rcpo_diag_s2.log

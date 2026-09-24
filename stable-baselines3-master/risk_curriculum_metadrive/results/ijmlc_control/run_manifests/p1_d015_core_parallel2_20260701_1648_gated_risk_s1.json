@@ -1,0 +1,27 @@
+{
+  "run_id": "p1_d015_core_parallel2_20260701_1648_gated_risk_s1",
+  "created_at": "2026-07-01T16:46:17",
+  "manifest": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/06_EXISTING_MODEL_MANIFEST.csv",
+  "labels": [
+    "gated_risk"
+  ],
+  "seeds": [
+    1
+  ],
+  "densities": [
+    0.15
+  ],
+  "test_start_seeds": [
+    10000,
+    20000
+  ],
+  "episodes_per_start": 20,
+  "selected_models": 1,
+  "episode_rows": 40,
+  "episode_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/raw_csv/p1_d015_core_parallel2_20260701_1648_gated_risk_s1_episodes.csv",
+  "summary_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/summary_tables/p1_d015_core_parallel2_20260701_1648_gated_risk_s1_summary.csv",
+  "elapsed_sec": 410.1105606555939,
+  "status": "done",
+  "claim_supported": "IJMLC non-motion artifact, progress-safety frontier, runtime wall-clock diagnostics",
+  "boundary_note": "Frozen-model diagnostic evaluation; not new training or retuning evidence."
+}

@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+"""Evaluate a saved policy using the run's config.json instead of source defaults."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from dataclasses import fields
+from pathlib import Path
+from typing import Any
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from racrl.config import CurriculumStage, ExperimentConfig, RewardWeights  # noqa: E402
+from racrl.experiment import evaluate  # noqa: E402
+
+
+def _filter_dataclass(cls, values: dict[str, Any]) -> dict[str, Any]:
+    allowed = {f.name for f in fields(cls)}
+    return {k: v for k, v in values.items() if k in allowed}
+
+
+def load_config(path: Path) -> ExperimentConfig:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    reward_raw = raw.get("reward_weights", {}) or {}
+    stage_raw = raw.get("stages", []) or []
+    raw = dict(raw)
+    raw["reward_weights"] = RewardWeights(**_filter_dataclass(RewardWeights, reward_raw))
+    if stage_raw:
+        raw["stages"] = tuple(CurriculumStage(**_filter_dataclass(CurriculumStage, s)) for s in stage_raw)
+    cfg = ExperimentConfig(**_filter_dataclass(ExperimentConfig, raw))
+    # Backward compatibility for older config.json files created before the split.
+    if "use_risk_reward" not in raw:
+        cfg.use_risk_reward = bool(cfg.risk_reward)
+    if "use_action_guard" not in raw:
+        cfg.use_action_guard = bool(cfg.risk_reward)
+    if "n_envs" not in raw:
+        cfg.n_envs = 1
+    return cfg
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config-json", type=Path, required=True)
+    parser.add_argument("--model", type=Path, required=True)
+    parser.add_argument("--episodes", type=int, default=None)
+    parser.add_argument("--densities", type=float, nargs="+", default=[0.00, 0.08, 0.15])
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--device", default="cuda")
+    parser.add_argument("--n-envs", type=int, default=16)
+    args = parser.parse_args()
+
+    config = load_config(args.config_json)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    output = args.output_dir / f"{config.variant}_{config.algo}_s{config.seed}.csv"
+    config.n_envs = max(int(args.n_envs), 1)
+    frame = evaluate(config, args.model, output, args.device, args.densities, args.episodes, n_envs=config.n_envs)
+    frame["source_config_json"] = str(args.config_json)
+    frame["source_model_path"] = str(args.model)
+    frame.to_csv(output, index=False)
+
+    metrics = [
+        "success",
+        "route_completion",
+        "collision",
+        "out_of_road",
+        "cost",
+        "reward",
+        "shield_intervention_rate",
+        "shield_soft_rate",
+        "shield_hard_rate",
+        "overspeed_guard_rate",
+    ]
+    present = [m for m in metrics if m in frame.columns]
+    summary = frame.groupby("density")[present].mean()
+    print(summary.to_string())
+    print(f"saved_evaluation={output}")
+
+
+if __name__ == "__main__":
+    main()

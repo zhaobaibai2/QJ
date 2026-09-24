@@ -1,0 +1,53 @@
+{
+  "publication_revision": {
+    "generated_at": "2026-07-01T19:47:30",
+    "figures_publication": [
+      "results/ijmlc_control/figures_publication/fig1_cybernetic_runtime_loop.pdf",
+      "results/ijmlc_control/figures_publication/fig1_cybernetic_runtime_loop.png",
+      "results/ijmlc_control/figures_publication/fig1_cybernetic_runtime_loop.svg",
+      "results/ijmlc_control/figures_publication/fig1_cybernetic_runtime_loop.tiff",
+      "results/ijmlc_control/figures_publication/fig2_core_diagnosis.pdf",
+      "results/ijmlc_control/figures_publication/fig2_core_diagnosis.png",
+      "results/ijmlc_control/figures_publication/fig2_core_diagnosis.svg",
+      "results/ijmlc_control/figures_publication/fig2_core_diagnosis.tiff",
+      "results/ijmlc_control/figures_publication/fig3_external_baselines.pdf",
+      "results/ijmlc_control/figures_publication/fig3_external_baselines.png",
+      "results/ijmlc_control/figures_publication/fig3_external_baselines.svg",
+      "results/ijmlc_control/figures_publication/fig3_external_baselines.tiff",
+      "results/ijmlc_control/figures_publication/fig4_density_stress.pdf",
+      "results/ijmlc_control/figures_publication/fig4_density_stress.png",
+      "results/ijmlc_control/figures_publication/fig4_density_stress.svg",
+      "results/ijmlc_control/figures_publication/fig4_density_stress.tiff",
+      "results/ijmlc_control/figures_publication/fig5_parameter_sensitivity.pdf",
+      "results/ijmlc_control/figures_publication/fig5_parameter_sensitivity.png",
+      "results/ijmlc_control/figures_publication/fig5_parameter_sensitivity.svg",
+      "results/ijmlc_control/figures_publication/fig5_parameter_sensitivity.tiff",
+      "results/ijmlc_control/figures_publication/fig6_runtime_overhead.pdf",
+      "results/ijmlc_control/figures_publication/fig6_runtime_overhead.png",
+      "results/ijmlc_control/figures_publication/fig6_runtime_overhead.svg",
+      "results/ijmlc_control/figures_publication/fig6_runtime_overhead.tiff"
+    ],
+    "tables_publication": [
+      "results/ijmlc_control/tables_publication/table_ci_binary_pub.tex",
+      "results/ijmlc_control/tables_publication/table_ci_continuous_pub.tex",
+      "results/ijmlc_control/tables_publication/table_core_full_pub.tex",
+      "results/ijmlc_control/tables_publication/table_density_full_pub.tex",
+      "results/ijmlc_control/tables_publication/table_experiment_matrix_pub.tex",
+      "results/ijmlc_control/tables_publication/table_external_full_pub.tex",
+      "results/ijmlc_control/tables_publication/table_manifest_pub.tex",
+      "results/ijmlc_control/tables_publication/table_nonmotion_all_density_pub.tex",
+      "results/ijmlc_control/tables_publication/table_runtime_by_seed_pub.tex",
+      "results/ijmlc_control/tables_publication/table_runtime_full_pub.tex",
+      "results/ijmlc_control/tables_publication/table_seed_scatter_pub.tex",
+      "results/ijmlc_control/tables_publication/table_sensitivity_full_pub.tex"
+    ],
+    "report": "results/ijmlc_control/FIGURE_TABLE_REVISION_REPORT.md",
+    "manuscript": "results/ijmlc_control/manuscript_ijmlc_20260701/main.tex"
+  },
+  "ijmlc_journalization_revision": {
+    "generated_at": "2026-07-01T23:46:27",
+    "report": "results/ijmlc_control/IJMLC_JOURNALIZATION_REPORT.md",
+    "manuscript": "results/ijmlc_control/manuscript_ijmlc_20260701/main.tex",
+    "claim_boundary": "simulation-level diagnostic improvement only"
+  }
+}

@@ -1,0 +1,10 @@
+priority,run_group,method,status_now,next_action,purpose,paper_target
+P0,control,all,created,keep updated,global IJMLC supervision and evidence chain,all sections
+P1,diagnostic_eval,baseline/risk/guard/shield/gated/no_action,all_core_densities_done,generate figures and external baselines,non-motion and progress-safety metrics,Fig2 Fig3 Table3
+P1,runtime_overhead,guard/shield/gated/no_action,table7_done,use manuscript/table7_runtime_overhead.csv and fig7_runtime_overhead.pdf,runtime overhead table,Table7
+P2,external_baseline,PPO-Lagrangian or RCPO,done,use table4_external_baselines_d015.csv; RCPO underperformed and supports runtime-intervention claim boundary,external safe-RL comparison,Table4
+P2,external_baseline,RSS/TTC classical filter,done,use table4_external_baselines_d015.csv and p2_external_with_core_aggregate.csv,external classical filter comparison,Table4
+P3,seed_extension,core methods seed3 seed4,deferred_after_ci,reserve for reviewer demand; see P3_SEED_EXTENSION_DECISION.md,5-seed journal statistics,CI and scatter
+P4,density_sweep,core methods d0.00-0.25,done,use p1_all_density_core_aggregate.csv for Fig5/Table6,robustness and stress,Fig5 Table6
+P5,sensitivity,thresholds and target speed,done,use table_supp_sensitivity.csv and fig7_sensitivity_*.pdf/png,threshold robustness boundary,Fig7 appendix
+P6,writing,Springer manuscript,pending,after stable summaries,IJMLC paper source and PDF,final deliverable

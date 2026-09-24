@@ -1,0 +1,86 @@
+\begin{table}[!htbp]
+\centering
+\caption{Full runtime-overhead diagnostics, part I: policy and control-loop latency.}
+\label{tab_runtime}
+\tiny
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Policy and loop latency}\par
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Method & Density & Ep & Policy mean (ms) & Policy p95 (ms) & Loop mean (ms) & Loop p95 (ms) \\
+\midrule
+PPO backbone & 0.08 & 120 & 1.62 & 4.12 & 7.07 & 12.02 \\
+Risk-only & 0.08 & 120 & 1.33 & 3.94 & 4.93 & 9.39 \\
+No-action guard & 0.08 & 120 & 1.39 & 3.19 & 6.48 & 10.72 \\
+Guard & 0.08 & 120 & 1.38 & 4.02 & 7.09 & 14.20 \\
+Shield & 0.08 & 120 & 1.37 & 3.92 & 7.15 & 14.16 \\
+Gated-risk & 0.08 & 120 & 1.37 & 3.96 & 7.16 & 14.52 \\
+PPO backbone & 0.15 & 120 & 1.39 & 3.62 & 10.29 & 16.93 \\
+Risk-only & 0.15 & 120 & 0.83 & 1.64 & 4.12 & 6.15 \\
+No-action guard & 0.15 & 120 & 0.87 & 1.17 & 6.20 & 7.59 \\
+Guard & 0.15 & 120 & 0.86 & 1.45 & 8.37 & 13.31 \\
+Shield & 0.15 & 120 & 0.84 & 1.42 & 7.98 & 12.68 \\
+Gated-risk & 0.15 & 120 & 0.80 & 1.37 & 7.73 & 12.40 \\
+PPO backbone & 0.20 & 120 & 1.40 & 3.67 & 13.13 & 21.98 \\
+Risk-only & 0.20 & 120 & 1.02 & 1.78 & 6.71 & 9.51 \\
+No-action guard & 0.20 & 120 & 1.31 & 3.23 & 12.20 & 19.64 \\
+Guard & 0.20 & 120 & 1.00 & 1.60 & 13.57 & 20.71 \\
+Shield & 0.20 & 120 & 1.00 & 1.61 & 13.79 & 21.37 \\
+Gated-risk & 0.20 & 120 & 0.98 & 1.50 & 13.67 & 20.98 \\
+PPO backbone & 0.25 & 120 & 1.36 & 3.37 & 14.79 & 23.86 \\
+Risk-only & 0.25 & 120 & 0.93 & 1.24 & 7.26 & 8.57 \\
+No-action guard & 0.25 & 120 & 1.24 & 2.93 & 14.43 & 23.01 \\
+Guard & 0.25 & 120 & 0.80 & 1.01 & 13.21 & 17.77 \\
+Shield & 0.25 & 120 & 0.76 & 0.98 & 12.35 & 16.68 \\
+Gated-risk & 0.25 & 120 & 0.75 & 0.96 & 12.35 & 16.47 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Direction: lower wall-clock timing is preferred. Times are milliseconds measured in the Python simulation loop.
+\end{tablenotes}
+\end{table}
+
+
+\begin{table}[!htbp]
+\centering
+\caption{Full runtime-overhead diagnostics, part II: intervention rates and PPO-relative deltas.}
+\label{tab_runtime_delta}
+\tiny
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\textit{Intervention rate and PPO-relative deltas}\par
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Method & Density & Int./100 steps & Int./km & $\Delta$ policy (ms) & $\Delta$ loop p95 (ms) \\
+\midrule
+PPO backbone & 0.08 & 0.0 & 0.0 & 0.00 & 0.00 \\
+Risk-only & 0.08 & 0.0 & 0.0 & -0.29 & -2.63 \\
+No-action guard & 0.08 & 0.0 & 0.0 & -0.23 & -1.30 \\
+Guard & 0.08 & 84.5 & 1694.4 & -0.25 & 2.19 \\
+Shield & 0.08 & 84.7 & 1697.0 & -0.26 & 2.15 \\
+Gated-risk & 0.08 & 84.2 & 1690.5 & -0.26 & 2.50 \\
+PPO backbone & 0.15 & 0.0 & 0.0 & 0.00 & 0.00 \\
+Risk-only & 0.15 & 0.0 & 0.0 & -0.56 & -10.78 \\
+No-action guard & 0.15 & 0.0 & 0.0 & -0.51 & -9.34 \\
+Guard & 0.15 & 69.6 & 1582.3 & -0.52 & -3.62 \\
+Shield & 0.15 & 70.8 & 1619.6 & -0.55 & -4.25 \\
+Gated-risk & 0.15 & 67.9 & 1604.2 & -0.59 & -4.53 \\
+PPO backbone & 0.20 & 0.0 & 0.0 & 0.00 & 0.00 \\
+Risk-only & 0.20 & 0.0 & 0.0 & -0.38 & -12.47 \\
+No-action guard & 0.20 & 0.0 & 0.0 & -0.09 & -2.34 \\
+Guard & 0.20 & 59.3 & 1585.0 & -0.39 & -1.27 \\
+Shield & 0.20 & 58.9 & 1569.8 & -0.40 & -0.61 \\
+Gated-risk & 0.20 & 57.1 & 1522.1 & -0.41 & -1.00 \\
+PPO backbone & 0.25 & 0.0 & 0.0 & 0.00 & 0.00 \\
+Risk-only & 0.25 & 0.0 & 0.0 & -0.43 & -15.29 \\
+No-action guard & 0.25 & 0.0 & 0.0 & -0.12 & -0.85 \\
+Guard & 0.25 & 50.6 & 1627.0 & -0.57 & -6.09 \\
+Shield & 0.25 & 52.0 & 1660.6 & -0.60 & -7.18 \\
+Gated-risk & 0.25 & 48.2 & 1555.4 & -0.62 & -7.39 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Deltas are relative to PPO backbone at the same density.
+\end{tablenotes}
+\end{table}

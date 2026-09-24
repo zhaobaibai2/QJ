@@ -1,0 +1,6 @@
+figure_slot,preferred_file,source,claim_boundary
+Method framework,pdf_figures/framework/framework_diagram.pdf,outputs/defensive_ttc12_v18_nenv16_final/figures/framework_diagram.pdf; script source is scripts/plot_framework_diagram.py,schematic only; copied from existing n_envs=16 figure because current python3 matplotlib has NumPy ABI mismatch
+Behavior rollouts d0.15,pdf_figures/behavior_rollouts/behavior_rollouts_density_0p15.pdf,codex_longrun_iscsic/behavior_rollouts_20260701_0406,qualitative mechanism visualization
+Behavior rollouts d0.25,pdf_figures/behavior_rollouts/behavior_rollouts_density_0p25.pdf,codex_longrun_iscsic/behavior_rollouts_20260701_0406,qualitative stress visualization
+Representative seed 10003,pdf_figures/behavior_rollouts/representative_density_0p15_seed10003.pdf,behavior rollout selected by representative_seed_search.csv,single-map qualitative evidence
+Single-seed run metric PDFs,pdf_figures/source_single_seed_metrics/,selected accepted run figures,diagnostic/source visuals only; use aggregate tables for claims

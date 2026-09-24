@@ -1,0 +1,26 @@
+
+\begin{table}[!htbp]
+\centering
+\caption{Compared methods and runtime deployment variants.}
+\label{tab_compared_methods}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}@{}}
+\toprule
+Method & Training or reward & Runtime operator & Role in protocol \\
+\midrule
+PPO backbone & No risk reward & None & Fixed policy backbone and lower-bound comparator \\
+Risk-only & Risk reward & None & Tests whether low cost is stationary avoidance \\
+No-action guard & Risk reward & Disabled & Reward-only control without execution-side action intervention \\
+RSS/TTC filter & No risk reward & External TTC/RSS rule & Classical runtime-filter comparator \\
+PPO-Lagrangian & Lagrangian penalty & None & Training-time constrained baseline under this protocol \\
+Guard & Curriculum PPO, no risk reward & TTC hard/soft cap + speed guard & Runtime deployment variant with action intervention \\
+Shield & No-curriculum PPO, no risk reward & Same TTC hard/soft cap + speed guard & Runtime deployment variant isolating the execution-side operator \\
+Gated-risk & Curriculum PPO with gated risk & Same TTC hard/soft cap + speed guard & Adds motion/risk-gated reward to reduce stationary exploitation \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Guard and Shield share the same execution-side operator but differ in training context; they are deployment variants rather than a clean single-factor ablation. The clean same-checkpoint runtime-operator contrast is reported separately in Table~\ref{tab_clean_runtime_ablation}.
+\end{tablenotes}
+\end{table}

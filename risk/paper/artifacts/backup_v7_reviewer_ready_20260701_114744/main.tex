@@ -1,0 +1,129 @@
+\documentclass[conference,a4paper]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{stfloats}
+\usepackage{placeins}
+\usepackage{balance}
+\graphicspath{{figures/}}
+\raggedbottom
+
+\newcommand{\method}{GuardShield-Runtime}
+\newcommand{\best}[1]{\cellcolor{black!8}\textbf{#1}}
+\newcommand{\second}[1]{\underline{#1}}
+\begin{document}
+\title{GuardShield-Runtime: Progress-Preserving Action Guarding and Shielding for Dense-Traffic Reinforcement Learning Driving}
+\author{\IEEEauthorblockN{Anonymous Authors}\\
+\IEEEauthorblockA{Anonymous Affiliation}}
+\maketitle
+\begin{abstract}
+Dense-traffic reinforcement learning for autonomous driving requires a policy to make route progress without entering collision or off-road states. A cost-minimizing policy can appear safe by barely moving, while an aggressive policy may improve progress at the price of frequent collisions. This paper presents \method{}, a progress-preserving runtime safety architecture that separates policy learning, action guarding, final shielding, and progress-gated risk shaping. In MetaDrive dense traffic, the guard-based runtime mode reaches 63.3\% success, 20.7\% episode-level safety cost, and 0.868 route completion at density $d=0.15$, while removing the action guard collapses success to 0.0\% and increases cost to 100.0\%. External-seed evaluation further shows that the shield mode achieves the highest mean success over 300 episodes, although confidence intervals overlap with other competitive variants. The results support a bounded simulator claim: runtime action guarding and shielding improve the progress--safety trade-off under dense traffic, while higher-density generalization remains unresolved.
+\end{abstract}
+\begin{IEEEkeywords}
+safe reinforcement learning, autonomous driving, action guard, shielding, risk-shaped reward, MetaDrive, dense traffic
+\end{IEEEkeywords}
+\section{Introduction}
+Reinforcement learning for autonomous driving must make progress along the route while keeping the vehicle out of collision and off-road states. Dense traffic makes this requirement difficult because the progress objective and the safety objective can fail in opposite directions. A cautious policy may reduce the measured cost by barely moving, whereas an aggressive policy may finish more routes by accepting unsafe interactions. A dense-traffic evaluation is therefore meaningful only when success, episode-level safety cost rate, route completion, collision, and off-road rates are interpreted together.
+
+Reward-level safety alone is not sufficient for this setting. A risk-only or cost-minimizing policy can create a non-motion artifact: it looks safe because it avoids traffic interaction, not because it drives safely. We therefore study whether safety intervention should be applied at the reward level, the action level, or the final execution level. This question shifts the paper away from selecting a single aggregate winner and toward identifying which mechanism changes the failure mode.
+
+This paper proposes \method{}, a progress-preserving runtime safety architecture for dense-traffic RL driving. The architecture separates a PPO policy, an action guard, a final safety shield, and a progress-gated risk penalty. The policy first proposes an action, the guard corrects short-horizon unsafe commands, the shield can veto the final command before execution, and the risk penalty is applied only when the vehicle is making progress. This decomposition allows reward shaping, action guarding, and execution shielding to be evaluated as distinct intervention points.
+
+The contributions are threefold. First, we introduce a progress-preserving runtime safety architecture that separates policy learning, action guarding, final shielding, and progress-gated risk shaping. Second, we use a mechanism-level evaluation protocol that jointly reports success, cost, route completion, collision, and off-road rates, preventing non-motion policies from being mistaken for safe driving. Third, we provide a bounded dense-traffic empirical finding: Ours-Guard gives the best formal held-out success--cost balance, Ours-Shield gives the highest external-seed mean success, no-guard removal collapses, and stress-density results expose the remaining generalization boundary.
+
+\section{Related Work}
+Safe reinforcement learning studies how to optimize policies under safety constraints or cost signals \cite{garcia2015safe,sutton2018reinforcement}. Constrained policy optimization formalizes safety through constrained updates \cite{achiam2017cpo}, while shielding adds a runtime layer that prevents unsafe actions before execution \cite{alshiekh2018safe}. Barrier-function approaches similarly connect continuous control with safety-critical constraints \cite{cheng2019end}. \method{} follows the runtime-intervention view, but evaluates action guarding and final shielding separately from reward shaping.
+
+RL-based autonomous driving benchmarks evaluate closed-loop behavior under route progress, collision, and road-departure constraints. MetaDrive provides configurable traffic density and diverse procedural scenarios, making it suitable for testing whether a safety mechanism preserves progress rather than merely reducing cost \cite{li2022metadrive}. We use PPO as the base learner \cite{schulman2017ppo} and focus on dense traffic because it exposes the progress--safety conflict directly.
+
+Reward shaping and runtime shielding intervene at different points in the decision process. Reward shaping changes the learning objective, whereas a guard or shield changes the action before execution. This distinction matters because reward-only safety can produce non-motion artifacts. \method{} evaluates these intervention points separately, so the results can identify whether progress-preserving safety comes from the learning signal, the action guard, or the final execution veto.
+
+\section{Method}
+\subsection{Runtime Decomposition}
+\method{} separates learning, runtime intervention, and risk shaping (Fig.~\ref{fig:framework}). At each step, the PPO policy samples a raw action from the observation. The action guard maps the raw action to a corrected action, and the shield maps that guarded action to the action sent to the simulator:
+\begin{equation}
+ a_t \sim \pi_\theta(\cdot \mid o_t), \quad
+ \tilde{a}_t = G(o_t,a_t), \quad
+ a_t^{\mathrm{exec}} = S(o_t,\tilde{a}_t).
+ \label{eq:runtime}
+\end{equation}
+Here, $G$ is the action guard, $S$ is the final safety shield, $\tilde{a}_t$ is the guarded action, and $a_t^{\mathrm{exec}}$ is the executed action. This form makes the mechanism explicit: safety is not only a scalar reward term, but also an action-space intervention before the environment transition.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig1_framework.pdf}
+\caption{Progress-preserving runtime architecture of \method{}. The left panel separates policy learning, action guarding, final shielding, and the MetaDrive transition. The right panel shows the execution decision flow used to convert a sampled action into an executed or fallback action.}
+\label{fig:framework}
+\end{figure*}
+
+\subsection{Action Guard and Safety Shield}
+The action guard is a pre-transition safety layer. Given the current observation and policy action, it checks observable short-horizon cues including time-to-collision, lane state, and speed-related conditions. If the action is unsafe under these checks, the guard clips or replaces it with a safer command. The safety shield is a final runtime veto that handles residual unsafe commands before execution. We evaluate guard and shield modes separately because a mechanism-level claim requires showing which intervention point is responsible for the progress--safety change.
+
+\subsection{Progress-Gated Risk Penalty}
+Risk shaping is used as a learning signal rather than a safety guarantee. To avoid rewarding non-motion, the risk penalty is activated only when the vehicle is making progress:
+\begin{equation}
+ r_t = r_t^{\mathrm{task}} - \lambda \mathbf{1}[p_t > p_{\min}]\rho(o_t,a_t),
+ \label{eq:gated-risk}
+\end{equation}
+where $r_t^{\mathrm{task}}$ is the task reward, $p_t$ is a progress signal, $p_{\min}$ is the minimum progress threshold, $\rho$ is the risk penalty, and $\lambda$ controls its strength. This gate is intended to prevent the cost-minimizing solution in which the policy avoids risk by not driving. In the experiments, gated risk shaping is therefore interpreted as a diagnostic extension, while the supported runtime modes are the guard and shield configurations.
+
+\section{Experimental Protocol}
+Table~\ref{tab:protocol} summarizes the evaluation blocks. The primary metrics are success rate, episode-level safety cost rate, route completion, collision rate, and off-road rate. The model-selection closure is handled in prose and audit artifacts: probes are not promoted when they improve a single axis but fail the joint success--cost criterion.
+\input{tables/table1_protocol.tex}
+
+\section{Results}
+\subsection{Primary Held-Out Comparison}
+The primary held-out slice is $d=0.15$. Table~\ref{tab:primary} and Fig.~\ref{fig:primary} compare the runtime modes with mechanism removals and reward-term ablations. Ours-Guard provides the best formal held-out success--cost balance: 63.3\% success, 20.7\% cost, and 0.868 route completion. Ours-Shield is close in the same slice and is evaluated again under external seeds. Removing the action guard directly isolates the critical runtime component, reducing success to 0.0\% and increasing cost to 100.0\%.
+\input{tables/table2_primary_d015.tex}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig3_primary_tradeoff.pdf}
+\caption{Primary result summary. Panel (a) reports formal held-out success and cost for the guard/shield modes and mechanism ablations. Panel (b) shows a zoomed progress--safety frontier for competitive variants and marks the no-guard collapse as off-scale. Panel (c) reports external-seed Wilson intervals using 300 episodes per variant.}
+\label{fig:primary}
+\end{figure*}
+
+\subsection{Normal-Density Generalization}
+Table~\ref{tab:density} and Fig.~\ref{fig:density} report normal-density generalization at $d=0.00$, $d=0.08$, and $d=0.15$. Guard and shield modes are high-performing at lower density, but success decreases as traffic becomes denser. This supports a bounded runtime-family claim: the proposed intervention remains on the leading frontier under the tested normal densities, but it does not remove the density dependence of the task.
+\input{tables/table3_density_sweep.tex}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{fig4_density_trend.pdf}
+\caption{Normal-density success and cost among competitive variants. Runtime guard and shield modes remain on the leading frontier, while increasing density still reduces performance.}
+\label{fig:density}
+\end{figure}
+
+\subsection{Mechanism Ablation}
+Table~\ref{tab:ablation} reports ablations around the Ours-Guard reference. Removing TTC, lane, or smoothness terms weakens either safety or control, but removing the action guard is the clearest collapse. This pattern supports the mechanism claim: runtime action guarding changes the failure mode more decisively than reward-term adjustments alone.
+\input{tables/table4_ablation.tex}
+
+\subsection{External-Seed Robustness}
+External-seed evaluation tests whether the ranking is stable under additional evaluation units. Table~\ref{tab:external} and Fig.~\ref{fig:primary}(c) show that Ours-Shield obtains the highest mean success over 300 episodes at $d=0.15$. Wilson intervals overlap; therefore, the shield mode is identified by mean success rather than by a statistically isolated margin.
+\input{tables/table5_external_ci.tex}
+
+\subsection{Stress-Boundary Evaluation}
+Table~\ref{tab:stress} is a stress-boundary test rather than another normal-density sweep. At $d=0.20$ and $d=0.25$, all competitive variants degrade. Ours-Shield obtains the best success and cost at $d=0.20$, while Ours-Guard obtains the best success and cost at $d=0.25$. These results keep the claim bounded: runtime guard and shield remain useful, but higher-density generalization is unresolved.
+\input{tables/table6_stress.tex}
+
+\subsection{Model-Selection Closure}
+Seed-level and parameter-sensitivity checks were used as closure tests. Several probes improve one metric while worsening another; for example, a lower-cost guard probe reduces success, and a higher-success probe raises cost. These checks are reported as diagnostics rather than as main configurations because the paper's claim is based on the joint progress--safety criterion.
+\FloatBarrier
+
+\section{Discussion}
+The main empirical finding is that runtime intervention changes the failure mode more reliably than reward shaping alone. PPO-only and curriculum controls do not solve the dense-traffic setting, while risk-only reward can reduce cost through non-motion. In contrast, action guarding preserves progress while reducing unsafe execution, and removing the guard produces the clearest collapse.
+
+The results do not justify claiming that the full gated-risk extension is the final algorithm. Its performance is competitive but not consistently superior, and external-seed confidence intervals overlap. Therefore, gated risk shaping is best interpreted as a diagnostic extension, while Guard and Shield are the supported runtime modes.
+
+The claim is simulator-bounded. Performance degrades at $d=0.20$ and $d=0.25$, so the method should not be described as solving dense-traffic generalization. Future work should target high-density robustness, more diverse traffic behaviors, and real-world deployment constraints.
+
+\section{Conclusion}
+This paper presented \method{}, a progress-preserving runtime safety architecture for dense-traffic reinforcement learning driving. By separating action guarding, final shielding, and progress-gated risk shaping, the method makes it possible to identify which mechanism changes the progress--safety trade-off. In MetaDrive, the guard runtime mode achieves the best formal held-out success--cost balance at $d=0.15$, while the shield mode obtains the highest external-seed mean success. The collapse of the no-guard variant shows that runtime action guarding is the critical component. The results support a bounded simulator claim and identify high-density generalization as the main remaining limitation.
+\FloatBarrier
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

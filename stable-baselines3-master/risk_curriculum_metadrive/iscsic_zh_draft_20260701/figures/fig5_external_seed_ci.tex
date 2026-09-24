@@ -1,0 +1,26 @@
+
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage{ctex}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,backgrounds}
+\pgfplotsset{compat=1.18}
+\definecolor{guardblue}{HTML}{2F5597}
+\definecolor{riskorange}{HTML}{C55A11}
+\definecolor{softgreen}{HTML}{548235}
+\definecolor{lightgray}{HTML}{F2F4F7}
+\begin{document}
+
+\begin{tikzpicture}
+\begin{axis}[
+    width=11.5cm, height=5.8cm, ymin=0, ymax=0.82,
+    ylabel={成功率}, symbolic x coords={Shield,Gated,Guard,Retuned,Risk,NoGuard}, xtick=data,
+    x tick label style={rotate=25, anchor=east, font=\scriptsize},
+    grid=major, grid style={black!8},
+]
+\addplot+[only marks, mark=*, mark size=2.6pt, guardblue, error bars/.cd, y dir=both, y explicit]
+    table[x=method,y=success,y error plus=errhigh,y error minus=errlow] {external_ci_inline.dat};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

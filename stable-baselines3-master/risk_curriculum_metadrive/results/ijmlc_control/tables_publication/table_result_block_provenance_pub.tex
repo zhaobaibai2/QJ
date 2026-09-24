@@ -1,0 +1,22 @@
+
+\begin{table}[!htbp]
+\centering
+\caption{Result-block provenance and parameter scope.}
+\label{tab_result_block_provenance}
+\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\centering\arraybackslash}p{0.09\textwidth}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.14\textwidth}@{}}
+\toprule
+Block & Density & Parameters & Source & Use \\
+\midrule
+Table~\ref{tab_core_mechanism} / Fig.~\ref{fig_core_evidence} & 0.15 & 18 km/h; TTC 12.0 & core diagnostic episodes & main mechanism result \\
+Fig.~\ref{fig_ttc_sensitivity} & 0.15 & stored speed; TTC 6/8/10/12 & independent sensitivity rerun & trend evidence only \\
+Fig.~\ref{fig_target_speed_sensitivity} & 0.15 & speed 15/18/22; TTC 12.0 & independent sensitivity rerun & secondary trend evidence \\
+Table~\ref{tab_density_summary} / Fig.~\ref{fig_density} & 0.08--0.25 & stored configs & density-stress diagnostics & operating-envelope evidence \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Rows with the same nominal TTC threshold can differ because sensitivity plots are independent diagnostic reruns, not duplicate evaluations of the core Table~\ref{tab_core_mechanism} rows.
+\end{tablenotes}
+\end{table}

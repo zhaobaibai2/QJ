@@ -1,0 +1,25 @@
+\begin{table}[!htbp]
+\centering
+\caption{Seed-level variation summary at density 0.15.}
+\label{tab_seed_range}
+\scriptsize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Method & S mean & S range & C mean & C range & R mean & R range \\
+\midrule
+PPO backbone & 0.0 & 0.0--0.0 & 100.0 & 100.0--100.0 & 20.7 & 19.9--21.4 \\
+Risk-only & 0.0 & 0.0--0.0 & 0.0 & 0.0--0.0 & 0.9 & 0.9--0.9 \\
+No-action guard & 0.8 & 0.0--2.5 & 100.0 & 100.0--100.0 & 21.7 & 21.0--23.1 \\
+RSS/TTC filter & 53.3 & 50.0--57.5 & 44.2 & 40.0--47.5 & 78.9 & 76.0--81.8 \\
+PPO-Lagrangian & 0.0 & 0.0--0.0 & 100.0 & 100.0--100.0 & 22.1 & 20.1--25.5 \\
+Guard & 59.2 & 57.5--60.0 & 20.8 & 15.0--30.0 & 86.4 & 85.5--87.0 \\
+Shield & 62.5 & 52.5--70.0 & 19.2 & 10.0--32.5 & 85.7 & 82.0--87.9 \\
+Gated-risk & 61.7 & 60.0--65.0 & 18.3 & 17.5--20.0 & 86.9 & 86.1--88.2 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item S, C, and R denote success, cost, and route completion in percent. Each method has three independently trained seeds and 40 diagnostic episodes per seed; the full per-seed scatter remains in the supplementary CSV package. Wider Shield ranges motivate the family-level interpretation rather than a strict ranking among runtime variants.
+\end{tablenotes}
+\end{table}

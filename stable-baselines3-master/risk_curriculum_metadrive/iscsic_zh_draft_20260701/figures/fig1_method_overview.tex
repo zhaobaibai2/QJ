@@ -1,0 +1,39 @@
+
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage{ctex}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,backgrounds}
+\pgfplotsset{compat=1.18}
+\definecolor{guardblue}{HTML}{2F5597}
+\definecolor{riskorange}{HTML}{C55A11}
+\definecolor{softgreen}{HTML}{548235}
+\definecolor{lightgray}{HTML}{F2F4F7}
+\begin{document}
+
+\begin{tikzpicture}[font=\small, node distance=9mm, >=Latex]
+\tikzset{box/.style={rounded corners=2pt, draw=black!55, fill=lightgray, align=center, minimum height=8mm, inner sep=4pt},
+         keybox/.style={rounded corners=2pt, draw=guardblue!80, fill=guardblue!8, align=center, minimum height=9mm, inner sep=4pt},
+         riskbox/.style={rounded corners=2pt, draw=riskorange!80, fill=riskorange!10, align=center, minimum height=9mm, inner sep=4pt},
+         metric/.style={rounded corners=2pt, draw=softgreen!80, fill=softgreen!9, align=center, minimum height=8mm, inner sep=3pt}}
+\node[box, minimum width=25mm] (obs) {MetaDrive\\观测 $s_t$\\导航/速度/LiDAR};
+\node[box, minimum width=25mm, right=16mm of obs] (policy) {PPO 策略\\$\pi_\theta(a_t|s_t)$};
+\node[keybox, minimum width=32mm, right=16mm of policy] (guard) {动作级安全守护\\TTC 软/硬制动\\超速油门裁剪};
+\node[box, minimum width=25mm, right=16mm of guard] (env) {环境执行\\$s_{t+1},r,c$};
+\node[riskbox, minimum width=38mm, below=14mm of guard] (reward) {门控风险塑形\\TTC/车道/平滑/事件代价\\进度与停滞约束};
+\node[metric, minimum width=32mm, below=14mm of policy] (curr) {课程与评估协议\\16-env, 三种子\\密度 0.00/0.08/0.15};
+\node[metric, minimum width=34mm, below=14mm of env] (metrics) {论文指标\\成功率 / cost / 路线完成\\stress 与外部种子};
+\draw[->, thick] (obs) -- (policy);
+\draw[->, thick] (policy) -- node[above]{原始动作} (guard);
+\draw[->, thick, guardblue] (guard) -- node[above]{安全动作} (env);
+\draw[->, thick] (env.north) to[out=60,in=120,looseness=1.2] node[above]{闭环反馈} (obs.north);
+\draw[->, thick, riskorange] (env) |- (reward);
+\draw[->, thick, riskorange] (reward.west) -- ++(-8mm,0) |- (policy.south);
+\draw[->, thick, softgreen] (curr) -- (policy);
+\draw[->, thick, softgreen] (env) -- (metrics);
+\begin{scope}[on background layer]
+\node[draw=guardblue!35, rounded corners=4pt, fit=(policy)(guard)(reward)(curr), inner sep=6pt, label={[guardblue]above:Guard/Shield-centered Safe RL}] {};
+\end{scope}
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,127 @@
+% Auto-generated evidence-grounded Results/Experiments draft.
+% Regenerated at 2026-07-01T08:55:18+08:00 with compact table labels from final_paper_manifest_20260701_0415.
+% This file is a drop-in draft and intentionally does not overwrite paper/main_zh.tex.
+
+\section{Experimental Protocol}
+
+All formal experiments use the frozen 16-environment protocol recorded in the experiment ledger. Training and evaluation are performed with \texttt{n\_envs=16} unless an experiment is explicitly marked as diagnostic. The formal held-out densities are $0.00$, $0.08$, and $0.15$, with 50 evaluation episodes per density and per seed. The high-density main table reports density $0.15$, where unsafe shortcuts and no-progress policies are most visible. Stress tests at densities $0.20$ and $0.25$ are frozen-model robustness probes rather than tuning targets.
+
+The comparison set separates mechanism from incidental reward tuning. Negative controls include vanilla PPO, curriculum-only PPO, risk-only PPO, and a no-action-guard ablation. Positive mechanism controls include \texttt{guard\_only} and \texttt{shield\_only}; full, retuned, and gated-risk variants test whether dense risk shaping, TTC, lane, smoothness, and conditional risk gating add robustness beyond the action-level safety mechanism. All paper-facing tables are generated from the frozen paper-table package and indexed by the final table manifest.
+
+\section{Results}
+
+\subsection{Formal Held-Out Comparison}
+
+Table~\ref{tab:formal-main-d015} shows that dense-traffic performance is dominated by the action-level safety mechanism rather than by risk reward alone. Vanilla PPO and curriculum-only PPO both fail at density $0.15$, with zero success and unit cost. The no-action-guard ablation also collapses despite sharing the surrounding framework. Risk-only PPO has zero success and nearly zero route completion, so its zero cost is a stagnation failure rather than safe driving.
+
+The strongest formal rows are the guard/shield-centered variants. \texttt{guard\_only} reaches a success rate of 0.633 with cost 0.207 and route completion 0.868, while \texttt{shield\_only} reaches 0.627 success with cost 0.227 and route completion 0.871. Full and gated variants remain competitive, but they do not consistently exceed the simpler action-guard baselines. The central manuscript claim should therefore be guard/shield-centered robustness under dense traffic, with risk shaping and gated-risk variants framed as refinements.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Collision $\downarrow$ \\
+\midrule
+Baseline & 0.000 & 1.000 & 0.190 & 0.627 \\
+Curriculum & 0.000 & 1.000 & 0.177 & 0.627 \\
+Risk-only & 0.000 & 0.000 & 0.009 & 0.000 \\
+No guard & 0.000 & 1.000 & 0.172 & 0.513 \\
+Guard & 0.633 & 0.207 & 0.868 & 0.200 \\
+Shield & 0.627 & 0.227 & 0.871 & 0.227 \\
+Full & 0.620 & 0.247 & 0.865 & 0.233 \\
+Retuned full & 0.620 & 0.240 & 0.853 & 0.220 \\
+Gated risk & 0.600 & 0.253 & 0.849 & 0.253 \\
+\bottomrule
+\end{tabular}
+\caption{Formal held-out evaluation at density 0.15 with three-seed means. Seed-level variability is reported in the robustness appendix; zero-cost risk-only results are not interpreted as safety because route progress collapses.}
+\label{tab:formal-main-d015}
+\end{table}
+
+\subsection{Component Ablation}
+
+Table~\ref{tab:ablation-d015} gives the mechanism ablation at density $0.15$. Removing the action guard is the most damaging intervention: success falls to zero and cost rises to 1.000. Removing the TTC term degrades high-density safety, with success 0.540 and cost 0.360. Removing the lane term increases lateral deviation and worsens the cost-success tradeoff, while removing smoothness mainly affects stability and seed variance.
+
+These ablations show that the method is not a single reward-weight trick. The action guard provides the dominant stabilizing structure, and the reward terms refine collision anticipation, lateral stability, and control smoothness around that structure.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Collision $\downarrow$ \\
+\midrule
+No guard & 0.000 & 1.000 & 0.172 & 0.513 \\
+w/o TTC & 0.540 & 0.360 & 0.823 & 0.360 \\
+w/o lane & 0.607 & 0.280 & 0.844 & 0.280 \\
+w/o smooth & 0.567 & 0.287 & 0.821 & 0.280 \\
+Guard & 0.633 & 0.207 & 0.868 & 0.200 \\
+\bottomrule
+\end{tabular}
+\caption{Mechanism ablation at density 0.15. Removing the action guard collapses held-out performance, while TTC, lane, and smoothness terms act as refinements around the guard-centered mechanism.}
+\label{tab:ablation-d015}
+\end{table}
+
+\subsection{Stress-Density Robustness}
+
+Table~\ref{tab:stress-ranked} evaluates frozen models at densities $0.20$ and $0.25$. These densities are harder than the formal held-out table and should not be described as training objectives. At density $0.20$, \texttt{shield\_only} ranks first by success/cost/route ordering, while \texttt{proposed\_gated\_risk} and the retuned full variant remain close. At density $0.25$, \texttt{guard\_only} becomes the cleanest survivor among progress-making methods. Risk-only again shows near-zero route completion and should be interpreted as stagnation rather than safety.
+
+The stress results support graceful degradation of guard/shield-centered policies. They do not support a claim that full risk shaping dominates all simpler mechanisms in every setting.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{rlrrrr}
+\toprule
+Density & Rank & Method & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ \\
+\midrule
+0.20 & 1 & Shield & 0.480 & 0.360 & 0.778 \\
+0.20 & 2 & Retuned full & 0.453 & 0.380 & 0.753 \\
+0.20 & 3 & Gated risk & 0.447 & 0.367 & 0.766 \\
+0.20 & 4 & Guard & 0.413 & 0.407 & 0.733 \\
+0.20 & 5 & Full & 0.380 & 0.400 & 0.744 \\
+0.20 & 6 & Risk-only & 0.000 & 0.000 & 0.009 \\
+0.25 & 1 & Guard & 0.267 & 0.487 & 0.658 \\
+0.25 & 2 & Gated risk & 0.220 & 0.527 & 0.628 \\
+0.25 & 3 & Full & 0.207 & 0.587 & 0.587 \\
+0.25 & 4 & Shield & 0.193 & 0.587 & 0.609 \\
+0.25 & 5 & Retuned full & 0.173 & 0.687 & 0.571 \\
+0.25 & 6 & Risk-only & 0.000 & 0.000 & 0.009 \\
+\bottomrule
+\end{tabular}
+\caption{Stress evaluation at densities 0.20 and 0.25, ranked by success, cost, and route completion. These rows are robustness evidence, not tuning objectives.}
+\label{tab:stress-ranked}
+\end{table}
+
+\subsection{External Scenario-Seed Validation}
+
+Table~\ref{tab:external-seed-d015} evaluates frozen models under external scenario seeds \texttt{test\_start\_seed=20000} and \texttt{30000}, aggregating 300 episodes per label at density $0.15$. \texttt{shield\_only} reaches 0.687 success with cost 0.207, while \texttt{proposed\_gated\_risk} reaches 0.663 success with cost 0.213. Their Wilson 95\% success intervals overlap, so the correct claim is that gated risk is competitive and useful as a refinement, not that it is statistically superior to shield-only. The no-action-guard and risk-only controls fail in the same distinct ways seen in the formal table: unsafe driving for no-action-guard and no-progress stagnation for risk-only.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success $\uparrow$ & 95\% CI & Cost $\downarrow$ & Route $\uparrow$ \\
+\midrule
+Shield & 0.687 & [0.632, 0.737] & 0.207 & 0.878 \\
+Gated risk & 0.663 & [0.608, 0.714] & 0.213 & 0.866 \\
+Guard & 0.613 & [0.557, 0.667] & 0.240 & 0.852 \\
+Retuned full & 0.597 & [0.540, 0.651] & 0.280 & 0.838 \\
+Risk-only & 0.000 & [0.000, 0.013] & 0.000 & 0.009 \\
+No guard & 0.000 & [0.000, 0.013] & 1.000 & 0.191 \\
+\bottomrule
+\end{tabular}
+\caption{External scenario-seed validation at density 0.15. Each row aggregates 300 episodes from train seeds 0/1/2 and external test-start seeds 20000/30000. Confidence intervals are Wilson 95\% intervals for success.}
+\label{tab:external-seed-d015}
+\end{table}
+
+\subsection{Qualitative Behavior Evidence}
+
+The qualitative rollout package provides representative trajectory and behavior plots. These figures should be used to illustrate failure modes and mechanisms: no-action-guard tends toward high-speed collision or road departure; risk-only avoids cost by barely progressing; guard/shield-centered policies keep meaningful route progress while reducing unsafe events. These figures are explanatory and should not replace aggregate tables.
+
+\subsection{Claim Boundary}
+
+The result package supports three claim levels. First, a strong claim: action guard/shield is the dominant stabilizing mechanism in dense traffic. Second, a strong negative-control claim: risk-only and no-action-guard fail for different reasons, so low cost must be interpreted together with route completion. Third, a moderate refinement claim: TTC, lane, smoothness, and gated-risk shaping improve or explain behavior around the guard/shield mechanism, but current evidence does not justify presenting them as independently dominant.
+
+This boundary is important for writing the discussion. The strongest paper is not a reward-only story; it is a mechanism-separated safe-RL story with formal, ablation, stress, external-seed, and qualitative evidence all pointing to the same guard/shield-centered interpretation.

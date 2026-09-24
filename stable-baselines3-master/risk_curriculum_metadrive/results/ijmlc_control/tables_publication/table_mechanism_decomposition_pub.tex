@@ -1,0 +1,23 @@
+
+\begin{table}[t]
+\centering
+\caption{Mechanism decomposition linking ablations to the main claim.}
+\label{tab_mechanism_decomposition}
+\footnotesize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.14\textwidth}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.10\textwidth}@{}}
+\toprule
+Question & Variant & Expected evidence & Observed evidence & Status \\
+\midrule
+Low cost is sufficient? & Risk-only & Fail if safety is stationary avoidance & 0.0 cost, 0.9 route, 100.0 stop & Supported \\
+Reward shaping is enough? & No-action guard & Unsafe without execution intervention & 100.0 cost, 21.7 route & Supported \\
+Runtime intervention matters? & Guard / Shield / Gated-risk & Lower cost with route progress & 18.3--20.8 cost, 85.7--86.9 route & Supported \\
+Classical filter is enough? & RSS/TTC filter & Improves PPO backbone but trails runtime variants & 44.2 cost versus 18.3--20.8 & Supported \\
+Dense traffic is solved? & Density sweep & Degrades under stress if claim is bounded & cost rises at density 0.25 & Bounded \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item This table is a reviewer-facing navigation aid. Status distinguishes supported claims from bounded operating-envelope claims.
+\end{tablenotes}
+\end{table}

@@ -1,0 +1,40 @@
+\begin{table}[!htbp]
+\centering
+\caption{Evidence map and supplementary artifacts.}
+\label{tab_data_manifest}
+\footnotesize
+\setlength{\tabcolsep}{4.0pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.28\textwidth}@{}}
+\toprule
+Evidence block & Manuscript support and main location & Supplementary artifacts \\
+\midrule
+Core diagnostics &
+Non-motion artifact, core mechanism, and density-0.15 headline results in Fig.~\ref{fig_core_evidence} and Table~\ref{tab_core_mechanism}. &
+Episode CSVs and table-ready aggregates. \\
+\addlinespace[2pt]
+External baselines &
+Comparator evidence against runtime filtering and training-time penalty methods in Table~\ref{tab_external_baseline}. &
+Baseline diagnostic CSVs and the supplementary external-baseline figure. \\
+\addlinespace[2pt]
+Density stress &
+Operating-envelope evidence across densities 0.08, 0.15, 0.20, and 0.25 in Fig.~\ref{fig_density}, Table~\ref{tab_density_summary}, and Appendix~\ref{app_density}. &
+All-density aggregate and episode CSVs. \\
+\addlinespace[2pt]
+Sensitivity &
+Independent diagnostic reruns for TTC threshold and target-speed trends in Fig.~\ref{fig_ttc_sensitivity} and Appendix~\ref{app_sensitivity_runtime}. &
+Sensitivity aggregate and episode CSVs. \\
+\addlinespace[2pt]
+Runtime &
+Python simulation-loop timing and intervention-frequency evidence in Fig.~\ref{fig_runtime_overhead} and Appendix~\ref{app_sensitivity_runtime}. &
+Runtime aggregate and per-seed CSVs. \\
+\addlinespace[2pt]
+Uncertainty and seed scatter &
+Episode-level intervals and seed variation at density 0.15 in Appendix~\ref{app_ci}. &
+Wilson/bootstrap and seed-scatter CSVs. \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}
+\item The printed appendix groups the evidence package by claim rather than listing every generated file. Full raw and table-ready CSV files remain in the submission package.
+\end{tablenotes}
+\end{table}

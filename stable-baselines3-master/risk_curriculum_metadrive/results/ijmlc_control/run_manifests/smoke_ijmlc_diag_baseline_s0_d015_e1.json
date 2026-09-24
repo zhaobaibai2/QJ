@@ -1,0 +1,26 @@
+{
+  "run_id": "smoke_ijmlc_diag_baseline_s0_d015_e1",
+  "created_at": "2026-07-01T16:32:31",
+  "manifest": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/06_EXISTING_MODEL_MANIFEST.csv",
+  "labels": [
+    "baseline"
+  ],
+  "seeds": [
+    0
+  ],
+  "densities": [
+    0.15
+  ],
+  "test_start_seeds": [
+    10000
+  ],
+  "episodes_per_start": 1,
+  "selected_models": 1,
+  "episode_rows": 1,
+  "episode_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/raw_csv/smoke_ijmlc_diag_baseline_s0_d015_e1_episodes.csv",
+  "summary_csv": "/home/aaa/data/qj/stable-baselines3-master/risk_curriculum_metadrive/results/ijmlc_control/summary_tables/smoke_ijmlc_diag_baseline_s0_d015_e1_summary.csv",
+  "elapsed_sec": 1.8326773643493652,
+  "status": "done",
+  "claim_supported": "IJMLC non-motion artifact, progress-safety frontier, runtime wall-clock diagnostics",
+  "boundary_note": "Frozen-model diagnostic evaluation; not new training or retuning evidence."
+}

@@ -1,0 +1,11 @@
+file,role,source,claim_boundary
+table1_formal_main_all_densities.csv,formal main comparator all densities,codex_longrun_iscsic/paper_tables_20260701_0258/main_comparators_nenv16.csv + gated-risk addendum,aggregate values only
+table1_formal_main_d015.csv,formal main table at hardest nominal density,formal three-seed aggregates,main quantitative table
+table1_formal_main_d015.tex,LaTeX for main formal table,table1_formal_main_d015.csv,caption contains risk-only caveat
+table2_ablation_d015.csv,mechanism ablation table,codex_longrun_iscsic/paper_tables_20260701_0258/ablation_mechanism_nenv16.csv,action guard necessary; rewards refine
+table2_ablation_d015.tex,LaTeX for ablation table,table2_ablation_d015.csv,mechanism evidence
+table3_stress_ranked.csv,stress robustness table,codex_longrun_iscsic/paper_tables_20260701_0258/gated_risk_stress_rank_with_existing.csv,"stress only, not tuning target"
+table3_stress_ranked.tex,LaTeX for stress table,table3_stress_ranked.csv,appendix/robustness
+claim_boundary_matrix.csv,paper claim guardrails,current evidence audit,use during writing
+table4_external_seed_robustness.csv,external scenario-seed robustness table,outputs/external_seed_robustness_nenv16_20260701_0425/aggregate/mean_by_label_density.csv,reviewer-facing validation; frozen models only
+table4_external_seed_robustness_d015_wilson95.csv,external seed hard-density Wilson 95 intervals,codex_longrun_iscsic/paper_tables_20260701_0258/external_seed_robustness_d015_wilson95.csv,uncertainty context; not a superiority claim

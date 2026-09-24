@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\caption{Parameter-sensitivity and model-selection closure. Single-axis probes are diagnostic unless they satisfy the joint success--cost and evaluation-scope criteria. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:param}
+\scriptsize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrl}
+\toprule
+Probe & Density & Success $\uparrow$ & Cost $\downarrow$ & Decision & Reason \\
+\midrule
+Ours-Guard runtime mode & 0.15 & \second{63.3} & \second{20.7} & Main & best formal joint mode \\
+Ours-Shield runtime mode & 0.15 & 62.7 & 22.7 & Robustness & highest external mean \\
+TTC14/v18 candidate & 0.15 & 57.3 & 26.0 & Rejected & below gate \\
+Guard ttc13/v18 two-seed probe & 0.15 & 60.0 & \best{18.0} & Diagnostic & cost improves but success drops \\
+Guard v19 two-seed probe & 0.15 & \best{65.0} & 27.0 & Diagnostic & success improves but cost rises \\
+Retuned full extension & 0.15 & 62.0 & 24.0 & Diagnostic & does not improve over runtime modes \\
+Gated-risk extension & 0.15 & 60.0 & 25.3 & Diagnostic & useful mechanism probe only \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

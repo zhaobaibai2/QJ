@@ -1,0 +1,52 @@
+\relax 
+\citation{li2022metadrive}
+\citation{garcia2015safe,achiam2017cpo,alshiekh2018shielding,cheng2019barrier}
+\citation{schulman2017ppo}
+\citation{li2022metadrive}
+\citation{garcia2015safe,achiam2017cpo,alshiekh2018shielding}
+\citation{cheng2019barrier}
+\@writefile{toc}{\contentsline {section}{\numberline {I}引言}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}相关工作}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}强化学习自动驾驶与程序化仿真}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}安全强化学习与动作屏蔽}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}方法}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}问题设置与总体框架}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}TTC 感知动作守护与安全屏蔽}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}风险塑形与门控风险}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}实验设置}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}结果与分析}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}正式主结果：动作守护/屏蔽主导密集交通性能}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces GuardShield-RL{} 的闭环框架。核心机制位于策略动作和环境执行之间：TTC 感知制动屏蔽和超速守护先约束动作，再由风险塑形与课程/评估协议提供训练和分析信号。}}{3}{}\protected@file@percent }
+\newlabel{fig:method}{{1}{3}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces 密集交通密度 $0.15$ 下的正式三种子均值结果。Risk-only 的低 cost 来自路线进度停滞，因此不作为安全驾驶成功。}}{3}{}\protected@file@percent }
+\newlabel{tab:formal-main-d015}{{I}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}机制消融：动作守护是必要条件，奖励项是细化机制}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}压力密度和外部场景种子验证}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 密度 0.15 下正式主对比的成功率、cost 和路线完成度。动作守护/安全屏蔽形成最高的安全-完成率折中；risk-only 的低 cost 与路线停滞同时出现。}}{4}{}\protected@file@percent }
+\newlabel{fig:formal}{{2}{4}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces 密度 $0.15$ 下的机制消融。动作守护移除后完全失效，TTC、车道和平滑项表现为机制细化。}}{4}{}\protected@file@percent }
+\newlabel{tab:ablation-d015}{{II}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 密度 0.15 下的机制消融图。动作守护移除造成直接崩溃，TTC/车道/平滑项表现为围绕守护机制的补强。}}{4}{}\protected@file@percent }
+\newlabel{fig:ablation}{{3}{4}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces 外部场景种子验证：密度 $0.15$，每行 300 个 episode，区间为成功率 Wilson 95\% CI。}}{4}{}\protected@file@percent }
+\newlabel{tab:external-d015}{{III}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}参数敏感性和调参闭环}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}定性行为分析}{4}{}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{li2022metadrive}{1}
+\bibcite{garcia2015safe}{2}
+\bibcite{achiam2017cpo}{3}
+\bibcite{alshiekh2018shielding}{4}
+\bibcite{cheng2019barrier}{5}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 冻结模型在压力密度 0.20 和 0.25 下的成功率与 cost。该实验用于鲁棒性验证，不作为调参目标。}}{5}{}\protected@file@percent }
+\newlabel{fig:stress}{{4}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 外部场景种子下密度 0.15 成功率及 Wilson 95\% 区间。Shield-only 与门控风险区间重叠，支持“竞争性补强”而非显著优越。}}{5}{}\protected@file@percent }
+\newlabel{fig:external}{{5}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}讨论}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}结论}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{参考文献}{5}{}\protected@file@percent }
+\bibcite{schulman2017ppo}{6}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 密度 0.15 下的定性 rollout。行为图用于解释 no-action-guard、risk-only 和 guard/shield 之间的失败模式差异。}}{6}{}\protected@file@percent }
+\newlabel{fig:behavior}{{6}{6}}
+\gdef \@abspage@last{6}

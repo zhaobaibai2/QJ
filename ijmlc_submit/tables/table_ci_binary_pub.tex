@@ -1,0 +1,45 @@
+\begin{table}[!htbp]
+\centering
+\caption{Episode-level uncertainty for binary outcomes at density 0.15.}
+\label{tab_ci_binary}
+\scriptsize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.06}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\multicolumn{5}{c}{(a) Task and artifact outcomes} \\
+\midrule
+Method & Ep & Success & Cost & Low-progress \\
+\midrule
+PPO backbone & 120 & 0.0 (0.0--3.1) & 100.0 (96.9--100.0) & 57.5 (48.6--66.0) \\
+Risk-only & 120 & 0.0 (0.0--3.1) & 0.0 (0.0--3.1) & 100.0 (96.9--100.0) \\
+No-action guard & 120 & 0.8 (0.1--4.6) & 100.0 (96.9--100.0) & 55.8 (46.9--64.4) \\
+RSS/TTC filter & 120 & 53.3 (44.4--62.0) & 44.2 (35.6--53.1) & 2.5 (0.9--7.1) \\
+PPO-Lagrangian & 120 & 0.0 (0.0--3.1) & 100.0 (96.9--100.0) & 55.0 (46.1--63.6) \\
+Guard & 120 & 59.2 (50.2--67.5) & 20.8 (14.5--28.9) & 0.0 (0.0--3.1) \\
+Shield & 120 & 62.5 (53.6--70.6) & 19.2 (13.1--27.1) & 0.8 (0.1--4.6) \\
+Gated-risk & 120 & 61.7 (52.7--69.9) & 18.3 (12.4--26.2) & 0.8 (0.1--4.6) \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\multicolumn{3}{c}{(b) Event outcomes} \\
+\midrule
+Method & Collision & Out-road \\
+\midrule
+PPO backbone & 63.3 (54.4--71.4) & 36.7 (28.6--45.6) \\
+Risk-only & 0.0 (0.0--3.1) & 0.0 (0.0--3.1) \\
+No-action guard & 53.3 (44.4--62.0) & 46.7 (38.0--55.6) \\
+RSS/TTC filter & 41.7 (33.2--50.6) & 2.5 (0.9--7.1) \\
+PPO-Lagrangian & 69.2 (60.4--76.7) & 30.8 (23.3--39.6) \\
+Guard & 18.3 (12.4--26.2) & 2.5 (0.9--7.1) \\
+Shield & 15.8 (10.4--23.4) & 3.3 (1.3--8.3) \\
+Gated-risk & 18.3 (12.4--26.2) & 0.0 (0.0--3.1) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Entries report point estimate with Wilson 95\% interval in parentheses, in percentage points.
+\end{tablenotes}
+\end{table}

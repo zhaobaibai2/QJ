@@ -1,0 +1,24 @@
+
+\begin{table}[t]
+\centering
+\caption{External baseline comparison at density 0.15.}
+\label{tab_external_baseline}
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Method & Success & Cost & Route & Collision & Out-road & TTC-danger & Int./100 steps \\
+\midrule
+PPO backbone & 0.0 & 100.0 & 20.7 & 63.3 & 36.7 & 60.4 & 0.0 \\
+RSS/TTC filter & 53.3 & 44.2 & 78.9 & 41.7 & 2.5 & 13.4 & 71.7 \\
+PPO-Lagrangian & 0.0 & 100.0 & 22.1 & 69.2 & 30.8 & 60.1 & 0.0 \\
+Guard & 59.2 & 20.8 & 86.4 & 18.3 & 2.5 & 11.8 & 69.6 \\
+Shield & 62.5 & 19.2 & 85.7 & 15.8 & 3.3 & 11.4 & 70.8 \\
+Gated-risk & 61.7 & 18.3 & 86.9 & 18.3 & 0.0 & 11.4 & 67.9 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Values are percentages except Int./100 steps. RSS/TTC is an interpretable runtime-filter comparator; intervention frequency is diagnostic rather than an objective by itself.
+\end{tablenotes}
+\end{table}

@@ -1,0 +1,157 @@
+
+\documentclass[conference,a4paper]{IEEEtran}
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{balance}
+\graphicspath{{figures/}}
+\newcommand{\method}{GuardShield-RL}
+\newcommand{\safeinput}[1]{\IfFileExists{#1}{\input{#1}}{\fbox{Missing #1}}}
+\newcommand{\safeinclude}[2][]{\includegraphics[#1]{#2}}
+
+\title{面向密集交通自动驾驶的动作安全屏蔽强化学习方法}
+\author{\IEEEauthorblockN{作者姓名}
+\IEEEauthorblockA{单位名称\\电子邮箱}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+程序化驾驶仿真中的强化学习策略需要同时保持路线完成、安全事件控制和未见场景泛化。仅依赖终止碰撞惩罚或密集风险奖励，容易出现两类失败：策略为了获得路线奖励而高速碰撞，或为了降低 cost 而几乎不前进。本文提出一种以动作级安全守护与安全屏蔽为中心的 PPO 驾驶框架 \method{}。该框架在策略输出和环境执行之间加入 TTC 感知的软/硬制动屏蔽与超速油门裁剪，并将 TTC、车道偏离、控制平滑、事件代价和门控风险塑形用于训练信号细化。我们在 MetaDrive 0.4.3 上采用统一的 16 环境训练/评估协议，整理了主对比、机制消融、参数敏感性、密度压力测试和外部场景种子验证。正式密度 0.15 下，仅动作守护和仅安全屏蔽分别达到 0.633/0.627 的成功率和 0.207/0.227 的 cost，而 risk-only 的零 cost 来自路线完成约 0.009 的停滞。外部场景种子验证中，shield-only 成功率为 0.687，门控风险为 0.663，二者 Wilson 95\% 区间重叠。结果表明，动作级安全机制是当前证据支持的主要稳定来源，风险奖励和门控风险应作为围绕该机制的补强而非单独主导因素。
+\end{abstract}
+
+\begin{IEEEkeywords}
+安全强化学习，自动驾驶，动作屏蔽，MetaDrive，PPO，TTC 风险
+\end{IEEEkeywords}
+
+\section{引言}
+自动驾驶决策控制要求策略在动态交通参与者、随机道路拓扑和未见场景中连续输出可执行控制动作。深度强化学习为端到端驾驶策略提供了直接优化路线完成和驾驶收益的方式，但安全关键场景中的探索代价较高，且高密度交通下的成功率、碰撞率、越界率和路线完成度存在显著权衡。MetaDrive 提供了程序化道路生成、交通随机化和逐回合安全指标记录能力，使得该问题可以在可重复的仿真协议下研究~\cite{li2022metadrive}。
+
+现有安全强化学习通常从约束优化、安全奖励或动作屏蔽三个方向缓解风险~\cite{garcia2015safe,achiam2017cpo,alshiekh2018shielding,cheng2019barrier}。然而，在密集交通驾驶中，单纯奖励塑形并不一定产生可用驾驶策略。过强的风险惩罚可能诱导策略停滞，从而得到低 cost 但几乎没有路线进度；过弱的安全机制又会使策略利用短期路线奖励，造成碰撞或越界。本文的实验台账也验证了这一点：risk-only 在密度 0.15 下 success 为 0 且 route completion 约 0.009，而去掉动作守护的变体 success 为 0 且 cost 为 1.000。
+
+本文的核心观点是：在当前 MetaDrive 密集交通证据下，动作级安全守护/屏蔽是稳定安全驾驶的主机制，风险奖励、TTC、车道和平滑项是对该机制的解释和补强。围绕这一观点，我们做出如下贡献：
+\begin{enumerate}
+  \item 提出 \method{}，在 PPO 策略动作和环境执行之间加入 TTC 感知制动屏蔽与超速守护，并保留风险塑形作为训练信号细化。
+  \item 建立统一的 16 环境正式实验协议，覆盖主对比、消融、调参闭环、压力密度和外部场景种子验证，避免将历史 n\_envs=8/10/32 诊断结果混入论文主表。
+  \item 通过机制消融和参数敏感性说明：动作守护移除会直接崩溃，TTC/车道/平滑项提供细化作用，门控风险能修复 risk-only 停滞但不能被写成显著优于 shield-only。
+\end{enumerate}
+
+\section{相关工作}
+\subsection{强化学习自动驾驶与程序化仿真}
+PPO 通过裁剪策略更新提高 on-policy 连续控制训练稳定性~\cite{schulman2017ppo}，因此常作为自动驾驶仿真控制的基础算法。MetaDrive 通过组合道路结构、交通密度和随机种子构造多样化驾驶场景~\cite{li2022metadrive}，适合验证策略是否只记住训练地图，或能在未见道路和不同交通密度下保持完成率与安全性。
+
+\subsection{安全强化学习与动作屏蔽}
+安全强化学习既可以通过约束优化显式限制期望 cost，也可以通过安全奖励或屏蔽器约束动作空间~\cite{garcia2015safe,achiam2017cpo,alshiekh2018shielding}。在连续控制任务中，屏蔽或 barrier-like 结构的优势在于可以在策略动作落地前进行干预~\cite{cheng2019barrier}。本文并不声称提出通用理论安全保证，而是实证展示在密集交通 MetaDrive 协议下，动作执行前的 TTC/速度守护比单独风险奖励更能解释最终性能。
+
+\section{方法}
+\subsection{问题设置与总体框架}
+驾驶控制被建模为马尔可夫决策过程。状态 $s_t$ 包含 MetaDrive 默认导航、车辆运动和激光雷达观测，动作 $a_t=[\delta_t,u_t]$ 包含转向和油门/制动。基础策略采用 PPO，策略网络为两层 256 单元全连接网络。图~\ref{fig:method} 给出整体闭环：策略先输出原始动作，动作守护模块根据 TTC 和速度风险进行软/硬裁剪，环境返回安全事件、路线完成和传感器状态，风险塑形再作为训练信号反馈给策略。
+
+\begin{figure*}[t]
+  \centering
+  \safeinclude[width=0.92\textwidth]{fig1_method_overview.pdf}
+  \caption{\method{} 的闭环框架。核心机制位于策略动作和环境执行之间：TTC 感知制动屏蔽和超速守护先约束动作，再由风险塑形与课程/评估协议提供训练和分析信号。}
+  \label{fig:method}
+\end{figure*}
+
+\subsection{TTC 感知动作守护与安全屏蔽}
+给定前向车辆的相对距离 $d_t$ 和闭合速度 $v_t^{ego}-v_t^{front}$，我们计算最小碰撞时间
+\begin{equation}
+\mathrm{TTC}_t=\frac{d_t}{\max(v_t^{ego}-v_t^{front},\epsilon)}.
+\end{equation}
+当最小 TTC 低于软阈值时，模块将纵向动作裁剪到保守制动；低于硬阈值时，强制更大制动。实现中硬阈值取 $\max(3.5,0.6\tau)$，软阈值取 $\max(6.0,\tau)$，其中 $\tau$ 是奖励配置中的 TTC 阈值。同时，当车速超过目标速度时，模块抑制正油门；超过目标速度 5 km/h 以上时施加保守制动。该模块不改变策略网络结构，但记录 shield intervention、soft/hard shield 和 overspeed guard rate，用于机制分析。
+
+\subsection{风险塑形与门控风险}
+风险塑形奖励包含基础行驶奖励、TTC 风险、车道偏离、控制平滑、加速度变化、超速、事件 cost、路线进度和停滞惩罚：
+\begin{equation}
+\begin{split}
+r_t = &\alpha r_t^{base} - \lambda_T c_t^{TTC}-\lambda_L c_t^{lane}-\lambda_S c_t^{steer} \\
+&-\lambda_A c_t^{acc}-\lambda_O c_t^{over}-\lambda_C c_t^{event} \\
+&+\lambda_P\Delta q_t - c_t^{idle}+b_t .
+\end{split}
+\end{equation}
+其中 $\Delta q_t$ 是路线完成度增量，$b_t$ 包含到达终点奖励和碰撞/越界终止惩罚。门控风险变体只在车辆存在最小速度、路线进度或局部风险时启用连续风险惩罚，事件代价仍保持有效。该设计用于缓解 risk-only 的停滞问题，但本文将其定位为围绕动作守护机制的补强。
+
+\section{实验设置}
+所有正式实验均使用 16 个并行环境训练和 16 个并行环境评估。训练种子为 0/1/2，正式评估密度为 0.00、0.08 和 0.15，每个密度每个种子 50 个 episode。训练使用 200 个程序化训练场景，测试使用不重叠的未见场景种子。压力测试采用冻结模型，在密度 0.20 和 0.25 下评估；外部场景种子验证使用 test\_start\_seed=20000 和 30000，每个标签在密度 0.15 下汇总 300 个 episode。主要指标为成功率、episode cost、路线完成度、碰撞率和越界率。
+
+比较方法包括基础 PPO、课程 PPO、risk-only、无动作守护、仅动作守护、仅安全屏蔽、完整候选、重调完整方法和门控风险方法。消融实验包含去掉动作守护、去掉 TTC、去掉车道项和去掉平滑项。所有论文主表只使用当前 final manifest 中的 n\_envs=16 聚合结果；n\_envs=8/10/32 和未推广调参分支只作为诊断记录。
+
+\section{结果与分析}
+\subsection{正式主结果：动作守护/屏蔽主导密集交通性能}
+表~\ref{tab:formal-main-d015} 和图~\ref{fig:formal} 展示密度 0.15 下的正式三种子均值。基础 PPO、课程 PPO 和无动作守护变体均为零成功且 cost 接近或等于 1.000，说明没有动作级约束时，高密度未见场景中的策略不可用。Risk-only 的 cost 为 0，但路线完成仅约 0.009，因此这是停滞失败而非安全驾驶。
+
+相比之下，仅动作守护达到 0.633 成功率、0.207 cost 和 0.868 路线完成；仅安全屏蔽达到 0.627 成功率、0.227 cost 和 0.871 路线完成。完整候选、重调完整和门控风险均处于相近性能带，但没有稳定超过简单的动作守护/屏蔽基线。因此，当前证据支持的主线是 guard/shield-centered robustness，而不是 risk reward 或 full proposed 的全面主导。
+
+\input{tables/formal_main_d015.tex}
+
+\begin{figure*}[t]
+  \centering
+  \safeinclude[width=0.92\textwidth]{fig2_formal_results.pdf}
+  \caption{密度 0.15 下正式主对比的成功率、cost 和路线完成度。动作守护/安全屏蔽形成最高的安全-完成率折中；risk-only 的低 cost 与路线停滞同时出现。}
+  \label{fig:formal}
+\end{figure*}
+
+\subsection{机制消融：动作守护是必要条件，奖励项是细化机制}
+表~\ref{tab:ablation-d015} 和图~\ref{fig:ablation} 给出机制消融。去掉动作守护后，成功率降为 0，cost 升至 1.000，是最强的必要性证据。去掉 TTC 后，高密度成功率为 0.540、cost 为 0.360，说明 TTC 风险对密集交通安全有实质作用。去掉车道或平滑项不会像去掉动作守护那样直接崩溃，但会改变安全-完成率折中和控制稳定性。因此，这些奖励项更适合写成机制细化，而不是主性能来源。
+
+\input{tables/ablation_d015.tex}
+
+\begin{figure}[t]
+  \centering
+  \safeinclude[width=\linewidth]{fig3_ablation_results.pdf}
+  \caption{密度 0.15 下的机制消融图。动作守护移除造成直接崩溃，TTC/车道/平滑项表现为围绕守护机制的补强。}
+  \label{fig:ablation}
+\end{figure}
+
+\subsection{压力密度和外部场景种子验证}
+图~\ref{fig:stress} 展示冻结模型在密度 0.20 和 0.25 下的压力测试。密度 0.20 下 shield-only 成功率最高，为 0.480；重调完整和门控风险接近。密度 0.25 下 guard-only 成为最干净的 survivor，成功率为 0.267、cost 为 0.487。Risk-only 在压力密度下仍表现为近零路线完成，因此不能解释为安全策略。
+
+外部场景种子验证进一步检查模型是否只适配了原测试种子。表~\ref{tab:external-d015} 和图~\ref{fig:external} 显示，shield-only 在密度 0.15 下成功率为 0.687，Wilson 95\% CI 为 [0.632,0.737]；门控风险成功率为 0.663，CI 为 [0.608,0.714]。两个区间重叠，因此本文只将门控风险写成有竞争力的补强，而不声称其显著优于 shield-only。
+
+\begin{figure*}[t]
+  \centering
+  \safeinclude[width=0.92\textwidth]{fig4_stress_results.pdf}
+  \caption{冻结模型在压力密度 0.20 和 0.25 下的成功率与 cost。该实验用于鲁棒性验证，不作为调参目标。}
+  \label{fig:stress}
+\end{figure*}
+
+\input{tables/external_d015.tex}
+
+\begin{figure}[t]
+  \centering
+  \safeinclude[width=\linewidth]{fig5_external_seed_ci.pdf}
+  \caption{外部场景种子下密度 0.15 成功率及 Wilson 95\% 区间。Shield-only 与门控风险区间重叠，支持“竞争性补强”而非显著优越。}
+  \label{fig:external}
+\end{figure}
+
+\subsection{参数敏感性和调参闭环}
+我们进一步整理了所有调参分支以判断是否需要继续训练。TTC14/v18 三种子分支在密度 0.15 下 success=0.573、cost=0.260，未通过 0.60/0.25 的推广门槛。Guard ttc13/v18 和 target-speed v19 在不同种子、不同密度之间呈混合权衡；moderate lateral/smooth retune 修复了一个种子的横向稳定性，但恶化另一个种子。因此这些分支均保留为参数敏感性证据，而不进入主表。该闭环说明，继续一维阈值或奖励微调的边际收益低于围绕已有证据完成论文论证。
+
+\subsection{定性行为分析}
+图~\ref{fig:behavior} 使用代表性未见场景 rollout 展示不同机制的行为差异。无动作守护更容易出现高速碰撞或越界；risk-only 倾向于低速停滞；动作守护/安全屏蔽方法能够保持路线推进并减少危险事件。该图用于解释机制，不替代聚合表格。
+
+\begin{figure*}[t]
+  \centering
+  \safeinclude[width=0.92\textwidth]{fig6_behavior_rollouts_d015.pdf}
+  \caption{密度 0.15 下的定性 rollout。行为图用于解释 no-action-guard、risk-only 和 guard/shield 之间的失败模式差异。}
+  \label{fig:behavior}
+\end{figure*}
+
+\section{讨论}
+当前证据给出三个层次的结论。第一，动作守护/安全屏蔽是最稳健的主机制：它在正式主表、消融和压力测试中反复出现为最强或最干净的性能来源。第二，risk-only 的失败说明低 cost 必须与路线完成共同解释，否则停滞策略会伪装成安全策略。第三，TTC、车道、平滑和门控风险塑形有助于解释或改善局部行为，但不能被夸大为独立主导因素。
+
+本文仍有边界。所有结果来自 MetaDrive 程序化仿真，不能直接声称可部署到真实车辆；外部种子和压力密度是冻结模型验证，不代表真实世界闭环验证；Wilson 区间也显示门控风险与 shield-only 的差异不足以支撑显著优越结论。后续工作应在更多交互模式、更真实传感器噪声和真实车辆或高保真仿真中验证动作屏蔽机制的迁移性。
+
+\section{结论}
+本文围绕 MetaDrive 密集交通中的安全强化学习整理并重构了完整 16 环境证据链。实验表明，动作级安全守护/屏蔽是当前最可靠的稳定来源；风险奖励、TTC、车道和平滑项以及门控风险塑形应被定位为围绕该机制的细化。主对比、消融、压力测试、外部种子和参数敏感性共同支持这一保守而一致的论文主线。该中文稿是投稿前工作稿；根据 ISCSIC 要求，正式提交时应转写为英文稿并进一步补齐作者信息和最终排版。
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

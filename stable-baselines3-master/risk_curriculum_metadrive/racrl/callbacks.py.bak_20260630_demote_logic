@@ -1,0 +1,109 @@
+"""Callbacks for paper metrics and adaptive difficulty."""
+
+from __future__ import annotations
+
+from collections import deque
+
+import numpy as np
+from stable_baselines3.common.callbacks import BaseCallback
+
+
+class PaperMetricsCallback(BaseCallback):
+    def __init__(
+        self,
+        curriculum: bool,
+        num_stages: int,
+        window: int,
+        stage0_route_completion: float,
+        stage0_cost: float,
+        stage1_success: float,
+        stage1_route_completion: float,
+        stage1_cost: float,
+        stage2_success: float,
+        stage2_cost: float,
+        demote_success: float,
+        demote_route_completion: float,
+        demote_cost: float,
+        demote_grace_episodes: int,
+        allow_demote: bool,
+    ):
+        super().__init__(verbose=0)
+        self.curriculum = curriculum
+        self.num_stages = num_stages
+        self.window = window
+        self.stage0_route_completion = stage0_route_completion
+        self.stage0_cost = stage0_cost
+        self.stage1_success = stage1_success
+        self.stage1_route_completion = stage1_route_completion
+        self.stage1_cost = stage1_cost
+        self.stage2_success = stage2_success
+        self.stage2_cost = stage2_cost
+        self.demote_success = demote_success
+        self.demote_route_completion = demote_route_completion
+        self.demote_cost = demote_cost
+        self.demote_grace_episodes = demote_grace_episodes
+        self.allow_demote = allow_demote
+        self.episodes: deque[dict] = deque(maxlen=window)
+        self.stage = 0
+        self.stage_episodes = 0
+
+    def _on_step(self) -> bool:
+        for info, done in zip(self.locals.get("infos", []), self.locals.get("dones", [])):
+            if done and "episode_cost" in info:
+                self.episodes.append(info)
+                self.stage_episodes += 1
+                self.logger.record("paper/episode_cost", info["episode_cost"])
+                self.logger.record("paper/base_reward", info["episode_base_reward"])
+                self.logger.record("paper/shaped_reward", info["episode_shaped_reward"])
+                self.logger.record("paper/collision", info["episode_collision"])
+                self.logger.record("paper/crash_vehicle", info["episode_crash_vehicle"])
+                self.logger.record("paper/crash_object", info["episode_crash_object"])
+                self.logger.record("paper/out_of_road", info["episode_out_of_road"])
+                self.logger.record("paper/success", info["is_success"])
+                self.logger.record("paper/route_completion", info["episode_route_completion"])
+                self.logger.record("paper/episode_length", info["episode_length"])
+                self.logger.record("paper/mean_speed_kmh", info["episode_mean_speed"])
+                self.logger.record("paper/lane_deviation", info["episode_mean_lane_deviation"])
+                self.logger.record("paper/max_lane_deviation", info["episode_max_lane_deviation"])
+                self.logger.record("paper/steering_variation", info["episode_steering_variation"])
+                self.logger.record("paper/accel_variation", info["episode_accel_variation"])
+                self.logger.record("paper/jerk", info["episode_jerk"])
+                self.logger.record("paper/ttc_risk", info["episode_ttc_risk"])
+                self.logger.record("paper/min_ttc", info["episode_min_ttc"])
+        if not self.curriculum:
+            return True
+        if len(self.episodes) < self.window:
+            return True
+        success = float(np.mean([e["is_success"] for e in self.episodes]))
+        cost = float(np.mean([e["episode_cost"] for e in self.episodes]))
+        route_completion = float(np.mean([e["episode_route_completion"] for e in self.episodes]))
+        self.logger.record("curriculum/window_success", success)
+        self.logger.record("curriculum/window_cost", cost)
+        self.logger.record("curriculum/window_route_completion", route_completion)
+        previous = self.stage
+        if self.stage == 0:
+            should_promote = route_completion >= self.stage0_route_completion and cost <= self.stage0_cost
+        elif self.stage == 1:
+            should_promote = (
+                success >= self.stage1_success
+                and route_completion >= self.stage1_route_completion
+                and cost <= self.stage1_cost
+            )
+        else:
+            should_promote = success >= self.stage2_success and cost <= self.stage2_cost
+        if should_promote:
+            self.stage = min(self.stage + 1, self.num_stages - 1)
+        elif (
+            self.allow_demote
+            and self.stage_episodes >= self.demote_grace_episodes
+            and route_completion < self.demote_route_completion
+            and cost > self.demote_cost
+            and success < self.demote_success
+        ):
+            self.stage = max(self.stage - 1, 0)
+        if previous != self.stage:
+            self.training_env.env_method("set_curriculum_stage", self.stage)
+            self.episodes.clear()
+            self.stage_episodes = 0
+        self.logger.record("curriculum/stage", self.stage)
+        return True

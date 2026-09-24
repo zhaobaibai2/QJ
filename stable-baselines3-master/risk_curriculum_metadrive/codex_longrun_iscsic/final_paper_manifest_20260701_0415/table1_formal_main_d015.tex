@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Collision $\downarrow$ \\
+\midrule
+baseline & 0.000 & 1.000 & 0.190 & 0.627 \\
+curriculum & 0.000 & 1.000 & 0.177 & 0.627 \\
+risk & 0.000 & 0.000 & 0.009 & 0.000 \\
+no\_action\_guard & 0.000 & 1.000 & 0.172 & 0.513 \\
+guard\_only & 0.633 & 0.207 & 0.868 & 0.200 \\
+shield\_only & 0.627 & 0.227 & 0.871 & 0.227 \\
+full\_proposed\_candidate & 0.620 & 0.247 & 0.865 & 0.233 \\
+retune\_proposed\_ttc4\_cost10\_lane1 & 0.620 & 0.240 & 0.853 & 0.220 \\
+proposed\_gated\_risk & 0.600 & 0.253 & 0.849 & 0.253 \\
+\bottomrule
+\end{tabular}
+\caption{Formal held-out evaluation at density 0.15 with three-seed means. Seed-level variability is reported in the robustness appendix; zero-cost risk-only results are not interpreted as safety because route progress collapses.}
+\label{tab:formal-main-d015}
+\end{table}

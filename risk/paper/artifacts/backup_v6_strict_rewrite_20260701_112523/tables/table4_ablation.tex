@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\caption{Ablation around the selected Ours-Guard mode at $d=0.15$. Every removal or reward-term ablation is worse than the selected reference on the main success-cost objective. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:ablation}
+\scriptsize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrl}
+\toprule
+Variant & Success $\uparrow$ & $\Delta$Succ. & Cost $\downarrow$ & $\Delta$Cost & Route $\uparrow$ & $\Delta$Route & Collision $\downarrow$ & Interpretation \\
+\midrule
+Ours-Guard mode & \best{63.3} & \best{+0.0} & \best{20.7} & \best{+0.0} & \best{0.868} & \best{+0.000} & \best{20.0} & selected reference \\
+No action guard & 0.0 & -63.3 & 100.0 & +79.3 & 0.172 & -0.695 & 51.3 & guard removal collapses \\
+w/o TTC reward & 54.0 & -9.3 & 36.0 & +15.3 & 0.823 & -0.045 & 36.0 & TTC loss hurts safety \\
+w/o lane reward & \second{60.7} & \second{-2.7} & \second{28.0} & \second{+7.3} & \second{0.844} & \second{-0.024} & \second{28.0} & lane control weakens \\
+w/o smoothness reward & 56.7 & -6.7 & 28.7 & +8.0 & 0.821 & -0.047 & \second{28.0} & smoothness trade-off \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{1mm}
+\begin{minipage}{0.97\textwidth}\scriptsize Deltas are relative to Ours-Guard. This table is a true ablation table: no ablation row exceeds the selected reference on the main objective.\end{minipage}
+\end{table*}

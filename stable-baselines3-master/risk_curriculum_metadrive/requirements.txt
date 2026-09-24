@@ -1,0 +1,9 @@
+# Installed in the supplied conda environment `sb3`; CUDA wheel must match driver.
+metadrive-simulator==0.4.3
+stable-baselines3
+torch
+tensorboard
+pandas
+matplotlib
+seaborn
+

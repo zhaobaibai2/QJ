@@ -1,0 +1,22 @@
+\documentclass[tikz,border=3mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=1.15cm}, width=7.0cm, height=5.2cm, xmin=-0.005,xmax=0.155, xtick={0,0.08,0.15}, xticklabels={0,0.08,0.15}, grid=major, legend style={at={(0.5,1.16)},anchor=south,legend columns=5,font=\scriptsize}]
+\nextgroupplot[xlabel={Density}, ylabel={Success rate $\uparrow$}, ymin=0.55, ymax=1.02]
+\addplot+[thick,mark=*,blue!75!black] coordinates {(0.00,0.9733) (0.08,0.8733) (0.15,0.6333)}; \addlegendentry{Guard}
+\addplot+[thick,mark=square*,teal!75!black] coordinates {(0.00,0.9933) (0.08,0.9133) (0.15,0.6267)}; \addlegendentry{Shield}
+\addplot+[thick,mark=diamond*,gray!70] coordinates {(0.00,0.9667) (0.08,0.8867) (0.15,0.6200)}; \addlegendentry{Retuned}
+\addplot+[thick,mark=o,gray!55] coordinates {(0.00,0.9733) (0.08,0.8333) (0.15,0.6200)}; \addlegendentry{Full}
+\addplot+[thick,mark=triangle*,orange!80!black] coordinates {(0.00,0.9400) (0.08,0.8667) (0.15,0.6000)}; \addlegendentry{Gated}
+\nextgroupplot[xlabel={Density}, ylabel={Cost rate $\downarrow$}, ymin=0, ymax=0.30]
+\addplot+[thick,mark=*,blue!75!black] coordinates {(0.00,0.0000) (0.08,0.0933) (0.15,0.2067)};
+\addplot+[thick,mark=square*,teal!75!black] coordinates {(0.00,0.0000) (0.08,0.0667) (0.15,0.2267)};
+\addplot+[thick,mark=diamond*,gray!70] coordinates {(0.00,0.0000) (0.08,0.0733) (0.15,0.2400)};
+\addplot+[thick,mark=o,gray!55] coordinates {(0.00,0.0000) (0.08,0.1333) (0.15,0.2467)};
+\addplot+[thick,mark=triangle*,orange!80!black] coordinates {(0.00,0.0000) (0.08,0.0800) (0.15,0.2533)};
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

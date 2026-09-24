@@ -1,0 +1,282 @@
+[
+  {
+    "key": "wiener1948cybernetics",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "Cybernetics-or control and communication in the animal and the machine",
+    "title": "Cybernetics: Or Control and Communication in the Animal and the Machine"
+  },
+  {
+    "key": "garcia2015safe",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://jmlr.org/papers/v16/garcia15a.html",
+    "found": "https://jmlr.org/papers/v16/garcia15a.html",
+    "title": "A comprehensive survey on safe reinforcement learning"
+  },
+  {
+    "key": "ji2024omnisafe",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://jmlr.org/papers/v25/23-0681.html",
+    "found": "https://jmlr.org/papers/v25/23-0681.html",
+    "title": "OmniSafe: An Infrastructure for Accelerating Safe Reinforcement Learning Research"
+  },
+  {
+    "key": "achiam2017constrained",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://proceedings.mlr.press/v70/achiam17a.html",
+    "found": "https://proceedings.mlr.press/v70/achiam17a.html",
+    "title": "Constrained Policy Optimization"
+  },
+  {
+    "key": "tessler2018reward",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1805.11074",
+    "found": "Reward Constrained Policy Optimization",
+    "title": "Reward Constrained Policy Optimization"
+  },
+  {
+    "key": "alshiekh2018shielding",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1609/aaai.v32i1.11797",
+    "found": "Safe Reinforcement Learning via Shielding",
+    "title": "Safe Reinforcement Learning via Shielding"
+  },
+  {
+    "key": "feng2023dense",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1038/s41586-023-05732-2",
+    "found": "Dense reinforcement learning for safety validation of autonomous vehicles",
+    "title": "Dense Reinforcement Learning for Safety Validation of Autonomous Vehicles"
+  },
+  {
+    "key": "jia2024bench2drive",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "2406.03877",
+    "found": "Bench2Drive: Towards Multi-Ability Benchmarking of Closed-Loop End-To-End Autonomous Driving",
+    "title": "Bench2Drive: Towards Multi-Ability Benchmarking of Closed-Loop End-To-End Autonomous Driving"
+  },
+  {
+    "key": "shalev2017rss",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1708.06374",
+    "found": "On a Formal Model of Safe and Scalable Self-driving Cars",
+    "title": "On a Formal Model of Safe and Scalable Self-driving Cars"
+  },
+  {
+    "key": "ames2019control",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.23919/ECC.2019.8796030",
+    "found": "Control Barrier Functions: Theory and Applications",
+    "title": "Control Barrier Functions: Theory and Applications"
+  },
+  {
+    "key": "li2022metadrive",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/TPAMI.2022.3190471",
+    "found": "MetaDrive: Composing Diverse Driving Scenarios for Generalizable Reinforcement Learning",
+    "title": "MetaDrive: Composing Diverse Driving Scenarios for Generalizable Reinforcement Learning"
+  },
+  {
+    "key": "schulman2017ppo",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1707.06347",
+    "found": "Proximal Policy Optimization Algorithms",
+    "title": "Proximal Policy Optimization Algorithms"
+  },
+  {
+    "key": "astrom2008feedback",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://fbsbook.org/",
+    "found": "https://fbsbook.org/",
+    "title": "Feedback Systems: An Introduction for Scientists and Engineers"
+  },
+  {
+    "key": "amodei2016concrete",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1606.06565",
+    "found": "Concrete Problems in AI Safety",
+    "title": "Concrete Problems in AI Safety"
+  },
+  {
+    "key": "berkenkamp2017safe",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://papers.nips.cc/paper/6692-safe-model-based-reinforcement-learning-with-stability-guarantees",
+    "found": "https://papers.nips.cc/paper/6692-safe-model-based-reinforcement-learning-with-stability-guarantees",
+    "title": "Safe Model-based Reinforcement Learning with Stability Guarantees"
+  },
+  {
+    "key": "chow2018lyapunov",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://papers.nips.cc/paper/8032-a-lyapunov-based-approach-to-safe-reinforcement-learning",
+    "found": "https://papers.nips.cc/paper/8032-a-lyapunov-based-approach-to-safe-reinforcement-learning",
+    "title": "A Lyapunov-based Approach to Safe Reinforcement Learning"
+  },
+  {
+    "key": "dalal2018safe",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1801.08757",
+    "found": "Safe Exploration in Continuous Action Spaces",
+    "title": "Safe Exploration in Continuous Action Spaces"
+  },
+  {
+    "key": "saunders2018trial",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "Trial without Error: Towards Safe Reinforcement Learning via Human Intervention",
+    "title": "Trial without Error: Towards Safe Reinforcement Learning via Human Intervention"
+  },
+  {
+    "key": "fisac2019bridging",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/ICRA.2019.8794107",
+    "found": "Bridging Hamilton-Jacobi Safety Analysis and Reinforcement Learning",
+    "title": "Bridging Hamilton-Jacobi Safety Analysis and Reinforcement Learning"
+  },
+  {
+    "key": "kuutti2021survey",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/TITS.2019.2962338",
+    "found": "A Survey of Deep Learning Applications to Autonomous Vehicle Control",
+    "title": "A Survey of Deep Learning Applications to Autonomous Vehicle Control"
+  },
+  {
+    "key": "dosovitskiy2017carla",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://proceedings.mlr.press/v78/dosovitskiy17a.html",
+    "found": "https://proceedings.mlr.press/v78/dosovitskiy17a.html",
+    "title": "CARLA: An Open Urban Driving Simulator"
+  },
+  {
+    "key": "kendall2019learning",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/ICRA.2019.8793742",
+    "found": "Learning to Drive in a Day",
+    "title": "Learning to Drive in a Day"
+  },
+  {
+    "key": "kiran2021deep",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/TITS.2021.3054625",
+    "found": "Deep Reinforcement Learning for Autonomous Driving: A Survey",
+    "title": "Deep Reinforcement Learning for Autonomous Driving: A Survey"
+  },
+  {
+    "key": "henderson2018deep",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "Deep Reinforcement Learning That Matters",
+    "title": "Deep Reinforcement Learning That Matters"
+  },
+  {
+    "key": "altman1999constrained",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1201/9781315140223",
+    "found": "Constrained Markov Decision Processes",
+    "title": "Constrained Markov Decision Processes"
+  },
+  {
+    "key": "leike2017ai",
+    "status": "verified",
+    "source": "arXiv",
+    "id": "1711.09883",
+    "found": "AI Safety Gridworlds",
+    "title": "AI Safety Gridworlds"
+  },
+  {
+    "key": "sallab2017deep",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.2352/ISSN.2470-1173.2017.19.AVM-023",
+    "found": "Deep Reinforcement Learning framework for Autonomous Driving",
+    "title": "Deep Reinforcement Learning Framework for Autonomous Driving"
+  },
+  {
+    "key": "grigorescu2020survey",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1002/rob.21918",
+    "found": "A survey of deep learning techniques for autonomous driving",
+    "title": "A Survey of Deep Learning Techniques for Autonomous Driving"
+  },
+  {
+    "key": "koopman2017autonomous",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/MITS.2016.2583491",
+    "found": "Autonomous Vehicle Safety: An Interdisciplinary Challenge",
+    "title": "Autonomous Vehicle Safety: An Interdisciplinary Challenge"
+  },
+  {
+    "key": "seto1998simplex",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/ACC.1998.703255",
+    "found": "The Simplex architecture for safe online control system upgrades",
+    "title": "The Simplex Architecture for Safe Online Control System Upgrades"
+  },
+  {
+    "key": "miller2024optimal",
+    "status": "verified",
+    "source": "CrossRef DOI",
+    "id": "10.1109/ICCPS61052.2024.00013",
+    "found": "Optimal Runtime Assurance via Reinforcement Learning",
+    "title": "Optimal Runtime Assurance via Reinforcement Learning"
+  },
+  {
+    "key": "xu2022safebench",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "SafeBench: A Benchmarking Platform for Safety Evaluation of Autonomous Vehicles",
+    "title": "SafeBench: A Benchmarking Platform for Safety Evaluation of Autonomous Vehicles"
+  },
+  {
+    "key": "ji2023safetygymnasium",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "Safety Gymnasium: A Unified Safe Reinforcement Learning Benchmark",
+    "title": "Safety-Gymnasium: A Unified Safe Reinforcement Learning Benchmark"
+  },
+  {
+    "key": "pan2022reward",
+    "status": "verified",
+    "source": "URL",
+    "id": "https://openreview.net/forum?id=JYtwGwIL7ye",
+    "found": "https://openreview.net/forum?id=JYtwGwIL7ye",
+    "title": "The Effects of Reward Misspecification: Mapping and Mitigating Misaligned Models"
+  },
+  {
+    "key": "skalse2022defining",
+    "status": "verified",
+    "source": "CrossRef title",
+    "id": "",
+    "found": "Defining and Characterizing Reward Hacking",
+    "title": "Defining and Characterizing Reward Hacking"
+  }
+]

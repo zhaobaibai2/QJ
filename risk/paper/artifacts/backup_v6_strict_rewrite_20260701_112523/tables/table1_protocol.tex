@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{Evaluation protocol and model-selection role of each evidence block. Success, cost, collision, and off-road are reported as percentages; route completion is reported as a 0--1 mean.}
+\label{tab:protocol}
+\scriptsize
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+Evidence block & Scientific question & Density & Scope & Reported quantities \\
+\midrule
+Primary comparison & Select final runtime modes and show decisive mechanism contrasts & 0.15 & selected modes plus 4 contrasts & success/cost/route/collision/off-road \\
+Density sweep & Test whether the selected family remains stable as traffic increases & 0.00/0.08/0.15 & 5 competitive variants & success/cost/route \\
+Mechanism ablation & Test necessity around the Ours-Guard reference & 0.15 & 5 ablation variants & absolute values and deltas \\
+External seeds & Validate Ours-Shield robustness under held-out seeds & 0.15 & 4 competitive variants, 300 episodes each & Wilson 95\% CI \\
+Stress evaluation & Identify harder-density winners and remaining boundary & 0.20/0.25 & 5 moving variants & success/cost/route \\
+Model-selection closure & Reject probes that improve only one axis & 0.15 & seed and parameter probes & success-cost trade-off \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

@@ -1,0 +1,101 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\citation{garcia2015safe,gu2022review,achiam2017cpo,ray2019benchmarking}
+\citation{chow2018lyapunov,tessler2019reward}
+\citation{dalal2018safe}
+\HyPL@Entry{0<</S/D>>}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Safe and Constrained Reinforcement Learning}{1}{subsection.2.1}\protected@file@percent }
+\citation{alshiekh2018safe,fulton2018safe,wabersich2021predictive}
+\citation{ames2017control,cheng2019end}
+\citation{li2022metadrive}
+\citation{dosovitskiy2017carla,leurent2018highway}
+\citation{kiran2021deep,kendall2019learning,paden2016survey}
+\citation{schulman2017ppo,haarnoja2018soft}
+\citation{amodei2016concrete}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Runtime Shielding and Safety Filters}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Closed-Loop Autonomous Driving Evaluation}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Method}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Runtime Decomposition}{2}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:runtime}{{1}{2}{Runtime Decomposition}{equation.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}TTC and Speed Guarding}{2}{subsection.3.2}\protected@file@percent }
+\newlabel{eq:ttc}{{2}{2}{TTC and Speed Guarding}{equation.3.2}{}}
+\newlabel{eq:ttc-risk}{{3}{2}{TTC and Speed Guarding}{equation.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Progress-Gated Risk Penalty}{2}{subsection.3.3}\protected@file@percent }
+\newlabel{eq:gated-risk}{{4}{2}{Progress-Gated Risk Penalty}{equation.3.4}{}}
+\newlabel{eq:risk-score}{{5}{2}{Progress-Gated Risk Penalty}{equation.3.5}{}}
+\citation{wilson1927probable}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Runtime action-intervention architecture of GuardShield-Runtime{}. The left panel shows the execution pipeline from observation to raw action, guarded action, shielded action, and MetaDrive transition. The bottom loop indicates that risk shaping is used for learning, not as a safety guarantee. The right panel shows the decision logic for TTC and speed predicates.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:framework}{{1}{3}{Runtime action-intervention architecture of \method {}. The left panel shows the execution pipeline from observation to raw action, guarded action, shielded action, and MetaDrive transition. The bottom loop indicates that risk shaping is used for learning, not as a safety guarantee. The right panel shows the decision logic for TTC and speed predicates}{figure.1}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces GuardShield-Runtime{} execution step}}{3}{algorithm.1}\protected@file@percent }
+\newlabel{alg:guardshield}{{1}{3}{Progress-Gated Risk Penalty}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Protocol}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Environment and Metrics}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Training and Evaluation Splits}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Compared Variants}{3}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Statistical Reporting}{3}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Primary result summary. Panel (a) reports formal held-out success and cost for runtime modes and mechanism ablations. Panel (b) shows the progress--safety frontier, including each ablation and the no-guard off-scale collapse. Panel (c) reports external-seed Wilson intervals using 300 episodes per variant.}}{4}{figure.2}\protected@file@percent }
+\newlabel{fig:primary}{{2}{4}{Primary result summary. Panel (a) reports formal held-out success and cost for runtime modes and mechanism ablations. Panel (b) shows the progress--safety frontier, including each ablation and the no-guard off-scale collapse. Panel (c) reports external-seed Wilson intervals using 300 episodes per variant}{figure.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Evaluation blocks and their role in the claim.}}{4}{table.1}\protected@file@percent }
+\newlabel{tab:protocol}{{I}{4}{Evaluation blocks and their role in the claim}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Results}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Primary Held-Out Comparison}{4}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Normal-Density Generalisation}{4}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Mechanism Ablation}{4}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}External-Seed Robustness}{4}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Stress-Boundary Evaluation}{4}{subsection.5.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Stress-boundary evaluation beyond the primary held-out setting. All variants degrade substantially, so this block identifies the remaining boundary rather than claiming solved high-density generalisation. Best values are shaded and bold; second-best values are underlined.}}{4}{table.6}\protected@file@percent }
+\newlabel{tab:stress}{{VI}{4}{Stress-boundary evaluation beyond the primary held-out setting. All variants degrade substantially, so this block identifies the remaining boundary rather than claiming solved high-density generalisation. Best values are shaded and bold; second-best values are underlined}{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Primary held-out comparison at density $d=0.15$. The no-guard row directly isolates the contribution of runtime action guarding. Best values are shaded and bold; second-best values are underlined.}}{5}{table.2}\protected@file@percent }
+\newlabel{tab:primary}{{II}{5}{Primary held-out comparison at density $d=0.15$. The no-guard row directly isolates the contribution of runtime action guarding. Best values are shaded and bold; second-best values are underlined}{table.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Density sweep for competitive variants. The runtime guard and shield modes stay on the leading frontier from easy traffic to the formal held-out density. Best values are shaded and bold; second-best values are underlined.}}{5}{table.3}\protected@file@percent }
+\newlabel{tab:density}{{III}{5}{Density sweep for competitive variants. The runtime guard and shield modes stay on the leading frontier from easy traffic to the formal held-out density. Best values are shaded and bold; second-best values are underlined}{table.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Mechanism ablation around the Guard runtime reference at $d=0.15$. Deltas are measured relative to Guard runtime. Reward-term removals degrade the balance, while removing the action guard causes the decisive collapse.}}{5}{table.4}\protected@file@percent }
+\newlabel{tab:ablation}{{IV}{5}{Mechanism ablation around the Guard runtime reference at $d=0.15$. Deltas are measured relative to Guard runtime. Reward-term removals degrade the balance, while removing the action guard causes the decisive collapse}{table.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-F}}Model-Selection Closure}{5}{subsection.5.6}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{garcia2015safe}{1}
+\bibcite{gu2022review}{2}
+\bibcite{achiam2017cpo}{3}
+\bibcite{ray2019benchmarking}{4}
+\bibcite{chow2018lyapunov}{5}
+\bibcite{tessler2019reward}{6}
+\bibcite{dalal2018safe}{7}
+\bibcite{alshiekh2018safe}{8}
+\bibcite{fulton2018safe}{9}
+\bibcite{wabersich2021predictive}{10}
+\bibcite{ames2017control}{11}
+\bibcite{cheng2019end}{12}
+\bibcite{li2022metadrive}{13}
+\bibcite{dosovitskiy2017carla}{14}
+\bibcite{leurent2018highway}{15}
+\bibcite{kiran2021deep}{16}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces External-seed robustness at $d=0.15$. Wilson intervals are shown for the two primary binary outcomes, success and cost. Route completion is reported as the mean. Best values are shaded and bold; second-best values are underlined.}}{6}{table.5}\protected@file@percent }
+\newlabel{tab:external}{{V}{6}{External-seed robustness at $d=0.15$. Wilson intervals are shown for the two primary binary outcomes, success and cost. Route completion is reported as the mean. Best values are shaded and bold; second-best values are underlined}{table.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{6}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{6}{section*.1}\protected@file@percent }
+\bibcite{kendall2019learning}{17}
+\bibcite{paden2016survey}{18}
+\bibcite{schulman2017ppo}{19}
+\bibcite{haarnoja2018soft}{20}
+\bibcite{amodei2016concrete}{21}
+\bibcite{wilson1927probable}{22}
+\gdef \@abspage@last{7}

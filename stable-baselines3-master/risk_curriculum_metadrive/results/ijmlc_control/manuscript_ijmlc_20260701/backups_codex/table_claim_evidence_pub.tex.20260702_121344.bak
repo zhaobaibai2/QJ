@@ -1,0 +1,24 @@
+
+\begin{center}
+\refstepcounter{table}\label{tab_claim_evidence}
+\footnotesize
+\textbf{Table~\thetable}\quad Claim-to-evidence summary.\par
+\vspace{3pt}
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.30\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.10\textwidth}@{}}
+\toprule
+Claim & Evidence & Location & Status \\
+\midrule
+Cost-only safety is ambiguous & Risk-only obtains 0.0 cost but 100.0 stop and 0.9 route & Table~\ref{tab_core_mechanism}, Fig.~\ref{fig_core_evidence} & Supported \\
+Execution-side intervention matters & No-action guard remains unsafe; runtime variants reduce cost and preserve route & Table~\ref{tab_core_mechanism}; Sec.~\ref{sec_mechanism} & Supported \\
+The tested TTC/RSS filter does not fully close the gap & The TTC/RSS-style filter improves PPO but retains 44.2 cost under the same diagnostic protocol & Table~\ref{tab_external_baseline}, Fig.~\ref{fig_external} & Supported \\
+Benefit has an operating envelope & Cost rises and success drops at density 0.25 & Table~\ref{tab_density_summary}, Fig.~\ref{fig_density} & Bounded \\
+Runtime claim is simulation-only & Loop p95 is measured in the Python simulation loop & Fig.~\ref{fig_runtime_overhead}, App.~\ref{app_sensitivity_runtime} & Bounded \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}
+\begin{minipage}{0.86\textwidth}
+\footnotesize The table records supported and bounded claims under the reported simulator protocol.
+\end{minipage}
+\end{center}

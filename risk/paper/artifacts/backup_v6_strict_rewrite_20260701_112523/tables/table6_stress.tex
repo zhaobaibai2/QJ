@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Stress-density evaluation for moving variants. Best values are shaded and bold; second-best values are underlined.}
+\label{tab:stress}
+\scriptsize
+\setlength{\tabcolsep}{2.1pt}
+\renewcommand{\arraystretch}{1.05}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+& \multicolumn{3}{c}{$d=0.20$} & \multicolumn{3}{c}{$d=0.25$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Variant & Succ. $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ & Succ. $\uparrow$ & Cost $\downarrow$ & Route $\uparrow$ \\
+\midrule
+Ours-Shield & \best{48.0} & \best{36.0} & \best{0.778} & 19.3 & 58.7 & 0.609 \\
+Ours-Guard & 41.3 & 40.7 & 0.733 & \best{26.7} & \best{48.7} & \best{0.658} \\
+Gated-risk & 44.7 & \second{36.7} & \second{0.766} & \second{22.0} & \second{52.7} & \second{0.628} \\
+Retuned full & \second{45.3} & 38.0 & 0.753 & 17.3 & 68.7 & 0.571 \\
+Full extension & 38.0 & 40.0 & 0.744 & 20.7 & 58.7 & 0.587 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
